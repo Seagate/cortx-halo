@@ -18,11 +18,11 @@
   <div class="sgt-data-table">
     <div class="search-container">
       <v-row class="search-row ma-0">
-        <v-col class="pl-0 margin-auto"
-          ><p v-if="title && !searchConfig" class="table-title">
+        <v-col class="pl-0 margin-auto" v-if="title && !searchConfig">
+          <p class="table-title">
             {{ title }}
-          </p></v-col
-        >
+          </p>
+        </v-col>
         <v-col class="pl-0 margin-auto">
           <SgtAdvanceSearch
             v-if="searchConfig"

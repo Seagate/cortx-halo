@@ -637,10 +637,10 @@
     "data": {
       "ntp": {
         "serverAddress": "192.168.1.1",
-        "timeZoneOffset": "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi"
+        "timeZoneOffset": "IST"
       },
       "log": {
-        "logLevel": "Warning",
+        "logLevel": "warning",
         "nodes": [
           {
             "id": "2",
