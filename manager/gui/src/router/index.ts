@@ -29,6 +29,7 @@ import LrConfiguration from "../components/configuration/LrConfiguration.vue";
 import LrConfigurationCards from "../components/configuration/LrConfigurationCards.vue";
 import LrObjectStore from "../components/configuration/LrObjectStore.vue";
 import LrNodeConfiguration from "../components/configuration/LrNodeConfiguration.vue";
+import LrClusterConfiguration from "../components/configuration/LrClusterConfiguration.vue";
 import LrMaintenanceUpdateSoftware from "../components/maintenance/LrMaintenanceUpdateSoftware.vue";
 
 Vue.use(VueRouter);
@@ -109,6 +110,11 @@ const routes: Array<RouteConfig> = [
         path: "node",
         name: "node",
         component: LrNodeConfiguration,
+      },
+      {
+        path: "cluster",
+        name: "cluster",
+        component: LrClusterConfiguration,
       },
     ],
   },
