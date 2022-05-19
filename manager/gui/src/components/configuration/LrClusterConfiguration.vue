@@ -71,10 +71,14 @@
                   color="primary"
                   @click="applyNtpSettings"
                   :disabled="!isNtpDetailsValid"
-                  :dark="isFormValid"
+                  :dark="isNtpDetailsValid"
                   >Apply
                 </v-btn>
-                <v-btn color="csmdisabled" @click="resetNtpData" depressed dark
+                <v-btn
+                  color="csmdisabled"
+                  @click="resetData('ntp')"
+                  depressed
+                  dark
                   >Reset</v-btn
                 >
               </v-col>
@@ -93,7 +97,7 @@
           </b>
         </v-expansion-panel-header>
         <v-expansion-panel-content class="panel-content">
-          <v-form v-model="isNetworkDetailsValid">
+          <v-form>
             <v-row class="field-row">
               <v-col cols="3" class="field-label">
                 Log Level
@@ -149,14 +153,14 @@
             <v-row class="field-row">
               <v-col cols="3"></v-col>
               <v-col cols="4" class="button-col">
-                <v-btn
-                  class="mr-5"
-                  color="primary"
-                  @click="applyLogInfo"
-                  :dark="isFormValid"
+                <v-btn class="mr-5" color="primary" @click="applyLogInfo"
                   >Apply
                 </v-btn>
-                <v-btn color="csmdisabled" @click="resetLogData" depressed dark
+                <v-btn
+                  color="csmdisabled"
+                  @click="resetData('log')"
+                  depressed
+                  dark
                   >Reset</v-btn
                 >
               </v-col>
@@ -175,6 +179,7 @@ import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
 import { timeZones, logLevels } from "@/utils/CommonUtil.constant";
 import { passwordRegex, ipAddressRegex } from "@/utils/RegexHelpers";
 import { Api } from "../../services/Api";
+import { cluster } from "d3";
 @Component({
   name: "LrClusterConfiguration",
   components: { SgtTooltipIcon, SgtDropdown },
@@ -186,17 +191,8 @@ export default class LrClusterConfiguration extends Vue {
     serverAddress: null,
     timeZoneOffset: null,
   };
-  initialNtpValues = {
-    serverAddress: null,
-    timeZoneOffset: null,
-  };
 
   log = {
-    logLevel: null,
-    nodes: null,
-    services: null,
-  };
-  initialLogValues = {
     logLevel: null,
     nodes: null,
     services: null,
@@ -239,13 +235,15 @@ export default class LrClusterConfiguration extends Vue {
     });
     const { ntp, log: logInfo } = clusterInfoRes.data;
     this.ntp = ntp;
-    this.initialNtpValues = { ...ntp };
+    this.setLogValues(logInfo);
+  }
+
+  setLogValues(logInfo: any) {
     const modifiedInfo = {
       logLevel: logInfo.logLevel,
       nodes: logInfo.nodes.map((nodeInfo: any) => nodeInfo.id),
       services: logInfo.services.map((serviceInfo: any) => serviceInfo.id),
     };
-    this.initialLogValues = modifiedInfo;
     this.log = JSON.parse(JSON.stringify(modifiedInfo));
   }
 
@@ -253,16 +251,20 @@ export default class LrClusterConfiguration extends Vue {
     //API to change the NTP settings of the cluster
   }
 
-  resetNtpData() {
-    this.ntp = { ...this.initialNtpValues };
-  }
-
   applyLogInfo() {
     //API call to change the Log settings of the cluster
   }
 
-  resetLogData() {
-    this.log = this.initialLogValues;
+  async resetData(section: "ntp" | "log") {
+    let clusterInfoRes: any = await Api.getData("config/default-cluster-info", {
+      isDummy: true,
+    });
+    clusterInfoRes = JSON.parse(JSON.stringify(clusterInfoRes));
+    if (section === "ntp") {
+      this.ntp = clusterInfoRes.data.ntp;
+    } else {
+      this.setLogValues(clusterInfoRes.data.log);
+    }
   }
 }
 </script>

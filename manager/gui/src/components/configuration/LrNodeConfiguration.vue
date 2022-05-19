@@ -32,6 +32,7 @@
             :dropdownOptions="nodeOptions"
             placeholder="Node"
             v-model="selectedNode"
+            @change="nodeChangeHandler"
           />
         </v-col>
       </v-row>
@@ -121,12 +122,12 @@
                   color="primary"
                   @click="applyNetworkInfo"
                   :disabled="!isNetworkDetailsValid"
-                  :dark="isFormValid"
+                  :dark="isNetworkDetailsValid"
                   >Apply
                 </v-btn>
                 <v-btn
                   color="csmdisabled"
-                  @click="resetNetworkData"
+                  @click="setNetworkInfoAllNodes(true)"
                   depressed
                   dark
                   >Reset</v-btn
@@ -206,7 +207,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
 import { passwordRegex, ipAddressRegex } from "@/utils/RegexHelpers";
@@ -221,12 +222,6 @@ export default class LrNodeConfiguration extends Vue {
   nodeOptions: any[] = [];
   networkInfoAllNodes: any[] = [];
   network = {
-    ipAddress: null,
-    netmask: null,
-    dnsServers: null,
-    searchDomains: null,
-  };
-  initialNetworkValues = {
     ipAddress: null,
     netmask: null,
     dnsServers: null,
@@ -265,14 +260,17 @@ export default class LrNodeConfiguration extends Vue {
     }));
     this.selectedNode = this.nodeOptions[0].value;
     await this.setNetworkInfoAllNodes();
-    this.populateNetworkValues();
   }
 
-  async setNetworkInfoAllNodes() {
-    const networkInfoRes: any = await Api.getData("config/network-info", {
+  async setNetworkInfoAllNodes(isReset = false) {
+    const path = isReset
+      ? "config/default-network-info"
+      : "config/network-info";
+    const networkInfoRes: any = await Api.getData(path, {
       isDummy: true,
     });
     this.networkInfoAllNodes = networkInfoRes.data;
+    this.populateNetworkValues();
   }
 
   populateNetworkValues() {
@@ -286,15 +284,10 @@ export default class LrNodeConfiguration extends Vue {
       dnsServers,
       searchDomains,
     };
-    this.initialNetworkValues = { ...this.network };
   }
 
   applyNetworkInfo() {
     //API call to modify the network data
-  }
-
-  resetNetworkData() {
-    this.network = { ...this.initialNetworkValues };
   }
 
   resetNodeAdminPassword() {
@@ -308,7 +301,6 @@ export default class LrNodeConfiguration extends Vue {
     };
   }
 
-  @Watch("selectedNode")
   nodeChangeHandler() {
     this.populateNetworkValues();
   }
