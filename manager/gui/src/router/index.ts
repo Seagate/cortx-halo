@@ -30,6 +30,7 @@ import LrConfigurationCards from "../components/configuration/LrConfigurationCar
 import LrObjectStore from "../components/configuration/LrObjectStore.vue";
 import LrNodeConfiguration from "../components/configuration/LrNodeConfiguration.vue";
 import LrClusterConfiguration from "../components/configuration/LrClusterConfiguration.vue";
+import LrSystemHealthConfiguration from "../components/configuration/LrSystemHealthConfiguration.vue";
 import LrMaintenanceUpdateSoftware from "../components/maintenance/LrMaintenanceUpdateSoftware.vue";
 
 Vue.use(VueRouter);
@@ -115,6 +116,11 @@ const routes: Array<RouteConfig> = [
         path: "cluster",
         name: "cluster",
         component: LrClusterConfiguration,
+      },
+      {
+        path: "system-health",
+        name: "system-health",
+        component: LrSystemHealthConfiguration,
       },
     ],
   },
