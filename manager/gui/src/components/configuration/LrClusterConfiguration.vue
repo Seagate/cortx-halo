@@ -76,7 +76,7 @@
                 </v-btn>
                 <v-btn
                   color="csmdisabled"
-                  @click="resetData('ntp')"
+                  @click="resetConfirmation('ntp')"
                   depressed
                   dark
                   >Reset</v-btn
@@ -158,7 +158,7 @@
                 </v-btn>
                 <v-btn
                   color="csmdisabled"
-                  @click="resetData('log')"
+                  @click="resetConfirmation('log')"
                   depressed
                   dark
                   >Reset</v-btn
@@ -179,13 +179,17 @@ import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
 import { timeZones, logLevels } from "@/utils/CommonUtil.constant";
 import { passwordRegex, ipAddressRegex } from "@/utils/RegexHelpers";
 import { Api } from "../../services/Api";
-import { cluster } from "d3";
+import SgtDialog from "@/lib/components/SgtDialog/SgtDialog.vue";
+import { SgtDialogModel } from "@/lib/components/SgtDialog/SgtDialog.model";
+import { create } from "vue-modal-dialogs";
+
 @Component({
   name: "LrClusterConfiguration",
   components: { SgtTooltipIcon, SgtDropdown },
 })
 export default class LrClusterConfiguration extends Vue {
   panel = 0;
+  resetModal = create<SgtDialogModel>(SgtDialog);
   nodesList = [];
   ntp = {
     serverAddress: null,
@@ -211,7 +215,8 @@ export default class LrClusterConfiguration extends Vue {
   };
 
   async mounted() {
-    this.setInitialValues();
+    this.getNtpData();
+    this.getLogData();
     const nodesListRes: any = await Api.getData("maintenance/node-list", {
       isDummy: true,
     });
@@ -229,13 +234,24 @@ export default class LrClusterConfiguration extends Vue {
     }));
   }
 
-  async setInitialValues() {
-    const clusterInfoRes: any = await Api.getData("config/cluster-info", {
-      isDummy: true,
-    });
-    const { ntp, log: logInfo } = clusterInfoRes.data;
-    this.ntp = ntp;
-    this.setLogValues(logInfo);
+  async getNtpData() {
+    const clusterNtpInfoRes: any = await Api.getData(
+      "config/cluster-ntp-info",
+      {
+        isDummy: true,
+      }
+    );
+    this.ntp = { ...clusterNtpInfoRes.data };
+  }
+
+  async getLogData() {
+    const clusterLogInfoRes: any = await Api.getData(
+      "config/cluster-log-info",
+      {
+        isDummy: true,
+      }
+    );
+    this.setLogValues(clusterLogInfoRes.data);
   }
 
   setLogValues(logInfo: any) {
@@ -255,16 +271,23 @@ export default class LrClusterConfiguration extends Vue {
     //API call to change the Log settings of the cluster
   }
 
-  async resetData(section: "ntp" | "log") {
-    let clusterInfoRes: any = await Api.getData("config/default-cluster-info", {
-      isDummy: true,
+  async resetConfirmation(section: "ntp" | "log") {
+    const result = await this.resetModal({
+      modalTitle: "Confirmation",
+      modalContent: `Are you sure you want to reset the ${section} data?`,
+      modalType: "prompt",
+      modalContentType: "html",
+    }).then(async (resp) => {
+      if (resp === "yes") {
+        if (section === "ntp") {
+          //API call to reset the NTP data of the cluster
+          this.getNtpData();
+        } else {
+          //API call to reset the Log data of the cluster
+          this.getLogData();
+        }
+      }
     });
-    clusterInfoRes = JSON.parse(JSON.stringify(clusterInfoRes));
-    if (section === "ntp") {
-      this.ntp = clusterInfoRes.data.ntp;
-    } else {
-      this.setLogValues(clusterInfoRes.data.log);
-    }
   }
 }
 </script>
