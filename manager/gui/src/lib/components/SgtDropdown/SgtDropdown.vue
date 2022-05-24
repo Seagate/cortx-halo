@@ -28,6 +28,7 @@
     outlined
     dense
     v-on="$listeners"
+    v-bind="$attrs"
   ></v-select>
 </template>
 <script lang="ts">
@@ -46,5 +47,4 @@ export default class SgtDropdown extends Vue {
   @Prop({ required: false }) private height: string;
 }
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

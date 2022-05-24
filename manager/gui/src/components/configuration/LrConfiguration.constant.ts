@@ -16,36 +16,36 @@
  */
 
 export const lrConfigurationCardsConst = {
-    cardList: [
-        {
-            name: "object-store",
-            title: "Object Store",
-            description: "Lorem ipsum, or lipsum as it is sometimes known.",
-            icon: "object-store-green.svg"
-        },
-        {
-            name: "node",
-            title: "Node",
-            description: "Lorem ipsum, or lipsum as it is sometimes known.",
-            icon: "node-green.svg"
-        },
-        {
-            name: "cluster",
-            title: "Cluster",
-            description: "Lorem ipsum, or lipsum as it is sometimes known.",
-            icon: "cluster-green.svg"
-        },
-        {
-            name: "system-health",
-            title: "System Health",
-            description: "Lorem ipsum, or lipsum as it is some known.",
-            icon: "system-health-green.svg"
-        },
-        {
-            name: "support",
-            title: "Support",
-            description: "Lorem ipsum, or lipsum as it is sometimes known.",
-            icon: "support-green.svg"
-        },
-    ]
+  cardList: [
+    {
+      name: "object-store",
+      title: "Object Store",
+      description: "Lorem ipsum, or lipsum as it is sometimes known.",
+      icon: "object-store-green.svg",
+    },
+    {
+      name: "node",
+      title: "Node",
+      description: "Lorem ipsum, or lipsum as it is sometimes known.",
+      icon: "node-green.svg",
+    },
+    {
+      name: "cluster",
+      title: "Cluster",
+      description: "Lorem ipsum, or lipsum as it is sometimes known.",
+      icon: "cluster-green.svg",
+    },
+    {
+      name: "system-health",
+      title: "System Health",
+      description: "Lorem ipsum, or lipsum as it is some known.",
+      icon: "system-health-green.svg",
+    },
+    {
+      name: "support",
+      title: "Support",
+      description: "Lorem ipsum, or lipsum as it is sometimes known.",
+      icon: "support-green.svg",
+    },
+  ],
 };
