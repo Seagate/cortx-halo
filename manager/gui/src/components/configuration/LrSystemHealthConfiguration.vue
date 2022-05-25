@@ -20,8 +20,8 @@
       <div class="page-title">
         System Health
         <SgtTooltipIcon>
-          Administrator can change default limits of the object store and also
-          override the SSL certificate packaged with the system.
+          Configuration about health of the cluster which includes both hardware
+          and software services.
         </SgtTooltipIcon>
       </div>
       <v-divider></v-divider>
@@ -32,81 +32,76 @@
           <b>
             Notification Settings
             <SgtTooltipIcon>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Unde,
-              nulla.
+              Configure settings for receiving notifications about alerts in the
+              system.
             </SgtTooltipIcon>
           </b>
         </v-expansion-panel-header>
         <v-expansion-panel-content class="panel-content">
-          <v-form v-model="isLimitsValid">
+          <v-form v-model="isSettingsValid">
             <v-row class="field-row">
               <v-col cols="3" class="field-label">
                 SMTP Server
                 <SgtTooltipIcon>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Harum, dicta.
+                  Address of the SMTP server. It could be an IP address or a
+                  FQDN.
                 </SgtTooltipIcon>
               </v-col>
               <v-col cols="4">
                 <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
+                  v-model="notificationSettings.smtpServer"
+                  :rules="validationRules.serverAddress"
+                  placeholder="SMTP Server"
                   outlined
                   dense
                 ></v-text-field>
               </v-col>
             </v-row>
+
+            <!-- <v-row class="field-row">
+              <v-col cols="3" class="field-label"> Protocol </v-col>
+              <v-col cols="4">
+                <SgtDropdown
+                  :dropdownOptions="protocolOptions"
+                  placeholder="Protocol"
+                  v-model="notificationSettings.protocol"
+                />
+              </v-col>
+            </v-row> -->
+
+            <v-row class="field-row">
+              <v-col cols="3" class="field-label"> SMTP Port </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  v-model="notificationSettings.smtpPort"
+                  :rules="validationRules.portNumber"
+                  placeholder="SMTP Port"
+                  type="number"
+                  min="1"
+                  max="65536"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
             <v-row class="field-row">
               <v-col cols="3" class="field-label">
                 Sender Email
-                <SgtTooltipIcon>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Harum, dicta.
-                </SgtTooltipIcon>
+                <SgtTooltipIcon> Email ID of the sender </SgtTooltipIcon>
               </v-col>
               <v-col cols="4">
                 <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
+                  v-model="notificationSettings.senderEmail"
+                  :rules="validationRules.email"
+                  placeholder="Sender Email"
+                  type="email"
                   outlined
                   dense
                 ></v-text-field>
               </v-col>
             </v-row>
-            <v-row class="field-row">
-              <v-col cols="3" class="field-label">
-                Protocol
-                <SgtTooltipIcon>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Harum, dicta.
-                </SgtTooltipIcon>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row class="field-row">
-              <v-col cols="3" class="field-label">
-                SMTP Port
-                <SgtTooltipIcon>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Harum, dicta.
-                </SgtTooltipIcon>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-            </v-row>
+
             <v-row class="field-row">
               <v-col cols="3" class="field-label">
                 Sender Password
@@ -118,8 +113,10 @@
               </v-col>
               <v-col cols="4">
                 <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
+                  v-model="notificationSettings.senderPassword"
+                  :rules="validationRules.password"
+                  placeholder="Sender Password"
+                  type="password"
                   outlined
                   dense
                 ></v-text-field>
@@ -129,26 +126,22 @@
               <v-col cols="3" class="field-label"> Confirm Password </v-col>
               <v-col cols="4">
                 <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
+                  v-model="notificationSettings.confirmPassword"
+                  :rules="validationRules.confirmPassword"
+                  placeholder="Confirm Password"
+                  type="password"
                   outlined
                   dense
                 ></v-text-field>
               </v-col>
             </v-row>
             <v-row class="field-row">
-              <v-col cols="3" class="field-label">
-                Receiver Emails
-                <SgtTooltipIcon>
-                  Password must contain: Minimum 8 characters, One uppercase
-                  letter, One lowercase letter, One special character, One
-                  number
-                </SgtTooltipIcon>
-              </v-col>
+              <v-col cols="3" class="field-label"> Receiver Emails </v-col>
               <v-col cols="4">
                 <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
+                  v-model="notificationSettings.receiverEmails"
+                  :rules="validationRules.receiverEmails"
+                  placeholder="Receiver Emails"
                   outlined
                   dense
                 ></v-text-field>
@@ -158,18 +151,25 @@
               <v-col cols="3" class="field-label">
                 Verify Config
                 <SgtTooltipIcon>
-                  Password must contain: Minimum 8 characters, One uppercase
-                  letter, One lowercase letter, One special character, One
-                  number
+                  This will send a test email to the receiver(s). Click on the
+                  checkbox after the email is received. On successful
+                  verification, the 'Apply' button will be enabled.
                 </SgtTooltipIcon>
               </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  placeholder="Enter SMTP Server"
-                  min="1"
-                  outlined
-                  dense
-                ></v-text-field>
+              <v-col class="verify-config-field" cols="6">
+                <v-btn
+                  class="mr-5"
+                  color="primary"
+                  :disabled="!isSettingsValid"
+                  :dark="isSettingsValid"
+                  @click="testEmailNotification"
+                >
+                  Test
+                </v-btn>
+                <v-checkbox
+                  v-model="isVerified"
+                  label="Verified that receiver has recieved the email"
+                ></v-checkbox>
               </v-col>
             </v-row>
 
@@ -180,9 +180,9 @@
                 <v-btn
                   class="mr-5"
                   color="primary"
-                  @click="applyLimit"
-                  :disabled="!isLimitsValid"
-                  :dark="isLimitsValid"
+                  @click="applyNotificationSettings"
+                  :disabled="disableApply"
+                  :dark="isSettingsValid && isVerified"
                   >Apply
                 </v-btn>
                 <v-btn
@@ -210,6 +210,13 @@ import SgtDialog from "@/lib/components/SgtDialog/SgtDialog.vue";
 import { SgtDialogModel } from "@/lib/components/SgtDialog/SgtDialog.model";
 import { create } from "vue-modal-dialogs";
 import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
+import { emailProtocols } from "@/utils/CommonUtil.constant";
+import {
+  emailRegex,
+  passwordRegex,
+  ipAddressRegex,
+  fqdnRegex,
+} from "@/utils/RegexHelpers";
 
 @Component({
   name: "LrSystemHealthConfiguration",
@@ -217,6 +224,93 @@ import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
 })
 export default class LrSystemHealthConfiguration extends Vue {
   panel = 0;
+  isVerified = false;
+  isSettingsValid = false;
+
+  notificationSettings = {
+    smtpServer: null,
+    smtpPort: null,
+    protocol: null,
+    senderEmail: null,
+    senderPassword: null,
+    confirmPassword: null,
+    receiverEmails: null,
+  };
+
+  validationRules = {
+    serverAddress: [
+      (val: string) => (val || "").length > 0 || "This field is required",
+      (val: string) =>
+        ipAddressRegex.test(val) || fqdnRegex.test(val) || "Invalid value",
+    ],
+    portNumber: [
+      (val: string) => (val || "").length > 0 || "This field is required",
+      (val: string) => +val <= 65536 || "Invalid value",
+    ],
+    email: [
+      (val: string) => (val || "").length > 0 || "Email is required",
+      (val: string) => emailRegex.test(val) || "Invalid email",
+    ],
+    password: [
+      (val: string) => (val || "").length > 0 || "Password is required",
+      (val: string) => passwordRegex.test(val) || "Invalid password",
+    ],
+    confirmPassword: [
+      (val: string) => (val || "").length > 0 || "Password is required",
+      (val: string) => {
+        /*eslint-disable*/
+        debugger;
+        return (
+          val === this.notificationSettings.senderPassword ||
+          "Passwords don't match"
+        );
+      },
+    ],
+    receiverEmails: [
+      (val: string) => (val || "").length > 0 || "Email is required",
+      (val: string) => {
+        let validation: string | boolean = false;
+        const emails = (val || "").split(",");
+        return (
+          emails.every((email) => emailRegex.test(email.trim())) ||
+          "Invalid email"
+        );
+      },
+    ],
+  };
+
+  get disableApply() {
+    if (this.isSettingsValid && this.isVerified) {
+      return false;
+    }
+    return true;
+  }
+
+  async mounted() {
+    const res: any = await Api.getData(
+      "config/system-health/notification-settings",
+      {
+        isDummy: true,
+      }
+    );
+    this.notificationSettings = {
+      ...res.data,
+      confirmPassword: res.data.senderPassword,
+    };
+  }
+
+  testEmailNotification() {
+    //API call to test the email notification
+  }
+
+  applyNotificationSettings() {
+    //API call to apply the notification settings
+  }
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.verify-config-field {
+  display: flex;
+  align-items: center;
+}
+</style>

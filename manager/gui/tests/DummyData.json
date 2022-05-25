@@ -753,5 +753,15 @@
         "id": "3"
       }
     ]
+  },
+  "config/system-health/notification-settings": {
+    "data": {
+      "smtpServer": "10.22.55.82",
+      "smtpPort": "553",
+      "protocol": null,
+      "senderEmail": "admin@seagate.com",
+      "senderPassword": "Seagate@1",
+      "receiverEmails": "user1@seagate.com, user2@seagate.com"
+    }
   }
 }
