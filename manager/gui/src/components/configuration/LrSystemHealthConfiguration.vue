@@ -187,7 +187,7 @@
                 </v-btn>
                 <v-btn
                   color="csmdisabled"
-                  @click="getLimit(true)"
+                  @click="resetConfirmation()"
                   depressed
                   dark
                   >Reset</v-btn
@@ -224,6 +224,7 @@ import {
 })
 export default class LrSystemHealthConfiguration extends Vue {
   panel = 0;
+  resetModal = create<SgtDialogModel>(SgtDialog);
   isVerified = false;
   isSettingsValid = false;
 
@@ -258,8 +259,6 @@ export default class LrSystemHealthConfiguration extends Vue {
     confirmPassword: [
       (val: string) => (val || "").length > 0 || "Password is required",
       (val: string) => {
-        /*eslint-disable*/
-        debugger;
         return (
           val === this.notificationSettings.senderPassword ||
           "Passwords don't match"
@@ -269,7 +268,6 @@ export default class LrSystemHealthConfiguration extends Vue {
     receiverEmails: [
       (val: string) => (val || "").length > 0 || "Email is required",
       (val: string) => {
-        let validation: string | boolean = false;
         const emails = (val || "").split(",");
         return (
           emails.every((email) => emailRegex.test(email.trim())) ||
@@ -287,6 +285,10 @@ export default class LrSystemHealthConfiguration extends Vue {
   }
 
   async mounted() {
+    this.getNotificationSettings();
+  }
+
+  async getNotificationSettings() {
     const res: any = await Api.getData(
       "config/system-health/notification-settings",
       {
@@ -305,6 +307,20 @@ export default class LrSystemHealthConfiguration extends Vue {
 
   applyNotificationSettings() {
     //API call to apply the notification settings
+  }
+
+  async resetConfirmation() {
+    const result = await this.resetModal({
+      modalTitle: "Confirmation",
+      modalContent: `Are you sure you want to reset the notification settings?`,
+      modalType: "prompt",
+      modalContentType: "html",
+    }).then(async (resp) => {
+      if (resp === "yes") {
+        //API call to reset the notification settings
+        this.getNotificationSettings();
+      }
+    });
   }
 }
 </script>
