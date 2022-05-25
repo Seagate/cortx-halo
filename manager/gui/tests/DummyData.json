@@ -640,102 +640,31 @@
       }
     ]
   },
-  "config/default-network-info": {
-    "data": [
-      {
-        "node": {
-          "id": "1",
-          "name": "Node1"
-        },
-        "ipAddress": "187.58.25.11",
-        "netmask": "22.41.57.98",
-        "dnsServers": "58.41.26.23",
-        "searchDomains": "example1.com"
-      },
-      {
-        "node": {
+  "config/cluster-ntp-info": {
+    "data": {
+      "serverAddress": "192.168.1.1",
+      "timeZoneOffset": "IST"
+    }
+  },
+  "config/cluster-log-info": {
+    "data": {
+      "logLevel": "warning",
+      "nodes": [
+        {
           "id": "2",
           "name": "Node2"
         },
-        "ipAddress": "89.45.21.87",
-        "netmask": "128.214.32.1",
-        "dnsServers": "178.145.211.22",
-        "searchDomains": "example2.com"
-      },
-      {
-        "node": {
-          "id": "3",
-          "name": "Node3"
-        },
-        "ipAddress": "69.62.115.201",
-        "netmask": "18.147.12.154",
-        "dnsServers": "36.65.98.97",
-        "searchDomains": "example3.com"
-      },
-      {
-        "node": {
+        {
           "id": "4",
           "name": "Node4"
-        },
-        "ipAddress": "69.143.12.41",
-        "netmask": "85.41.78.65",
-        "dnsServers": "80.248.72.1",
-        "searchDomains": "example4.com"
-      }
-    ]
-  },
-  "config/cluster-info": {
-    "data": {
-      "ntp": {
-        "serverAddress": "192.168.1.1",
-        "timeZoneOffset": "IST"
-      },
-      "log": {
-        "logLevel": "warning",
-        "nodes": [
-          {
-            "id": "2",
-            "name": "Node2"
-          },
-          {
-            "id": "4",
-            "name": "Node4"
-          }
-        ],
-        "services": [
-          {
-            "id": "1",
-            "name": "Service1"
-          }
-        ]
-      }
-    }
-  },
-  "config/default-cluster-info": {
-    "data": {
-      "ntp": {
-        "serverAddress": "21.22.23.24",
-        "timeZoneOffset": "EST"
-      },
-      "log": {
-        "logLevel": "debug",
-        "nodes": [
-          {
-            "id": "1",
-            "name": "Node1"
-          },
-          {
-            "id": "3",
-            "name": "Node3"
-          }
-        ],
-        "services": [
-          {
-            "id": "3",
-            "name": "Service3"
-          }
-        ]
-      }
+        }
+      ],
+      "services": [
+        {
+          "id": "1",
+          "name": "Service1"
+        }
+      ]
     }
   },
   "config/services-list": {

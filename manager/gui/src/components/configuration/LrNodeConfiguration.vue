@@ -127,7 +127,7 @@
                 </v-btn>
                 <v-btn
                   color="csmdisabled"
-                  @click="setNetworkInfoAllNodes(true)"
+                  @click="resetConfirmation()"
                   depressed
                   dark
                   >Reset</v-btn
@@ -212,6 +212,10 @@ import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
 import { passwordRegex, ipAddressRegex } from "@/utils/RegexHelpers";
 import { Api } from "../../services/Api";
+import SgtDialog from "@/lib/components/SgtDialog/SgtDialog.vue";
+import { SgtDialogModel } from "@/lib/components/SgtDialog/SgtDialog.model";
+import { create } from "vue-modal-dialogs";
+
 @Component({
   name: "LrNodeConfiguration",
   components: { SgtTooltipIcon, SgtDropdown },
@@ -219,6 +223,7 @@ import { Api } from "../../services/Api";
 export default class LrNodeConfiguration extends Vue {
   selectedNode = "";
   panel = 0;
+  resetModal = create<SgtDialogModel>(SgtDialog);
   nodeOptions: any[] = [];
   networkInfoAllNodes: any[] = [];
   network = {
@@ -299,6 +304,27 @@ export default class LrNodeConfiguration extends Vue {
       newPassword: "",
       confirmNewPassword: "",
     };
+  }
+
+  async resetNetworkDataForNode() {
+    /*
+     ** API call to reset the network data for the selected node
+     ** Followed by the call to get the updated network data
+     */
+    this.setNetworkInfoAllNodes();
+  }
+
+  async resetConfirmation() {
+    const result = await this.resetModal({
+      modalTitle: "Confirmation",
+      modalContent: `Are you sure you want to reset the network data for the selected node?`,
+      modalType: "prompt",
+      modalContentType: "html",
+    }).then(async (resp) => {
+      if (resp === "yes") {
+        this.resetNetworkDataForNode();
+      }
+    });
   }
 
   nodeChangeHandler() {

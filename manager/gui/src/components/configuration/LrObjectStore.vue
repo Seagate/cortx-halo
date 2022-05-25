@@ -106,7 +106,7 @@
                 </v-btn>
                 <v-btn
                   color="csmdisabled"
-                  @click="getLimit(true)"
+                  @click="resetConfirmation()"
                   depressed
                   dark
                   >Reset</v-btn
@@ -179,6 +179,7 @@ import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
 export default class LrObjectStore extends Vue {
   panel = 0;
   limit = {};
+  resetModal = create<SgtDialogModel>(SgtDialog);
   SSLConfig = {
     status: null,
     SSLCertificateName: null,
@@ -196,14 +197,31 @@ export default class LrObjectStore extends Vue {
   };
 
   mounted() {
-    this.getLimit();
+    this.getLimits();
     this.getSSLConfig();
   }
 
-  async getLimit(isReset = false) {
-    const path = isReset ? "config/default-limit" : "config/limit";
-    const resp: any = await Api.getData(path, { isDummy: true });
+  async getLimits() {
+    const resp: any = await Api.getData("config/limit", { isDummy: true });
     this.limit = JSON.parse(JSON.stringify(resp.data));
+  }
+
+  async resetLimitValues() {
+    //API call to reset the limit value followed by the getLimits call
+    this.getLimits();
+  }
+
+  async resetConfirmation() {
+    const result = await this.resetModal({
+      modalTitle: "Confirmation",
+      modalContent: `Are you sure you want to reset the data?`,
+      modalType: "prompt",
+      modalContentType: "html",
+    }).then(async (resp) => {
+      if (resp === "yes") {
+        this.resetLimitValues();
+      }
+    });
   }
 
   async getSSLConfig() {
