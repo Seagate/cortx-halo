@@ -31,66 +31,89 @@
       <v-expansion-panel>
         <v-expansion-panel-header><b> Limits </b></v-expansion-panel-header>
         <v-expansion-panel-content class="panel-content">
-          <v-row class="field-row">
-            <v-col cols="3" class="field-label">
-              Max S3 Account
-              <SgtTooltipIcon>
-                Maximum limit of S3 accounts that can be created in the system.
-                Exceeding this value will cause an error.
-              </SgtTooltipIcon>
-            </v-col>
-            <v-col cols="4">
-              <SgtDropdown
-                :dropdownOptions="[5, 10, 20, 50, 100]"
-                placeholder="select max s3 Account"
-                v-model="limit.maxS3Account"
-              />
-            </v-col>
-          </v-row>
-          <v-row class="field-row">
-            <v-col cols="3" class="field-label">
-              Max IAM user
-              <SgtTooltipIcon>
-                Maximum limit of IAM user accounts that can be created in the
-                system. Exceeding this value will cause an error.
-              </SgtTooltipIcon>
-            </v-col>
-            <v-col cols="4">
-              <SgtDropdown
-                :dropdownOptions="[5, 10, 20, 50, 100, 1000]"
-                placeholder="select max IAM user"
-                v-model="limit.maxIAMUser"
-              />
-            </v-col>
-          </v-row>
-          <v-row class="field-row">
-            <v-col cols="3" class="field-label">
-              Max Bucket
-              <SgtTooltipIcon>
-                Maximum limit of S3 buckets that can be created in the system.
-                Exceeding this value will cause an error.
-              </SgtTooltipIcon>
-            </v-col>
-            <v-col cols="4">
-              <SgtDropdown
-                :dropdownOptions="[5, 10, 20, 50, 100, 1000]"
-                placeholder="select max bucket"
-                v-model="limit.maxBucket"
-              />
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row class="field-row">
-            <v-col cols="3"></v-col>
-            <v-col cols="4" class="button-col">
-              <v-btn class="mr-5" color="primary" @click="applyLimit" dark
-                >Apply
-              </v-btn>
-              <v-btn color="csmdisabled" @click="resetLimit" depressed dark
-                >Reset</v-btn
-              >
-            </v-col>
-          </v-row>
+          <v-form v-model="isLimitsValid">
+            <v-row class="field-row">
+              <v-col cols="3" class="field-label">
+                Max S3 Account
+                <SgtTooltipIcon>
+                  Maximum limit of S3 accounts that can be created in the
+                  system. Exceeding this value will cause an error.
+                </SgtTooltipIcon>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  v-model="limit.maxS3Account"
+                  :rules="validationRules.number"
+                  placeholder="Enter max S3 Account"
+                  type="number"
+                  min="1"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row class="field-row">
+              <v-col cols="3" class="field-label">
+                Max IAM user
+                <SgtTooltipIcon>
+                  Maximum limit of IAM user accounts that can be created in the
+                  system. Exceeding this value will cause an error.
+                </SgtTooltipIcon>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  v-model="limit.maxIAMUser"
+                  :rules="validationRules.number"
+                  placeholder="Enter max IAM user"
+                  type="number"
+                  min="1"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row class="field-row">
+              <v-col cols="3" class="field-label">
+                Max Bucket
+                <SgtTooltipIcon>
+                  Maximum limit of S3 buckets that can be created in the system.
+                  Exceeding this value will cause an error.
+                </SgtTooltipIcon>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  v-model="limit.maxBucket"
+                  :rules="validationRules.number"
+                  placeholder="Enter max bucket"
+                  type="number"
+                  min="1"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-divider></v-divider>
+            <v-row class="field-row">
+              <v-col cols="3"></v-col>
+              <v-col cols="4" class="button-col">
+                <v-btn
+                  class="mr-5"
+                  color="primary"
+                  @click="applyLimit"
+                  :disabled="!isLimitsValid"
+                  :dark="isLimitsValid"
+                  >Apply
+                </v-btn>
+                <v-btn
+                  color="csmdisabled"
+                  @click="resetConfirmation()"
+                  depressed
+                  dark
+                  >Reset</v-btn
+                >
+              </v-col>
+            </v-row>
+          </v-form>
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
@@ -155,37 +178,59 @@ import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
 })
 export default class LrObjectStore extends Vue {
   panel = 0;
-  limit = {
-    maxS3Account: null,
-    maxIAMUser: null,
-    maxBucket: null,
-  };
+  limit = {};
+  resetModal = create<SgtDialogModel>(SgtDialog);
   SSLConfig = {
     status: null,
     SSLCertificateName: null,
   };
   SSLFile = [];
   SSLModal = create<SgtDialogModel>(SgtDialog);
-  limitInitialValues = {};
+
+  isLimitsValid = false;
+
+  validationRules = {
+    number: [
+      (val: number) => !!val || "This field is required",
+      (val: string) => /^\d+$/.test(val) || "Invalid value",
+    ],
+  };
 
   mounted() {
-    this.getLimit();
+    this.getLimits();
     this.getSSLConfig();
   }
-  async getLimit() {
+
+  async getLimits() {
     const resp: any = await Api.getData("config/limit", { isDummy: true });
-    this.limitInitialValues = JSON.parse(JSON.stringify(resp.data));
-    this.limit = resp.data;
+    this.limit = JSON.parse(JSON.stringify(resp.data));
   }
+
+  async resetLimitValues() {
+    //API call to reset the limit value followed by the getLimits call
+    this.getLimits();
+  }
+
+  async resetConfirmation() {
+    const result = await this.resetModal({
+      modalTitle: "Confirmation",
+      modalContent: `Are you sure you want to reset the data?`,
+      modalType: "prompt",
+      modalContentType: "html",
+    }).then(async (resp) => {
+      if (resp === "yes") {
+        this.resetLimitValues();
+      }
+    });
+  }
+
   async getSSLConfig() {
     const resp: any = await Api.getData("config/SSLConfig", { isDummy: true });
     this.SSLConfig = resp.data;
   }
+
   applyLimit() {
     //api call
-  }
-  resetLimit() {
-    this.limit = JSON.parse(JSON.stringify(this.limitInitialValues));
   }
 
   async installCertificateConfirmation() {
