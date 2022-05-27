@@ -40,25 +40,6 @@
         <v-expansion-panel-content class="panel-content">
           <v-form v-model="isSettingsValid">
             <v-row class="field-row">
-              <v-col cols="3" class="field-label">
-                SMTP Server
-                <SgtTooltipIcon>
-                  Address of the SMTP server. It could be an IP address or a
-                  FQDN.
-                </SgtTooltipIcon>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  v-model="notificationSettings.smtpServer"
-                  :rules="validationRules.serverAddress"
-                  placeholder="SMTP Server"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-            </v-row>
-
-            <!-- <v-row class="field-row">
               <v-col cols="3" class="field-label"> Protocol </v-col>
               <v-col cols="4">
                 <SgtDropdown
@@ -67,15 +48,33 @@
                   v-model="notificationSettings.protocol"
                 />
               </v-col>
-            </v-row> -->
+            </v-row>
 
             <v-row class="field-row">
-              <v-col cols="3" class="field-label"> SMTP Port </v-col>
+              <v-col cols="3" class="field-label">
+                Server
+                <SgtTooltipIcon>
+                  Address of the server. It could be an IP address or a FQDN.
+                </SgtTooltipIcon>
+              </v-col>
               <v-col cols="4">
                 <v-text-field
-                  v-model="notificationSettings.smtpPort"
+                  v-model="notificationSettings.server"
+                  :rules="validationRules.serverAddress"
+                  placeholder="Server address"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row class="field-row">
+              <v-col cols="3" class="field-label"> Port </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  v-model="notificationSettings.port"
                   :rules="validationRules.portNumber"
-                  placeholder="SMTP Port"
+                  placeholder="Port number"
                   type="number"
                   min="1"
                   max="65536"
@@ -224,13 +223,14 @@ import {
 })
 export default class LrSystemHealthConfiguration extends Vue {
   panel = 0;
+  protocolOptions: string[] = [];
   resetModal = create<SgtDialogModel>(SgtDialog);
   isVerified = false;
   isSettingsValid = false;
 
   notificationSettings = {
-    smtpServer: null,
-    smtpPort: null,
+    server: null,
+    port: null,
     protocol: null,
     senderEmail: null,
     senderPassword: null,
@@ -258,12 +258,9 @@ export default class LrSystemHealthConfiguration extends Vue {
     ],
     confirmPassword: [
       (val: string) => (val || "").length > 0 || "Password is required",
-      (val: string) => {
-        return (
-          val === this.notificationSettings.senderPassword ||
-          "Passwords don't match"
-        );
-      },
+      (val: string) =>
+        val === this.notificationSettings.senderPassword ||
+        "Passwords don't match",
     ],
     receiverEmails: [
       (val: string) => (val || "").length > 0 || "Email is required",
@@ -285,6 +282,7 @@ export default class LrSystemHealthConfiguration extends Vue {
   }
 
   async mounted() {
+    this.protocolOptions = emailProtocols;
     this.getNotificationSettings();
   }
 
@@ -295,18 +293,22 @@ export default class LrSystemHealthConfiguration extends Vue {
         isDummy: true,
       }
     );
-    this.notificationSettings = {
-      ...res.data,
-      confirmPassword: res.data.senderPassword,
-    };
+
+    this.notificationSettings.protocol = res.data.protocol;
+    this.notificationSettings.server = res.data.server;
+    this.notificationSettings.port = res.data.port;
+    this.notificationSettings.senderEmail = res.data.senderEmail;
+    this.notificationSettings.receiverEmails = res.data.receiverEmails;
   }
 
   testEmailNotification() {
     //API call to test the email notification
+    this.testEmailsSentInfo();
   }
 
   applyNotificationSettings() {
     //API call to apply the notification settings
+    this.appliedNotificationSettings();
   }
 
   async resetConfirmation() {
@@ -322,11 +324,32 @@ export default class LrSystemHealthConfiguration extends Vue {
       }
     });
   }
+
+  async testEmailsSentInfo() {
+    const result = await this.resetModal({
+      modalTitle: "Success",
+      modalContent: `Emails have been sent to the receivers' addresses. Click the checkbox if the mail has been received.`,
+      modalType: "message",
+      modalContentType: "text",
+    });
+  }
+
+  async appliedNotificationSettings() {
+    const result = await this.resetModal({
+      modalTitle: "Success",
+      modalContent: `Notification settings have been applied.`,
+      modalType: "message",
+      modalContentType: "text",
+    });
+  }
 }
 </script>
 <style lang="scss" scoped>
 .verify-config-field {
   display: flex;
-  align-items: center;
+
+  .v-input--checkbox {
+    margin-top: 0;
+  }
 }
 </style>

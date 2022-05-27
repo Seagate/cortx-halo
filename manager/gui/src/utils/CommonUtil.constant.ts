@@ -57,8 +57,4 @@ export const logLevels = [
   { label: "Fatal", value: "fatal" },
 ];
 
-export const emailProtocols = [
-  { label: "SMTP", value: "smtp" },
-  { label: "POP", value: "pop" },
-  { label: "IMAP", value: "imap" },
-];
+export const emailProtocols = ["SMTP", "POP", "IMAP"];
