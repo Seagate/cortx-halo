@@ -46,6 +46,7 @@
                   :dropdownOptions="protocolOptions"
                   placeholder="Protocol"
                   v-model="notificationSettings.protocol"
+                  data-test="protocol-dropdown-input"
                 />
               </v-col>
             </v-row>
@@ -57,13 +58,15 @@
                   Address of the server. It could be an IP address or a FQDN.
                 </SgtTooltipIcon>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="4" data-test="server-input-container">
                 <v-text-field
                   v-model="notificationSettings.server"
                   :rules="validationRules.serverAddress"
                   placeholder="Server address"
                   outlined
                   dense
+                  id="server-input-field"
+                  data-test="server-input"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -80,6 +83,7 @@
                   max="65536"
                   outlined
                   dense
+                  data-test="port-input"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -97,6 +101,7 @@
                   type="email"
                   outlined
                   dense
+                  data-test="email-input"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -118,6 +123,7 @@
                   type="password"
                   outlined
                   dense
+                  data-test="password-input"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -131,6 +137,7 @@
                   type="password"
                   outlined
                   dense
+                  data-test="confirm-password-input"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -143,7 +150,18 @@
                   placeholder="Receiver Emails"
                   outlined
                   dense
+                  data-test="receiver-emails-input"
                 ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row class="field-row">
+              <v-col cols="3" class="field-label"> test </v-col>
+              <v-col cols="4">
+                <input
+                  v-model="test"
+                  type="text"
+                  data-test="test-input-field"
+                />
               </v-col>
             </v-row>
             <v-row class="field-row">
@@ -162,12 +180,14 @@
                   :disabled="!isSettingsValid"
                   :dark="isSettingsValid"
                   @click="testEmailNotification"
+                  data-test="test-btn"
                 >
                   Test
                 </v-btn>
                 <v-checkbox
                   v-model="isVerified"
                   label="Verified that receiver has recieved the email"
+                  data-test="verified-checkbox"
                 ></v-checkbox>
               </v-col>
             </v-row>
@@ -182,6 +202,7 @@
                   @click="applyNotificationSettings"
                   :disabled="disableApply"
                   :dark="isSettingsValid && isVerified"
+                  data-test="apply-btn"
                   >Apply
                 </v-btn>
                 <v-btn
@@ -189,6 +210,7 @@
                   @click="resetConfirmation()"
                   depressed
                   dark
+                  data-test="reset-btn"
                   >Reset</v-btn
                 >
               </v-col>
@@ -223,6 +245,7 @@ import {
 })
 export default class LrSystemHealthConfiguration extends Vue {
   panel = 0;
+  test = "";
   protocolOptions: string[] = [];
   resetModal = create<SgtDialogModel>(SgtDialog);
   isVerified = false;

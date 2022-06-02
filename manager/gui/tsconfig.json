@@ -14,10 +14,10 @@
     "sourceMap": true,
     "baseUrl": ".",
     "strictPropertyInitialization": false,
-    "types": ["webpack-env", "jest"],
+    "types": ["webpack-env", "jest", "vuetify"],
     "paths": {
       "@/*": ["src/*"],
-      "@lib/*":["src/lib/components/*"]
+      "@lib/*": ["src/lib/components/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
