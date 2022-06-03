@@ -1,13 +1,14 @@
 import { mount, createLocalVue } from "@vue/test-utils";
 import LrSystemHealthConfiguration from "@/components/configuration/LrSystemHealthConfiguration.vue";
 import Vuetify from "vuetify";
+import { Vue } from "vue-property-decorator";
 
 describe("LrSystemHealthConfiguration", () => {
   let wrapper: any;
   const localVue = createLocalVue();
   let vuetify: Vuetify;
 
-  beforeEach(() => {
+  beforeAll(() => {
     vuetify = new Vuetify();
     wrapper = mount(LrSystemHealthConfiguration, { localVue, vuetify });
   });
@@ -58,7 +59,7 @@ describe("LrSystemHealthConfiguration", () => {
     expect(receiverEmailsInput.exists()).toBe(true);
   });
 
-  test(`Presence of test cta button.`, () => {
+  test(`Presence of 'Test' button.`, () => {
     const testButton = wrapper.find(`[data-test="test-btn"]`);
     expect(testButton.exists()).toBe(true);
   });
@@ -68,33 +69,113 @@ describe("LrSystemHealthConfiguration", () => {
     expect(verifiedCheckbox.exists()).toBe(true);
   });
 
-  test(`Presence of apply button`, () => {
+  test(`Presence of 'Apply' button`, () => {
     const applyButton = wrapper.find(`[data-test="apply-btn"]`);
     expect(applyButton.exists()).toBe(true);
   });
 
-  test(`Presence of reset button`, () => {
+  test(`Presence of 'Reset' button`, () => {
     const resetButton = wrapper.find(`[data-test="reset-btn"]`);
     expect(resetButton.exists()).toBe(true);
   });
 
   test(`Validation of server input field`, async () => {
-    const serverInput = wrapper
-      .findComponent({ name: "v-text-field" })
-      .find(`[data-test="server-input"]`);
-
+    const serverInput = wrapper.get(`[data-test="server-input"]`);
     await serverInput.setValue("test value");
+    await Vue.nextTick();
 
-    const serverInputContainer = wrapper
-      .findAllComponents({ name: "v-col" })
-      .filter(
-        (w: any) => w.attributes()["data-test"] === "server-input-container"
-      )
-      .at(0);
-    console.log("server input container: ", serverInputContainer.html());
+    expect(wrapper.text()).toContain("Invalid value");
+  });
 
-    expect(serverInputContainer.find(".v-input.error-text").exists()).toBe(
-      true
+  test(`Validation of port input field`, async () => {
+    const portInput = wrapper.get(`[data-test="port-input"]`);
+    await portInput.setValue("98745");
+    await Vue.nextTick();
+
+    expect(wrapper.text()).toContain("Invalid value");
+  });
+
+  test(`Validation of email input field`, async () => {
+    const emailInput = wrapper.get(`[data-test="email-input"]`);
+    await emailInput.setValue("test value");
+    await Vue.nextTick();
+
+    expect(wrapper.text()).toContain("Invalid value");
+  });
+
+  test(`Validation of password input field`, async () => {
+    const password = wrapper.get(`[data-test="password-input"]`);
+    await password.setValue("randomvalue");
+    await Vue.nextTick();
+
+    expect(wrapper.text()).toContain("Invalid value");
+  });
+
+  test(`Validation of confirm password input field`, async () => {
+    const password = wrapper.get(`[data-test="password-input"]`);
+    await password.setValue("Seagate@1");
+    await Vue.nextTick();
+    const confirmPasswordInput = wrapper.get(
+      `[data-test="confirm-password-input"]`
     );
+    await confirmPasswordInput.setValue("Seagate@2");
+    await Vue.nextTick();
+
+    expect(wrapper.text()).toContain("Passwords don't match");
+  });
+
+  test(`Validation of receiver emails input field`, async () => {
+    const receiverEmails = wrapper.get(`[data-test="receiver-emails-input"]`);
+    await receiverEmails.setValue("random value");
+    await Vue.nextTick();
+
+    expect(wrapper.text()).toContain("Invalid value");
+  });
+
+  test(`Whether the 'test' button is disabled initially`, async () => {
+    const testButton = wrapper.get(`[data-test="test-btn"]`);
+    expect(testButton.attributes("disabled")).toBe("disabled");
+  });
+
+  test(`Whether the 'test' button is enabled after providing correct inputs`, async () => {
+    await wrapper.setData({
+      notificationSettings: {
+        server: "10.25.14.36",
+        port: "9225",
+        protocol: "SMTP",
+        senderEmail: "admin@seagate.com",
+        senderPassword: "Seagate@1",
+        confirmPassword: "Seagate@1",
+        receiverEmails: "user1@seagate.com, user2@seagate.com",
+      },
+    });
+
+    await Vue.nextTick();
+
+    const testButton = wrapper.get(`[data-test="test-btn"]`);
+    expect(testButton.attributes("disabled")).toBe(undefined);
+  });
+
+  test(`Whether the 'apply' button is disabled initially`, async () => {
+    const applyButton = wrapper.get(`[data-test="apply-btn"]`);
+    expect(applyButton.attributes("disabled")).toBe("disabled");
+  });
+
+  test(`Whether the 'apply' button is enabled if the inputs are valid and also verify checkbox is selected`, async () => {
+    await wrapper.setData({
+      notificationSettings: {
+        server: "10.25.14.36",
+        port: "9225",
+        protocol: "SMTP",
+        senderEmail: "admin@seagate.com",
+        senderPassword: "Seagate@1",
+        confirmPassword: "Seagate@1",
+        receiverEmails: "user1@seagate.com, user2@seagate.com",
+      },
+      isVerified: true,
+    });
+
+    const applyButton = wrapper.get(`[data-test="apply-btn"]`);
+    expect(applyButton.attributes("disabled")).toBe(undefined);
   });
 });

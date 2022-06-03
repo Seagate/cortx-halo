@@ -155,16 +155,6 @@
               </v-col>
             </v-row>
             <v-row class="field-row">
-              <v-col cols="3" class="field-label"> test </v-col>
-              <v-col cols="4">
-                <input
-                  v-model="test"
-                  type="text"
-                  data-test="test-input-field"
-                />
-              </v-col>
-            </v-row>
-            <v-row class="field-row">
               <v-col cols="3" class="field-label">
                 Verify Config
                 <SgtTooltipIcon>
