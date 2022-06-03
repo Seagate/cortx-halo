@@ -13,68 +13,43 @@ describe("LrSystemHealthConfiguration", () => {
     wrapper = mount(LrSystemHealthConfiguration, { localVue, vuetify });
   });
 
-  test(`Title should be "System Health"`, () => {
-    const pageTitle = wrapper.get(".page-title");
-    expect(pageTitle.text()).toMatch("System Health");
-  });
-
-  test(`Presence of protocol dropdown field`, () => {
+  test(`Presence of input fields in the form`, () => {
     const protocolDropdown = wrapper.find(
       `[data-test="protocol-dropdown-input"]`
     );
     expect(protocolDropdown.exists()).toBe(true);
-  });
 
-  test(`Presence of server input field`, () => {
     const serverInput = wrapper.find(`[data-test="server-input"]`);
     expect(serverInput.exists()).toBe(true);
-  });
 
-  test(`Presence of port input field`, () => {
     const portInput = wrapper.find(`[data-test="port-input"]`);
     expect(portInput.exists()).toBe(true);
-  });
 
-  test(`Presence of email input field`, () => {
     const emailInput = wrapper.find(`[data-test="email-input"]`);
     expect(emailInput.exists()).toBe(true);
-  });
 
-  test(`Presence of password input field`, () => {
     const passwordInput = wrapper.find(`[data-test="password-input"]`);
     expect(passwordInput.exists()).toBe(true);
-  });
 
-  test(`Presence of confirm password input field`, () => {
     const confirmPasswordInput = wrapper.find(
       `[data-test="confirm-password-input"]`
     );
     expect(confirmPasswordInput.exists()).toBe(true);
-  });
 
-  test(`Presence of receiver emails input field`, () => {
     const receiverEmailsInput = wrapper.find(
       `[data-test="receiver-emails-input"]`
     );
     expect(receiverEmailsInput.exists()).toBe(true);
-  });
 
-  test(`Presence of 'Test' button.`, () => {
     const testButton = wrapper.find(`[data-test="test-btn"]`);
     expect(testButton.exists()).toBe(true);
-  });
 
-  test(`Presence of verified checkbox field`, () => {
     const verifiedCheckbox = wrapper.find(`[data-test="verified-checkbox"]`);
     expect(verifiedCheckbox.exists()).toBe(true);
-  });
 
-  test(`Presence of 'Apply' button`, () => {
     const applyButton = wrapper.find(`[data-test="apply-btn"]`);
     expect(applyButton.exists()).toBe(true);
-  });
 
-  test(`Presence of 'Reset' button`, () => {
     const resetButton = wrapper.find(`[data-test="reset-btn"]`);
     expect(resetButton.exists()).toBe(true);
   });
