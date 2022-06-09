@@ -31,6 +31,7 @@ import LrObjectStore from "../components/configuration/LrObjectStore.vue";
 import LrNodeConfiguration from "../components/configuration/LrNodeConfiguration.vue";
 import LrClusterConfiguration from "../components/configuration/LrClusterConfiguration.vue";
 import LrMaintenanceUpdateSoftware from "../components/maintenance/LrMaintenanceUpdateSoftware.vue";
+import LrSupport from "../components/configuration/LrSupport.vue";
 
 Vue.use(VueRouter);
 
@@ -116,6 +117,11 @@ const routes: Array<RouteConfig> = [
         name: "cluster",
         component: LrClusterConfiguration,
       },
+      {
+        path: "support",
+        name: "support",
+        component: LrSupport
+      }
     ],
   },
 ];
