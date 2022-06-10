@@ -117,6 +117,25 @@ describe('Configuration-LrSupport.vue', () => {
         expect(applyBtn.attributes("disabled")).toBe("disabled");
     })
 
+    it('checks form submit on apply button click', async () => {
+        const applyUploadFunc = jest.spyOn(wrapper.vm, 'applyUploadConfig');
+        await wrapper.setData({
+            supportConfig: {
+                protocol: "FTP",
+                userName: "Cortxadmin",
+                serverName: "test server",
+                password: "Seagate@1",
+                location: "India"
+            }
+        });
+        await Vue.nextTick();
+        const applyBtn = wrapper.get("[data-test='apply-btn']");
+        applyBtn.trigger('click');
+        await Vue.nextTick();
+        expect(applyUploadFunc).toHaveBeenCalled();
+        applyUploadFunc.mockRestore();
+    })
+
     it('checks form reset on reset button click', async () => {
         const resetFun = jest.spyOn(wrapper.vm, 'resetConfirmation');
         await wrapper.setData({
