@@ -10,17 +10,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see https://www.gnu.org/licenses/.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  * For any questions about this software or licensing,
  * please email opensource@seagate.com.
  */
-/* eslint-disable */
-export const usernameRegex = /^[a-zA-Z0-9_-]{4,56}$/;
-export const emailRegex =
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-export const passwordRegex =
-  /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)\_\+\-\=\[\]\{\}\|\'])[A-Za-z\d!@#\$%\^&\*\(\)\_\+\-\=\[\]\{\}\|\']{8,}/;
-export const ipAddressRegex =
-  /\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b/;
-export const fqdnRegex =
-  /(?=^.{4,253}\.?$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}\.?$)/;
+import { passwordTest, usernameTest } from "./CommonUtilFunctions";
+
+export const requiredValidation = (value: any) => !!value || "This field is required";
+export const numberValidation = (value: any) => (typeof value === 'number') || "The Field is type Number";
+export const passwordValidation = (value: any) => (value && passwordTest(value)) || "Please enter a valid password";
+export const usernameValidation = (value: any) => (value && usernameTest(value)) ||
+    "Should be Alphanumeric and can contain underscore (_) and dash (-) only.";
+

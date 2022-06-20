@@ -667,33 +667,6 @@
       ]
     }
   },
-  "config/default-cluster-info": {
-    "data": {
-      "ntp": {
-        "serverAddress": "21.22.23.24",
-        "timeZoneOffset": "EST"
-      },
-      "log": {
-        "logLevel": "debug",
-        "nodes": [
-          {
-            "id": "1",
-            "name": "Node1"
-          },
-          {
-            "id": "3",
-            "name": "Node3"
-          }
-        ],
-        "services": [
-          {
-            "id": "3",
-            "name": "Service3"
-          }
-        ]
-      }
-    }
-  },
   "config/services-list": {
     "data": [
       {
@@ -709,5 +682,26 @@
         "id": "3"
       }
     ]
+  },
+  "config/supportConfig": {
+    "data": {
+      "protocol": "FTP",
+      "userName": "Cortxadmin",
+      "serverName": "test server"
+    }
+  },
+  "config/supportAccountStatus": {
+    "data": {
+      "supportAccountStatus": "enabled"
+    }
+  },
+  "config/system-health/notification-settings": {
+    "data": {
+      "server": "10.22.55.82",
+      "port": "553",
+      "protocol": "SMTP",
+      "senderEmail": "admin@seagate.com",
+      "receiverEmails": "user1@seagate.com, user2@seagate.com"
+    }
   }
 }
