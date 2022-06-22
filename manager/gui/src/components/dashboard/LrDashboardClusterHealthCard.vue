@@ -16,28 +16,15 @@
 -->
 <template>
   <div class="health-widget-container">
-    <SgtCard
-      title="clusterHealth"
-      :showZoomIcon="true"
-      @zoom-click="zoomIconHandler"
-    >
-      <template v-if="clusterDetails.status">
-        <LrDashboardInfoCard
-          :title="clusterDetails.name"
-          :description="`${clusterDetails.status}`"
-          :imgUrl="getClusterHealthImgUrl(clusterDetails.status)"
-          @click="cardClickHandler('/health')"
-        />
-      </template>
-      <p class="text-h6 font-weight-medium">{{ $t("nodes") }}</p>
-      <div class="node-health-cards-container">
-        <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <LrDashboardInfoCard
-            :key="index"
-            :title="cardDetail.title"
-            :description="cardDetail.description"
-            :imgUrl="cardDetail.imgUrl"
-            @click="cardClickHandler(cardDetail.navPath)"
+    <SgtCard title="cluster Health" :showZoomIcon="false">
+      <div class="cluster-health-card-container">
+        <template v-if="clusterDetails.status">
+          <SgtInfoCard
+            :title="clusterDetails.name"
+            :description="`${clusterDetails.status}`"
+            :imgUrl="getClusterHealthImgUrl(clusterDetails.status)"
+            @click="cardClickHandler('/health')"
+            :backgroundColor="getClusterHealthBackground(clusterDetails.status)"
           />
         </template>
       </div>
@@ -46,38 +33,23 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LrDashboardInfoCard from "./LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
-import {
-  DashboardCardDetail,
-  HealthData,
-  ClusterDetails,
-  NodeStatus,
-} from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
 import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardClusterHealthCard",
-  components: { LrDashboardInfoCard, SgtCard },
+  components: { SgtInfoCard, SgtCard },
 })
 export default class LrDashboardClusterHealthCard extends Vue {
-  public dashboardCardDetails: DashboardCardDetail[] = [];
-  public clusterDetails: ClusterDetails = {} as ClusterDetails;
+  public clusterDetails: any = {};
 
-  public async mounted() {
-    const data = (await Api.getData("/dashboard/health", {
+  mounted() {
+    Api.getData("/dashboard/health", {
       isDummy: true,
-    })) as HealthData;
-    this.clusterDetails = data.cluster;
-    this.dashboardCardDetails = dashboardCardData.clusterNodes.map((datum) => {
-      const statusType = datum.description.split("Nodes")[0];
-      const nodeCount = +data.nodes[statusType as keyof NodeStatus];
-      return {
-        ...datum,
-        title: nodeCount,
-        imgUrl: nodeCount === 0 ? "health-zero-nodes.svg" : datum.imgUrl,
-      };
+    }).then((resp: any) => {
+      this.clusterDetails = resp["cluster"];
     });
   }
 
@@ -88,34 +60,25 @@ export default class LrDashboardClusterHealthCard extends Vue {
   getClusterHealthImgUrl(
     healthType: "offline" | "degraded" | "failed" | "online"
   ) {
-    const healthImageUrl = {
-      offline: "health-offline-cluster.svg",
-      degraded: "health-degraded-cluster.svg",
-      failed: "health-failed-cluster.svg",
-      online: "health-online-cluster.svg",
-    };
-    return healthImageUrl[healthType];
+    if (healthType && dashboardCardData.clusterHealth[healthType])
+      return dashboardCardData.clusterHealth[healthType].image;
+    else return dashboardCardData.clusterHealth["offline"].image;
   }
 
-  zoomIconHandler() {
-    this.$router.push("/health");
+  getClusterHealthBackground(
+    healthType: "offline" | "degraded" | "failed" | "online"
+  ) {
+    if (healthType && dashboardCardData.clusterHealth[healthType])
+      return dashboardCardData.clusterHealth[healthType].color;
+    else return "#FFFFFF";
   }
 }
 </script>
 <style lang="scss" scoped>
-.node-health-cards-container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
 .info-card-container {
   margin-bottom: 1em;
 }
 .health-widget-container > .info-card-container {
   width: 100%;
-}
-.node-health-cards-container > * {
-  width: 48%;
-  justify-content: flex-start;
 }
 </style>

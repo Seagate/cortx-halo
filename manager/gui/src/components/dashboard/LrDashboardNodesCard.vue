@@ -15,13 +15,13 @@
 * please email opensource@seagate.com.
 -->
 <template>
-  <div class="bg-activities-widget-container">
+  <div class="health-widget-container">
     <SgtCard
-      title="backgroundActivities"
+      :title="nodeCount+ ' nodes'"
       :showZoomIcon="true"
       @zoom-click="zoomIconHandler"
     >
-      <div class="bg-activities-cards-container">
+      <div class="node-health-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
           <SgtInfoCard
             :key="index"
@@ -29,6 +29,7 @@
             :description="cardDetail.description"
             :imgUrl="cardDetail.imgUrl"
             @click="cardClickHandler(cardDetail.navPath)"
+            :backgroundColor="cardDetail.color"
           />
         </template>
       </div>
@@ -41,45 +42,61 @@ import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import {
   DashboardCardDetail,
-  BackgroundActivitiesData,
+  HealthData,
+  ClusterDetails,
+  NodeStatus,
 } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
 import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
-  name: "LrDashboardBgActivitiesCard",
+  name: "LrDashboardNodesCard",
   components: { SgtInfoCard, SgtCard },
 })
-export default class LrDashboardBgActivitiesCard extends Vue {
+export default class LrDashboardNodesCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
+  public clusterDetails: ClusterDetails = {} as ClusterDetails;
+  public nodeCount = 0;
 
   public async mounted() {
-    const data = (await Api.getData("/dashboard/background-activities", {
+    const data = (await Api.getData("/dashboard/health", {
       isDummy: true,
-    })) as BackgroundActivitiesData;
-    this.dashboardCardDetails = dashboardCardData.bgActivities.map((datum) => ({
-      ...datum,
-      title: data[datum.description as keyof BackgroundActivitiesData],
-    }));
+    })) as HealthData;
+    this.clusterDetails = data.cluster;
+    this.dashboardCardDetails = dashboardCardData.clusterNodes.map((datum) => {
+      const statusType = datum.description.split("Nodes")[0];
+      const nodeCount = +data.nodes[statusType as keyof NodeStatus];
+      this.nodeCount = this.nodeCount+nodeCount;
+      return {
+        ...datum,
+        title: nodeCount,
+        imgUrl: nodeCount === 0 ? "health-zero-nodes.svg" : datum.imgUrl,
+      };
+    });
   }
 
   cardClickHandler(routePath: string) {
-    // nav path given in performanceCardDetails will be received here and it can be used for redirects
+    this.$router.push(routePath);
   }
 
   zoomIconHandler() {
-    //Redirect to the background activities page when you have one
-    // this.$router.push("/");
+    this.$router.push("/health");
   }
 }
 </script>
 <style lang="scss" scoped>
-.bg-activities-cards-container {
+.node-health-cards-container {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
-.bg-activities-cards-container > * {
+.info-card-container {
   margin-bottom: 1em;
-  justify-content: flex-start;
+}
+.health-widget-container > .info-card-container {
+  width: 100%;
+}
+.node-health-cards-container > * {
+  width: 24%;
 }
 </style>

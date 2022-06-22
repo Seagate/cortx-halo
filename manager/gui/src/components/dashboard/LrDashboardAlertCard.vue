@@ -19,7 +19,7 @@
     <SgtCard title="alerts" :showZoomIcon="true" @zoom-click="zoomIconHandler">
       <div class="alert-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <LrDashboardInfoCard
+          <SgtInfoCard
             :key="index"
             :title="cardDetail.title"
             :description="cardDetail.description"
@@ -33,7 +33,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LrDashboardInfoCard from "./LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import { AlertData, DashboardCardDetail } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
@@ -41,7 +41,7 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardAlertCard",
-  components: { LrDashboardInfoCard, SgtCard },
+  components: { SgtInfoCard, SgtCard },
 })
 export default class LrDashboardAlertCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];

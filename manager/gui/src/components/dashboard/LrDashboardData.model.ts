@@ -25,6 +25,9 @@ export interface StorageComponentsData {
   buckets: number;
   objects: number;
   underReplicated: number;
+  S3Accounts: number;
+  IAMUser: number;
+  dummyText: number;
 }
 
 export interface PerformanceData {

@@ -17,7 +17,7 @@
 <template>
   <v-card class="card-container pa-3" :v-bind="$props" :v-on="$listeners">
     <div class="title-section">
-      <p class="widget-title text-h6 font-weight-medium">{{ $t(title) }}</p>
+      <p class="widget-title text-h6 font-weight-medium">{{ title }}</p>
       <SgtSvgIcon
         icon="zoom-in.svg"
         hoverIcon="zoom-in-hover.svg"
