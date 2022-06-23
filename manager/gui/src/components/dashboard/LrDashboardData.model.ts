@@ -62,12 +62,11 @@ export interface NodeStatus {
 }
 export interface HealthData {
   cluster: ClusterDetails;
-  nodes: NodeStatus;
+  nodes: any;
 }
 
 export interface DashboardCardDetail {
   title: number | string;
   description: string;
   imgUrl: string;
-  navPath: string;
 }

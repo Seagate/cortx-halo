@@ -17,7 +17,7 @@
 <template>
   <div class="health-widget-container">
     <SgtCard
-      :title="nodeCount+ ' nodes'"
+      :title="nodeCount + ' nodes'"
       :showZoomIcon="true"
       @zoom-click="zoomIconHandler"
     >
@@ -28,8 +28,9 @@
             :title="cardDetail.title"
             :description="cardDetail.description"
             :imgUrl="cardDetail.imgUrl"
-            @click="cardClickHandler(cardDetail.navPath)"
+            @click="cardClickHandler(cardDetail.description)"
             :backgroundColor="cardDetail.color"
+            data-test="info-card"
           />
         </template>
       </div>
@@ -40,12 +41,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
-import {
-  DashboardCardDetail,
-  HealthData,
-  ClusterDetails,
-  NodeStatus,
-} from "./LrDashboardData.model";
+import { DashboardCardDetail, HealthData } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
 import { dashboardCardData } from "./LrDashboardCardData.constant";
 
@@ -55,28 +51,28 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 })
 export default class LrDashboardNodesCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
-  public clusterDetails: ClusterDetails = {} as ClusterDetails;
   public nodeCount = 0;
 
   public async mounted() {
     const data = (await Api.getData("/dashboard/health", {
       isDummy: true,
     })) as HealthData;
-    this.clusterDetails = data.cluster;
+    this.nodeCount =
+      data.nodes.online +
+      data.nodes.offline +
+      data.nodes.degraded +
+      data.nodes.failed;
     this.dashboardCardDetails = dashboardCardData.clusterNodes.map((datum) => {
-      const statusType = datum.description.split("Nodes")[0];
-      const nodeCount = +data.nodes[statusType as keyof NodeStatus];
-      this.nodeCount = this.nodeCount+nodeCount;
       return {
         ...datum,
-        title: nodeCount,
-        imgUrl: nodeCount === 0 ? "health-zero-nodes.svg" : datum.imgUrl,
+        titleNumber: data.nodes[datum.description],
+        imgUrl: this.nodeCount === 0 ? "health-zero-nodes.svg" : datum.imgUrl,
       };
     });
   }
 
-  cardClickHandler(routePath: string) {
-    this.$router.push(routePath);
+  cardClickHandler(status: string) {
+    this.$router.push("/health");
   }
 
   zoomIconHandler() {

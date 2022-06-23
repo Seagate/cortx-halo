@@ -72,28 +72,24 @@ export const dashboardCardData = {
       title: 0,
       description: "online",
       imgUrl: "health-online-nodes.svg",
-      navPath: "/health",
       color: "#E2F2DB"
     },
     {
       title: 0,
       description: "offline",
       imgUrl: "health-offline-nodes.svg",
-      navPath: "/health",
       color: "#EEEEEE"
     },
     {
       title: 0,
       description: "failed",
       imgUrl: "health-failed-nodes.svg",
-      navPath: "/health",
       color: "#FBE9EA"
     },
     {
       title: 0,
       description: "degraded",
       imgUrl: "health-degraded-nodes.svg",
-      navPath: "/health",
       color: "#FDEDD4"
     },
   ],
@@ -151,8 +147,8 @@ export const dashboardCardData = {
       image: "health-degraded-cluster.svg"
     },
     failed: {
-      color: "#E2F2DB",
-      image: "FBE9EA-failed-cluster.svg"
+      color: "#FBE9EA",
+      image: "health-failed-cluster.svg"
     }
   }
 };
