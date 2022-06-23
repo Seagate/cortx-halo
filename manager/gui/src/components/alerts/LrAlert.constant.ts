@@ -87,7 +87,12 @@ export const lrAlertConst = {
         align: "middle",
       },
       { text: "State", value: "state", width: "125px" },
-      { text: "Description", value: "description", type: "custom" },
+      {
+        text: "Description",
+        value: "description",
+        type: "custom",
+        width: "200px",
+      },
       { text: "Alert Type", value: "alert_type", width: "135px" },
       {
         text: "",
@@ -95,8 +100,39 @@ export const lrAlertConst = {
         type: "action",
         align: "end",
         sortable: false,
-        zoomIcon: true,
-        actionList: ["notification", "comment"],
+        actionList: [],
+        customActionList: [
+          {
+            name: "recommend",
+            path: "recommendation-icon.svg",
+            hoverPath: "recommendation-hover-icon.svg",
+            tooltip: "Recommendation",
+          },
+          {
+            name: "singleAcknowledge",
+            path: "acknowledge-icon.svg",
+            hoverPath: "acknowledge-hover-icon.svg",
+            tooltip: "Acknowledge",
+          },
+          {
+            name: "comment",
+            path: "comment-default.svg",
+            hoverPath: "comment-hover.svg",
+            tooltip: "Comment",
+          },
+          {
+            name: "occurrences",
+            path: "occurrences-icon.svg",
+            hoverPath: "occurrences-hover-icon.svg",
+            tooltip: "Occurrences",
+          },
+          {
+            name: "alertDetails",
+            path: "magnify-icon.svg",
+            hoverPath: "magnify-hover-icon.svg",
+            tooltip: "Alert Details",
+          },
+        ],
       },
     ],
     multiSelectButtons: [

@@ -19,7 +19,7 @@
     <v-card>
       <v-card-title>
         <div class="title-container">
-          Add Comment
+          Comments
           <img
             :src="require(`@/assets/icons/close-green.svg`)"
             @click="dialog = false"
@@ -33,24 +33,57 @@
         <div class="no-comment-label" v-if="alertComments.length === 0">
           No Comments
         </div>
-        <div
-          v-else
-          class="lr-comment"
-          v-for="comment in alertComments"
-          :key="comment.comment_id"
-        >
-          <div>
-            <span>{{ comment.comment_text }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="sub-txt">{{
-              new Date(comment.created_time * 1000) | timeago
-            }}</span>
-            <span class="sub-txt mx-3">|</span>
-            <span class="sub-txt">{{ comment.created_by }}</span>
+        <div class="comments-container" v-else>
+          <div
+            class="lr-comment"
+            v-for="comment in alertComments"
+            :key="comment.comment_id"
+          >
+            <div class="comment-wrapper">
+              <div class="created-by">
+                {{ comment.created_by }}
+              </div>
+              <div class="comment-text mt-1">
+                {{ comment.comment_text }}
+              </div>
+              <div class="mt-2 comment-timestamp">
+                {{ formattedTime(new Date(comment.created_time * 1000)) }}
+              </div>
+            </div>
+            <ul class="comment-replies-container" v-if="comment.replies">
+              <li
+                class="comment-reply"
+                v-for="reply in comment.replies"
+                :key="reply.comment_id"
+              >
+                <div class="created-by">
+                  {{ reply.created_by }}
+                </div>
+                <div class="comment-text mt-1">
+                  {{ reply.comment_text }}
+                </div>
+                <div class="mt-2 comment-timestamp">
+                  {{ formattedTime(new Date(reply.created_time * 1000)) }}
+                </div>
+              </li>
+            </ul>
+            <div class="add-reply">
+              <v-text-field
+                outlined
+                dense
+                class="mt-2"
+                name="reply"
+                label="Reply"
+                height="40"
+                hide-details="auto"
+                append-icon="mdi-send-circle"
+                @click:append="replyToComment(comment.comment_id, $event)"
+                @keyup.enter="replyToComment(comment.comment_id, $event)"
+              ></v-text-field>
+            </div>
           </div>
         </div>
-        <div class="comment-text">
+        <div class="comment-input">
           <v-textarea
             outlined
             name="comment"
@@ -58,6 +91,8 @@
             rows="3"
             row-height="30"
             v-model.trim="commentText"
+            :no-resize="true"
+            hide-details="auto"
           ></v-textarea>
           <span class="error-txt sub-txt">{{ errorMsg }}</span>
         </div>
@@ -65,7 +100,7 @@
       <v-divider></v-divider>
       <v-card-actions class="action-button-container">
         <v-btn color="primary" @click="addComment()" class="mr-2" dark
-          >Save</v-btn
+          >Comment</v-btn
         >
         <v-btn color="csmdisabled" @click="dialog = false" dark>Cancel</v-btn>
       </v-card-actions>
@@ -76,22 +111,22 @@
 import { Component, Vue, Prop, PropSync } from "vue-property-decorator";
 import { Api } from "../../services/Api";
 import { AlertCommentModel } from "./LrAlertComment.model";
+import { formatTime } from "@/utils/CommonUtilFunctions";
 @Component({
   name: "LrAlertComments",
   components: {},
 })
 export default class LrAlertComments extends Vue {
   @Prop({ required: true }) private id: any;
+  @Prop({ required: false, default: () => [] })
+  private alertComments: AlertCommentModel[];
   @PropSync("showAlertCommentsDialog", { required: false, default: false })
   private dialog: boolean;
   private commentText = "";
-  private alertComments: AlertCommentModel[] = [];
   private errorMsg = "";
 
-  mounted() {
-    Api.getData("alerts/comment", { isDummy: true }).then((resp: any) => {
-      this.alertComments = resp["comments"];
-    });
+  formattedTime(time: string) {
+    return formatTime(time).replace(" ", " | ");
   }
 
   addComment() {
@@ -100,8 +135,12 @@ export default class LrAlertComments extends Vue {
       this.errorMsg = "Comment Cannot Be More Than 250 Char";
     else {
       this.errorMsg = "";
-      // code to post date
+      // code to post the comment
     }
+  }
+
+  replyToComment(comment_id: string, event: any) {
+    //Make the API call to reply to the comment.
   }
 }
 </script>
@@ -120,14 +159,65 @@ export default class LrAlertComments extends Vue {
 .error-txt {
   color: red;
 }
-.comment-text {
+.comment-input {
   margin-top: 1rem;
+
+  .v-text-field__details {
+    display: none;
+  }
 }
 .no-comment-label {
   display: block;
   margin-top: 1rem;
 }
 .card-content-container {
-  padding: 0 1.5rem;
+  padding: 0 1.5rem 0.5rem 1.5rem !important;
+
+  .comments-container {
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin: 1em 0;
+
+    .lr-comment {
+      border: 1px solid #eceeef;
+      border-radius: 8px;
+      max-height: 500px;
+      overflow-y: auto;
+      background-color: #fcfcfd;
+
+      &:not(:last-child) {
+        margin-bottom: 1em;
+      }
+
+      .comment-wrapper {
+        padding: 1rem 1.2rem 0.5em;
+      }
+
+      .created-by {
+        font-weight: bold;
+      }
+
+      .comment-timestamp {
+        font-weight: bold;
+      }
+
+      .comment-replies-container {
+        padding: 0 1em 0.5em 3em;
+        border-top: 1px solid #eceeef;
+
+        .comment-reply {
+          padding: 0.5em 0;
+          &:not(:last-child) {
+            border-bottom: 1px solid #eceeef;
+          }
+        }
+      }
+
+      .add-reply {
+        padding: 0.5em 1em 1em;
+      }
+    }
+  }
 }
 </style>

@@ -25,9 +25,12 @@
       :multiSelectButtons="alertConst.alertTable.multiSelectButtons"
       :chips="chips"
       :itemKey="alertConst.alertTable.itemKey"
-      @zoom="openDetails($event)"
+      @alertDetails="openDetails($event)"
       @comment="comment($event)"
+      @recommend="recommendation($event)"
       @acknowledge="multiAcknowledge($event)"
+      @occurrences="occurrencesHandler($event)"
+      @singleAcknowledge="singleAcknowledge($event)"
       @update-record="updateRecord($event)"
     >
       <template v-slot:severity="{ data }">
@@ -54,6 +57,7 @@
     <LrAlertComments
       v-if="showAlertCommentsDialog"
       :id="selectedRecord.alert_uuid"
+      :alertComments="selectedRecord.comments"
       :showAlertCommentsDialog.sync="showAlertCommentsDialog"
     />
   </div>
@@ -70,6 +74,10 @@ import {
   PaginationModel,
 } from "@/lib/components/SgtDataTable/SgtDataTableFilterSortPag.model";
 import { SgtFilterObject } from "@/lib/components/SgtChips/SgtFilterObject.model";
+import SgtDialog from "@/lib/components/SgtDialog/SgtDialog.vue";
+import { SgtDialogModel } from "@/lib/components/SgtDialog/SgtDialog.model";
+import { create } from "vue-modal-dialogs";
+
 @Component({
   name: "LrAlert",
   components: { SgtDataTable, LrAlertDialog, LrAlertComments },
@@ -84,6 +92,7 @@ export default class LrAlert extends Vue {
   showAlertDetailsDialog = false;
   selectedRecord: any = null;
   showAlertCommentsDialog = false;
+  public acknowledgeModal = create<SgtDialogModel>(SgtDialog);
 
   mounted() {
     Api.getData("alerts/list", { isDummy: true }).then((resp: any) => {
@@ -100,35 +109,63 @@ export default class LrAlert extends Vue {
       this.showDataTable = true;
     }
   }
+
   getColor(item: any) {
     return this.alertConst.severityList[item.severity];
   }
+
   updateRecord(tableDataConfig: SgtDataTableFilterSortPag) {
     // code for API call
     this.chips = tableDataConfig.filterList;
   }
+
   openDetails(selectedRow: any) {
-    if (this.alertId) {
-      this.selectedRecord = null;
-      this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
-      this.selectedRecord.extended_info = JSON.parse(
-        this.selectedRecord.extended_info
-      );
-      this.showAlertDetailsDialog = true;
-    } else {
-      this.$router.push({
-        name: "alert-details",
-        params: { alertId: selectedRow.alert_uuid },
-      });
-    }
+    this.selectedRecord = null;
+    this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
+    this.selectedRecord.extended_info = JSON.parse(
+      this.selectedRecord.extended_info
+    );
+    this.showAlertDetailsDialog = true;
   }
+
   comment(selectedRow: any) {
     this.selectedRecord = null;
     this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
     this.showAlertCommentsDialog = true;
   }
+
   multiAcknowledge(data: any) {
     //multi select action
+  }
+
+  async singleAcknowledge(data: any) {
+    const result = await this.acknowledgeModal({
+      modalTitle: "Confirmation",
+      modalContent: `Are you sure you want to acknowledge this alert?`,
+      modalType: "prompt",
+      modalContentType: "text",
+    }).then((resp) => {
+      if (resp === "yes") {
+        //API call to acknowledge this alert
+      }
+    });
+  }
+
+  async recommendation(data: any) {
+    const result = await this.acknowledgeModal({
+      modalTitle: "Recommendation",
+      modalContent: data.recommendation,
+      modalType: "message",
+      modalContentType: "text",
+      okButtonLabel: "Close",
+    });
+  }
+
+  occurrencesHandler(selectedRow: any) {
+    this.$router.push({
+      name: "alert-details",
+      params: { alertId: selectedRow.alert_uuid },
+    });
   }
 }
 </script>
