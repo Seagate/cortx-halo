@@ -23,14 +23,13 @@ class ComponentMonitorFactory:
     """Factory to provide requested component instance"""
 
     @staticmethod
-    def get_component(component):
-        component_name = component.split(":")[-1]
-        module = component.replace(":", ".")
+    def get_component(element, component):
+        module = ".".join([element, component])
         try:
             module = importlib.import_module(module)
             comp_collection = inspect.getmembers(module, inspect.isclass)
-            for kls_name, kls in comp_collection:
-                if component_name.lower() == kls_name.lower():
+            for _, kls in comp_collection:
+                if component.lower() == kls.NAME.lower():
                     return kls()
         except ModuleNotFoundError as err:
             Log.error(f"Invalid component, {component}. {err}")
@@ -40,8 +39,8 @@ if __name__ == '__main__':
 
     Log.init(service_name="monitor", log_path=const.LOG_PATH, level="INFO")
 
-    component = ComponentMonitorFactory.get_component("server:fan")
-    component_info = component.get_info()
+    component = ComponentMonitorFactory.get_component(element="server", component="fan")
     component.check_health_status()
+    component_info = component.get_info()
     Log.info(f"Received: {component_info}")
     Log.info(f"Events: {component.events}")

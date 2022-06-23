@@ -3,14 +3,28 @@
 LOG_PATH = "/tmp/"
 
 
-COMPONENT_TOOL_MAPPING = {
-    "hpe": {
-        "server:fan": ["ipmitool"],
-        },
-    "dell": {
-        "server:fan": ["ipmitool", "redish"],
-        },
-    "corvault": {
-        "storage:fan": ["storage_enclosure"]
+SERVER = "server"
+STORAGE = "storage"
+
+SERVER_TOOL_MAPPING = {
+    "server": {
+        "hpe": {
+            "fan": ["ipmitool"],
+            },
+        "dell": {
+            "fan": ["ipmitool", "redish"],
+            }
         }
     }
+
+STORAGE_TOOL_MAPPING = {
+    "storage": {
+        "corvault": {
+            "fan": ["storage_enclosure"]
+            }
+        }
+    }
+
+# Tool command functions
+LIST = "list"
+GET = "get"

@@ -22,13 +22,13 @@ class Fan(Component):
     """Provides Fan component information and reports its status change"""
 
     NAME = "Fan"
-    COMPONENT_TYPE = "server:fan"
 
     def __init__(self):
         """Initialize component"""
         self.events = []
-        self.tool_manager = ToolManager(self.COMPONENT_TYPE)
-        Log.info(f"Initialized {self.NAME} component monitor")
+        self.element_type = const.SERVER
+        self.tool_manager = ToolManager(self.element_type, self.NAME)
+        Log.info(f"Initialized {self.element_type} - {self.NAME} component monitor")
 
     def check_health_status(self):
         """
@@ -36,12 +36,13 @@ class Fan(Component):
         If health status change in any of the identified fan modules is
         detected, create event on that specific fan module.
         """
-        fan_list = self.tool_manager.get_response("list", self.NAME)
+        fan_list = self.tool_manager.get_response(const.LIST, self.NAME)
         for fan_id in fan_list:
             info = self.get_info(fan_id)
-            stored_health_status = self.read_cache(self.COMPONENT_TYPE, fan_id)
-            current_health_status = self._get_current_health(fan_id)
-            if stored_health_status != current_health_status:
+            stored_health = self.read_cache(self.element_type, fan_id)
+            current_health = self._get_current_health_status(info)
+            if current_health != stored_health:
+                # Health status mismatch found
                 event = self.convert_to_event(info)
                 if event:
                     self.events.append(event)
@@ -53,9 +54,9 @@ class Fan(Component):
             component_id - unique id of the fan module
         """
         info = {}
-        response = self.tool_manager.get_response("get", component_id)
+        response = self.tool_manager.get_response(const.GET, component_id)
         if response:
-            self._parse_response(response, info)
+            self._parse_data(response, info)
         return info
 
     def _update_status_cache(self, component_id, status):
@@ -68,23 +69,14 @@ class Fan(Component):
         """
         pass
 
-    def _get_current_health(self, component_id: str):
+    def _get_current_health_status(self, info: dict):
         """
         Get current health
         Args:
             component_id - unique id of the fan module
         """
-        data = self.get_info(component_id)
-        return data["status"]
-
-    def _parse_response(self, data: dict, result: dict):
-        """
-        Parse dict type message and add only required field for event creation
-        Args:
-            data - contains raw information about the component(unformatted)
-            result - event required fields will be added to result
-        """
-        return result
+        health = info["health"]
+        return health
 
     def convert_to_event(self, info):
         event = {}

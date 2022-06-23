@@ -1,3 +1,33 @@
-
 {
+    "version":"string",
+    "timestamp":"integer",
+    "event_type":"string",
+    "event_severity":"string",
+    "source":"string",
+    "event_id":"string",
+    "resource":{
+       "cluster_id":"string",
+       "site_id":"string",
+       "rack_id":"string",
+       "node_id":"string",
+       "resource_type":{
+          "element":"storage",
+          "component":"fan"
+       },
+       "resource_id":"string"
+    },
+    "data":{
+       "health_status":"string",
+       "health_reason":{
+          "code":"integer",
+          "message":"string"
+       },
+       "health_recommendation":{
+          "code":"integer",
+          "message":"string"
+       },
+       "create_time":"integer",
+       "specific_data":{
+       }
+    }
 }

@@ -18,8 +18,7 @@ from cortx.utils.log import Log
 
 class Fan(Component):
 
-    NAME = "Storage Fan"
-    COMPONENT_TYPE = "storage:fan"
+    NAME = "Fan"
 
     def check_health_status(self, component_id):
         pass

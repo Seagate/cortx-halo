@@ -18,6 +18,8 @@ from abc import ABC, abstractmethod
 class Component(ABC):
     """Template for component"""
 
+    NAME = ""
+
     @abstractmethod
     def check_health_status(self):
         raise NotImplementedError

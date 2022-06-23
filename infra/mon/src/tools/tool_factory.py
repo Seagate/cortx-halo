@@ -34,15 +34,19 @@ class ToolFactory:
 class ToolManager:
     """Routes the request to corresponding tool"""
 
+    # Tool manager gets server name and storage name from provisioner config
     SERVER_NAME = "hpe"
     STORAGE_NAME = "corvault"
 
-    def __init__(self, component):
+    def __init__(self, element, component_name):
         """Initialize tool manager"""
-        self.component = component
-        server_tools = const.COMPONENT_TOOL_MAPPING.get(self.SERVER_NAME)
-        self.monitoring_tools = server_tools.get(self.component, [])
-        self.component_name = self.component.split(":")[-1]
+        self.component_name = component_name.lower()
+        if element == const.SERVER:
+            server_tools = const.SERVER_TOOL_MAPPING[element][self.SERVER_NAME]
+            self.monitoring_tools = server_tools.get(self.component_name, [])
+        elif element == const.STORAGE:
+            storage_tools = const.STORAGE_TOOL_MAPPING[element][self.STORAGE_NAME]
+            self.monitoring_tools = storage_tools.get(self.component_name, [])
 
     def get_response(self, func=None, component_id=None):
         """
@@ -51,7 +55,7 @@ class ToolManager:
         """
         response = {}
         if not self.monitoring_tools:
-            Log.error(f"No tool listed for monitoring '{self.component}'")
+            Log.error(f"No tool listed for monitoring '{self.component_name}'")
         for mon_tool in self.monitoring_tools:
             tool = ToolFactory.get_tool(mon_tool)
             response = tool.get_response(func, self.component_name, component_id)
