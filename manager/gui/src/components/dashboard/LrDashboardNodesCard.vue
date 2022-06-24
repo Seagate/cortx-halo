@@ -23,10 +23,11 @@
     >
       <div class="node-health-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <SgtInfoCard
+          <SgtInfoContainer
             :key="index"
-            :title="cardDetail.title"
-            :description="cardDetail.description"
+            :title="$t(cardDetail.title)"
+            :count="cardDetail.count"
+            :unit="$t(cardDetail.unit)"
             :imgUrl="cardDetail.imgUrl"
             @click="cardClickHandler(cardDetail.description)"
             :backgroundColor="cardDetail.color"
@@ -39,7 +40,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
+import SgtInfoContainer from "@/lib/components/SgtInfoContainer/SgtInfoContainer.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import { DashboardCardDetail, HealthData } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
@@ -47,13 +48,17 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardNodesCard",
-  components: { SgtInfoCard, SgtCard },
+  components: { SgtInfoContainer, SgtCard },
 })
 export default class LrDashboardNodesCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
   public nodeCount = 0;
 
-  public async mounted() {
+  public mounted() {
+    this.getHealthData();
+  }
+
+  async getHealthData(){
     const data = (await Api.getData("/dashboard/health", {
       isDummy: true,
     })) as HealthData;
@@ -65,7 +70,7 @@ export default class LrDashboardNodesCard extends Vue {
     this.dashboardCardDetails = dashboardCardData.clusterNodes.map((datum) => {
       return {
         ...datum,
-        titleNumber: data.nodes[datum.description],
+        count: data.nodes[datum.title],
         imgUrl: this.nodeCount === 0 ? "health-zero-nodes.svg" : datum.imgUrl,
       };
     });

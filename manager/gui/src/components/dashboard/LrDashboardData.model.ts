@@ -67,6 +67,8 @@ export interface HealthData {
 
 export interface DashboardCardDetail {
   title: number | string;
-  description: string;
+  count?: number;
+  unit?: string;
+  description?: string;
   imgUrl: string;
 }

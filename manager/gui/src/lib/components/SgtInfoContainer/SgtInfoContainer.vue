@@ -16,12 +16,18 @@
 -->
 <template>
   <div>
-    <div class="info-card-container" @click="$emit('click')">
-      <img :src="require(`@/assets/images/${imgUrl}`)" alt />
+    <div
+      class="info-card-container"
+      @click="$emit('click')"
+      :style="{ 'background-color': backgroundColor, border: 0 }"
+    >
       <div class="card-info">
         <span class="title">{{ title }}</span>
-        <span class="description">{{ description }}</span>
+        <span
+          ><span class="count">{{ count }}</span> {{ unit }}</span
+        >
       </div>
+      <img :src="require(`@/assets/images/${imgUrl}`)" alt />
     </div>
   </div>
 </template>
@@ -30,13 +36,15 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component({
-  name: "SgtInfoCard",
+  name: "SgtInfoContainer",
   components: {},
 })
-export default class SgtInfoCard extends Vue {
+export default class SgtInfoContainer extends Vue {
   @Prop({ required: true }) public imgUrl: string;
   @Prop({ required: true }) public title: string;
-  @Prop({ required: false }) public description: string;
+  @Prop({ required: false }) public count: string;
+  @Prop({ required: false }) public unit: string;
+  @Prop({ required: false, default: undefined }) public backgroundColor: string;
 }
 </script>
 
@@ -62,8 +70,12 @@ export default class SgtInfoCard extends Vue {
   margin-left: 1em;
   width: 80%;
 }
+.title {
+  font-weight: bold;
+  font-size: 1rem !important;
+}
 .count {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 </style>

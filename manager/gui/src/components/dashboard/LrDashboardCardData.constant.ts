@@ -69,26 +69,30 @@ export const dashboardCardData = {
   ],
   clusterNodes: [
     {
-      title: 0,
-      description: "online",
+      count: 0,
+      unit: "nodes",
+      title: "online",
       imgUrl: "health-online-nodes.svg",
       color: "#E2F2DB"
     },
     {
-      title: 0,
-      description: "offline",
+      count: 0,
+      unit: "nodes",
+      title: "offline",
       imgUrl: "health-offline-nodes.svg",
       color: "#EEEEEE"
     },
     {
-      title: 0,
-      description: "failed",
+      count: 0,
+      unit: "nodes",
+      title: "failed",
       imgUrl: "health-failed-nodes.svg",
       color: "#FBE9EA"
     },
     {
-      title: 0,
-      description: "degraded",
+      count: 0,
+      unit: "nodes",
+      title: "degraded",
       imgUrl: "health-degraded-nodes.svg",
       color: "#FDEDD4"
     },

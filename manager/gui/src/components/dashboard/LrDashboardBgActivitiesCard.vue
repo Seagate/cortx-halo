@@ -17,7 +17,7 @@
 <template>
   <div class="bg-activities-widget-container">
     <SgtCard
-      title="backgroundActivities"
+      :title="`$t{'backgroundActivities'}`"
       :showZoomIcon="true"
       @zoom-click="zoomIconHandler"
     >

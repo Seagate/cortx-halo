@@ -19,9 +19,9 @@
     <SgtCard title="cluster Health" :showZoomIcon="false">
       <div class="cluster-health-card-container">
         <template v-if="clusterDetails.status">
-          <SgtInfoCard
-            :title="clusterDetails.name"
-            :description="`${clusterDetails.status}`"
+          <SgtInfoContainer
+            :title="$t(clusterDetails.status)"
+            :count="clusterDetails.name"
             :imgUrl="getClusterHealthImgUrl(clusterDetails.status)"
             @click="cardClickHandler('/health')"
             :backgroundColor="getClusterHealthBackground(clusterDetails.status)"
@@ -33,14 +33,14 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
+import SgtInfoContainer from "@/lib/components/SgtInfoContainer/SgtInfoContainer.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import { Api } from "../../services/Api";
 import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardClusterHealthCard",
-  components: { SgtInfoCard, SgtCard },
+  components: { SgtInfoContainer, SgtCard },
 })
 export default class LrDashboardClusterHealthCard extends Vue {
   public clusterDetails: any = {};
