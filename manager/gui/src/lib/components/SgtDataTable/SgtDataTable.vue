@@ -207,8 +207,8 @@
                     </div>
                     <div v-if="col.zoomIcon" class="zoom-container">
                       <SgtSvgIcon
-                        icon="zoom-in.svg"
-                        hoverIcon="zoom-in-hover.svg"
+                        icon="magnify-icon.svg"
+                        hoverIcon="magnify-hover-icon.svg"
                         tooltip="View"
                         @click="$emit('zoom', item)"
                       />
@@ -467,6 +467,8 @@ export default class SgtDataTable extends Vue {
       display: flex;
       gap: 10px;
       position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       right: 2rem;
     }
   }
