@@ -100,6 +100,7 @@ export const lrAlertConst = {
         type: "action",
         align: "end",
         sortable: false,
+        zoomIcon: true,
         actionList: [],
         customActionList: [
           {
@@ -125,12 +126,6 @@ export const lrAlertConst = {
             path: "occurrences-icon.svg",
             hoverPath: "occurrences-hover-icon.svg",
             tooltip: "Occurrences",
-          },
-          {
-            name: "alertDetails",
-            path: "magnify-icon.svg",
-            hoverPath: "magnify-hover-icon.svg",
-            tooltip: "Alert Details",
           },
         ],
       },

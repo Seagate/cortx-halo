@@ -61,49 +61,7 @@
         "node_id": "1",
         "support_message": "",
         "resource_id": "0",
-        "hostname": "srvnode-1.mgmt.public",
-        "comments": [
-          {
-            "comment_id": "naytvce2892ncqeoi",
-            "created_by": "admin1",
-            "comment_text": "This is a sample comment",
-            "created_time": 1655882086,
-            "replies": [
-              {
-                "comment_id": "naytvce2892ncpownw",
-                "created_by": "admin2",
-                "comment_text": "This is a sample reply comment one.",
-                "created_time": 1655882765
-              },
-              {
-                "comment_id": "naytvce2892qrqweu",
-                "created_by": "admin2",
-                "comment_text": "This is a sample reply comment two.",
-                "created_time": 1655882765
-              }
-            ]
-          },
-          {
-            "comment_id": "naytvce2892pqtnoi",
-            "created_by": "admin1",
-            "comment_text": "This is a sample comment",
-            "created_time": 1655882086,
-            "replies": [
-              {
-                "comment_id": "naytvce2892ncpownw",
-                "created_by": "admin2",
-                "comment_text": "This is a sample reply comment one.",
-                "created_time": 1655882765
-              },
-              {
-                "comment_id": "naytvce2892qrqweu",
-                "created_by": "admin2",
-                "comment_text": "This is a sample reply comment two.",
-                "created_time": 1655882765
-              }
-            ]
-          }
-        ]
+        "hostname": "srvnode-1.mgmt.public"
       },
       {
         "alert_uuid": "16382764691ff81c418c254fb2957e68a8019d8066",
@@ -303,8 +261,49 @@
       }
     ]
   },
-  "alerts/comment": {
-    "comments": []
+  "alerts/comment/1638276506e3b3954d1c03463b8ca4ecaa84a6b92f": {
+    "data": [
+      {
+        "comment_id": "naytvce2892ncqeoi",
+        "created_by": "admin1",
+        "comment_text": "This is a sample comment",
+        "created_time": 1655882086,
+        "replies": [
+          {
+            "comment_id": "naytvce2892ncpownw",
+            "created_by": "admin2",
+            "comment_text": "This is a sample reply comment one.",
+            "created_time": 1655882765
+          },
+          {
+            "comment_id": "naytvce2892qrqweu",
+            "created_by": "admin2",
+            "comment_text": "This is a sample reply comment two.",
+            "created_time": 1655882765
+          }
+        ]
+      },
+      {
+        "comment_id": "naytvce2892pqtnoi",
+        "created_by": "admin1",
+        "comment_text": "This is a sample comment",
+        "created_time": 1655882086,
+        "replies": [
+          {
+            "comment_id": "naytvce2892ncpownw",
+            "created_by": "admin2",
+            "comment_text": "This is a sample reply comment one.",
+            "created_time": 1655882765
+          },
+          {
+            "comment_id": "naytvce2892qrqweu",
+            "created_by": "admin2",
+            "comment_text": "This is a sample reply comment two.",
+            "created_time": 1655882765
+          }
+        ]
+      }
+    ]
   },
   "/health/health-graphical": {
     "data": [

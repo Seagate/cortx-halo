@@ -25,12 +25,12 @@
       :multiSelectButtons="alertConst.alertTable.multiSelectButtons"
       :chips="chips"
       :itemKey="alertConst.alertTable.itemKey"
-      @alertDetails="openDetails($event)"
-      @comment="comment($event)"
       @recommend="recommendation($event)"
-      @acknowledge="multiAcknowledge($event)"
-      @occurrences="occurrencesHandler($event)"
+      @comment="comment($event)"
       @singleAcknowledge="singleAcknowledge($event)"
+      @occurrences="occurrencesHandler($event)"
+      @zoom="openDetails($event)"
+      @acknowledge="multiAcknowledge($event)"
       @update-record="updateRecord($event)"
     >
       <template v-slot:severity="{ data }">
@@ -57,7 +57,6 @@
     <LrAlertComments
       v-if="showAlertCommentsDialog"
       :id="selectedRecord.alert_uuid"
-      :alertComments="selectedRecord.comments"
       :showAlertCommentsDialog.sync="showAlertCommentsDialog"
     />
   </div>

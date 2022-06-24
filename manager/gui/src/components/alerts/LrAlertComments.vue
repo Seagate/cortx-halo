@@ -118,12 +118,20 @@ import { formatTime } from "@/utils/CommonUtilFunctions";
 })
 export default class LrAlertComments extends Vue {
   @Prop({ required: true }) private id: any;
-  @Prop({ required: false, default: () => [] })
-  private alertComments: AlertCommentModel[];
+  private alertComments: AlertCommentModel[] = [];
   @PropSync("showAlertCommentsDialog", { required: false, default: false })
   private dialog: boolean;
   private commentText = "";
   private errorMsg = "";
+
+  async mounted() {
+    //Id in the below api path should be alert id (this.id)
+    const res: any = await Api.getData(
+      "alerts/comment/1638276506e3b3954d1c03463b8ca4ecaa84a6b92f",
+      { isDummy: true }
+    );
+    this.alertComments = res.data;
+  }
 
   formattedTime(time: string) {
     return formatTime(time).replace(" ", " | ");
