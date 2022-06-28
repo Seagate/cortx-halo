@@ -6,10 +6,8 @@ from common.db_store.error import DBError
 class DBAdmin(ABC):
 
     @abstractmethod
-    def create_index(self, index_key, **kwargs):
-        """
-        Abstract method of DBAdmin
-        """
+    def create_index(self, **kwargs):
+        """Abstract method of DBAdmin."""
         pass
 
 
@@ -24,7 +22,6 @@ class MongoDBAdmin(DBAdmin):
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
             db_name (str): Name of database.
         """
-
         server_endpoint = "/".join([endpoint, db_name])
         try:
             self._db = pymongo.MongoClient(server_endpoint).get_database()
@@ -37,10 +34,10 @@ class MongoDBAdmin(DBAdmin):
     def create_index(self, **kwargs):
         """
         Creates an index on this collection.
-        Args:
+        kwargs -
             index_key (str): Key/field on which index is created.
+            bucket_name (str): Name of bucket.
         """
-
         bucket_name = kwargs.get('bucket_name')
         index_key = kwargs.get('index_key')
 

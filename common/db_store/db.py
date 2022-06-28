@@ -24,7 +24,6 @@ class MongoDB(DB):
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
             db_name (str): Name of database.
         """
-
         # TODO : Maintain maximum 10 connection in connection pool
         server_endpoint = "/".join([endpoint, db_name])
         try:
@@ -42,7 +41,6 @@ class MongoDB(DB):
         Returns:
             result_list : List of document.
         """
-
         result_list = []
 
         bucket_name = kwargs.get('bucket_name')
@@ -65,7 +63,6 @@ class MongoDB(DB):
         Args:
             data : JSON / BSON document to save to the collection.
         """
-
         bucket_name = kwargs.get('bucket_name')
         try:
 
