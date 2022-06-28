@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
 import pymongo
-from pymongo.errors import PyMongoError
+from abc import ABC, abstractmethod
+from common.db_store.error import DBError
 
 
 class DB(ABC):
@@ -15,12 +15,25 @@ class DB(ABC):
 
 class MongoDB(DB):
 
-    def __init__(self):
-        # Initialize db connection
-        # TODO : limit connection pool to max 10 connection.
-        self._db = pymongo. \
-            MongoClient("mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/stream") \
-            .get_database()
+    def __init__(self, endpoint, db_name, **kwargs) -> None:
+        """
+        Initialize DB connection.
+
+        Args:
+            endpoint (str): MongoDB server endpoints.
+                Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
+            db_name (str): Name of database.
+        """
+
+        # TODO : Maintain maximum 10 connection in connection pool
+        server_endpoint = "/".join([endpoint, db_name])
+        try:
+            self._db = pymongo.MongoClient(server_endpoint).get_database()
+        except Exception as e:
+            # Log.error(f"Unable to connect database server endpoints \
+            #     {server_endpoint} {e}")
+            raise DBError(f"Unable to connect database server endpoints \
+                {server_endpoint} with Error : {e}")
 
     def get_data(self, **kwargs):
         """
@@ -39,9 +52,9 @@ class MongoDB(DB):
             results = self._db[bucket_name].find(query_params)
             for result in results:
                 result_list.append(result)
-        except PyMongoError as e:
-            print("An exception occurred. Error : ", e)
-            # Log & Raise Exception
+        except Exception as e:
+            # Log.error(f"Unable to fetch data from data store. Error {e}")
+            raise DBError(f"Unable to fetch data from data store. Error {e}")
 
         return result_list
 
@@ -64,29 +77,6 @@ class MongoDB(DB):
                 result = self._db[bucket_name].insert_one(data)
                 return result.inserted_id
 
-        except PyMongoError as e:
-            print("An exception occurred. Error : ", e)
-            # Log & Raise Exception
-
-
-class MongoDBAdmin:
-
-    def __init__(self) -> None:
-        # Initialize db connection
-        self._db = pymongo. \
-            MongoClient("mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/stream") \
-            .get_database()
-
-    def create_index(self, index_key, **kwargs):
-        """
-        Creates an index on this collection.
-        Args:
-            index_key (str): Name of index
-        """
-
-        bucket_name = kwargs.get('bucket_name')
-        try:
-            self._db[bucket_name].create_index(index_key)
-        except PyMongoError as e:
-            print("An exception occurred. Error : ", e)
-            # Log & Raise Exception
+        except Exception as e:
+            # Log.error(f"Unable to fetch data from data store. Error {e}")
+            raise DBError(f"Unable to save data to data store. Error {e}")
