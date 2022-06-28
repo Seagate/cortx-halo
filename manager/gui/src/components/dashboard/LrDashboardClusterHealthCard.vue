@@ -16,7 +16,7 @@
 -->
 <template>
   <div class="health-widget-container">
-    <SgtCard title="cluster Health" :showZoomIcon="false">
+    <SgtCard :title="$t('clusterHealth')" :showZoomIcon="false">
       <div class="cluster-health-card-container">
         <template v-if="clusterDetails.status">
           <SgtInfoContainer
