@@ -11,23 +11,3 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # For any questions about this software or licensing,
 # please email opensource@seagate.com or cortx-questions@seagate.com.
-
-from abc import ABC, abstractmethod
-
-
-class Component(ABC):
-    """Template for component"""
-
-    NAME = ""
-
-    @abstractmethod
-    def check_health_status(self):
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_info(self):
-        raise NotImplementedError
-
-    @abstractmethod
-    def _update_status_cache(self):
-        raise NotImplementedError

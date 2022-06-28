@@ -2,9 +2,14 @@
 # Log config
 LOG_PATH = "/tmp/"
 
-
 SERVER = "server"
 STORAGE = "storage"
+
+# Enable/Disbale component monitoring
+COMPONENT_MONITORING_COLLECTION = {
+    "server": ["fan"],
+    "storage": []
+}
 
 SERVER_TOOL_MAPPING = {
     "server": {
@@ -28,3 +33,14 @@ STORAGE_TOOL_MAPPING = {
 # Tool command functions
 LIST = "list"
 GET = "get"
+
+EVENT_SCHEMA_FILE = "event/response.json"
+
+DEFAULT_HEALTH_ATTRIBUTES = [
+    "health",
+    "health-numeric",
+    "health-reason",
+    "health-reason-numeric",
+    "health-recommendation",
+    "health-recommendation-numeric"
+]

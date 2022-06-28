@@ -1,0 +1,33 @@
+{
+    "version":"",
+    "timestamp":0,
+    "event_type":"",
+    "event_severity":"",
+    "source":"",
+    "event_id":"",
+    "resource":{
+       "cluster_id":"",
+       "site_id":"",
+       "rack_id":"",
+       "node_id":"",
+       "resource_type":{
+          "element":"",
+          "component":""
+       },
+       "resource_id":""
+    },
+    "data":{
+       "health_status":"",
+       "health_reason":{
+          "code":0,
+          "message":""
+       },
+       "health_recommendation":{
+          "code":0,
+          "message":""
+       },
+       "create_time":0,
+       "specific_data":{
+       }
+    }
+}

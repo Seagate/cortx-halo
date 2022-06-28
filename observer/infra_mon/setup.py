@@ -57,7 +57,11 @@ setup(name='infra_mon',
       description='Component monitor for Halo',
       package_dir={'infra_mon': 'src'},
       packages=[
-         'infra_mon.component_monitor_collection', 'infra_mon.tools'
+          'infra_mon',
+          'infra_mon.component_monitor_collection',
+          'infra_mon.component_monitor_collection.server',
+          'infra_mon.component_monitor_collection.storage',
+          'infra_mon.tools', 'infra_mon.event'
       ],
       install_requires=[],
       package_data={

@@ -23,8 +23,8 @@ class Fan(Component):
     def check_health_status(self, component_id):
         pass
 
-    def get_info(self, component_id=None):
+    def get_data(self, component_id=None):
         pass
 
-    def _update_status_cache(self, component_id, status):
+    def update_status_cache(self, component_id, status):
         pass

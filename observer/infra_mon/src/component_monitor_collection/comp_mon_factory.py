@@ -17,6 +17,7 @@ import importlib
 import traceback
 import const
 from cortx.utils.log import Log
+from component import Component
 
 
 class ComponentMonitorFactory:
@@ -29,7 +30,7 @@ class ComponentMonitorFactory:
             module = importlib.import_module(module)
             comp_collection = inspect.getmembers(module, inspect.isclass)
             for _, kls in comp_collection:
-                if component.lower() == kls.NAME.lower():
+                if issubclass(kls, Component) and component.lower() == kls.NAME.lower():
                     return kls()
         except ModuleNotFoundError as err:
             Log.error(f"Invalid component, {component}. {err}")
@@ -40,7 +41,10 @@ if __name__ == '__main__':
     Log.init(service_name="monitor", log_path=const.LOG_PATH, level="INFO")
 
     component = ComponentMonitorFactory.get_component(element="server", component="fan")
+    component.fan_list = ["Fan 1", "Fan 2"]
     component.check_health_status()
-    component_info = component.get_info()
-    Log.info(f"Received: {component_info}")
+    component_data = component.get_data("Fan 1")
+    Log.info(f"Received: {component_data}")
     Log.info(f"Events: {component.events}")
+    while component.events:
+        print("\nEvent: ", component.events.pop(0))
