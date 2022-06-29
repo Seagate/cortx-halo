@@ -1,5 +1,4 @@
 class DBError(Exception):
-    """Exception class for DB store."""
 
     def __init__(self, message, rc=1, *args):
         """Handle Exception in DB store."""

@@ -16,23 +16,21 @@ class DB(ABC):
 class MongoDB(DB):
 
     def __init__(self, endpoint, db_name, **kwargs) -> None:
-        """
-        Initialize DB connection.
-
+        """Initialize DB connection.
         Args:
             endpoint (str): MongoDB server endpoints.
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
             db_name (str): Name of database.
         """
         # TODO : Maintain maximum 10 connection in connection pool
-        server_endpoint = "/".join([endpoint, db_name])
         try:
-            self._db = pymongo.MongoClient(server_endpoint).get_database()
+            self._client = pymongo.MongoClient(endpoint)
+            self._db = self._client[db_name]
         except Exception as e:
             # Log.error(f"Unable to connect database server endpoints \
-            #     {server_endpoint} {e}")
+            #     {endpoint} {e}")
             raise DBError(f"Unable to connect database server endpoints \
-                {server_endpoint} with Error : {e}")
+                {endpoint} with Error : {e}")
 
     def get_data(self, **kwargs):
         """
