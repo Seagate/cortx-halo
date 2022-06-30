@@ -19,6 +19,7 @@
     <SgtCard
       :title="nodeCount + ' nodes'"
       :showZoomIcon="true"
+      titleInfo="Total number of nodes in the Cluster"
       @zoom-click="zoomIconHandler"
     >
       <div class="node-health-cards-container">
