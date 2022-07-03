@@ -14,7 +14,6 @@
 
 import inspect
 import importlib
-import traceback
 import const
 from cortx.utils.log import Log
 from component import Component
@@ -45,6 +44,6 @@ if __name__ == '__main__':
     component.check_health_status()
     component_data = component.get_data("Fan 1")
     Log.info(f"Received: {component_data}")
-    Log.info(f"Events: {component.events}")
-    while component.events:
-        print("\nEvent: ", component.events.pop(0))
+    Log.info(f"Fan Data Collection: {component.data_collection}")
+    while component.data_collection:
+        print("\nFan Data: ", component.data_collection.pop(0))

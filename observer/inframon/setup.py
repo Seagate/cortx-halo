@@ -19,7 +19,7 @@ import sys
 from setuptools import setup
 
 # Get the installation dir
-install_dir = "/opt/seagate/halo/infra/mon"
+install_dir = "/opt/seagate/halo/inframon"
 
 with open('README.md', 'r') as rf:
     long_description = rf.read()
@@ -55,19 +55,19 @@ setup(name='infra_mon',
       author='Ajay Srivastava',
       author_email='ajay.srivastava@seagate.com',
       description='Component monitor for Halo',
-      package_dir={'infra_mon': 'src'},
+      package_dir={'inframon': '.'},
       packages=[
-          'infra_mon',
-          'infra_mon.component_monitor_collection',
-          'infra_mon.component_monitor_collection.server',
-          'infra_mon.component_monitor_collection.storage',
-          'infra_mon.tools', 'infra_mon.event'
+          'inframon',
+          'inframon.component_monitor_collection',
+          'inframon.component_monitor_collection.server',
+          'inframon.component_monitor_collection.storage',
+          'inframon.tools', 'inframon.event'
       ],
       install_requires=[],
       package_data={
-        'infra_mon': ['py.typed'],
+        "inframon.event": ["response.json"],
       },
-      data_files=get_data_files(),
+      include_package_data=True,
       long_description=long_description,
       zip_safe=False,
       python_requires='>=3.6')

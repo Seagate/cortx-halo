@@ -29,5 +29,5 @@ class Component(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def update_status_cache(self):
+    def commit_changes(self):
         raise NotImplementedError

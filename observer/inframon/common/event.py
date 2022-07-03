@@ -19,16 +19,14 @@ import const
 
 class Event:
 
-    SOURCE = "infra-mon"
+    SOURCE = "inframon"
     VERSION = "0.0.1"
 
-    def __init__(self, element, component, resource_id, event_type, event_severity, comp_info):
+    def __init__(self, element, component, resource_id, component_info):
         self._element = element
         self._component = component
         self._resource_id = resource_id
-        self._event_type = event_type
-        self._event_severity = event_severity
-        self._comp_info = comp_info
+        self._comp_info = component_info
         # Load schema
         self._schema = None
         self._read_schema()
@@ -79,8 +77,8 @@ class Event:
     def get_message(self):
         self._schema["version"] = self.VERSION
         self._schema["timestamp"] = int(time.time())
-        self._schema["event_type"] = self._event_type
-        self._schema["event_severity"] = self._event_severity
+        self._schema["event_type"] = self._get_event_type()
+        self._schema["event_severity"] = self._get_event_severity()
         self._schema["source"] = self.SOURCE
         self._schema["event_id"] = ""
         self._update_resource_info()
@@ -88,13 +86,23 @@ class Event:
         self._update_specific_data()
         return json.dumps(self._schema)
 
+    def _get_event_type(self):
+        return self._comp_info["event_type"]
+
+    def _get_event_severity(self):
+        event_type_severity_map = {
+            "insertion": "informational",
+            "missing": "critical",
+            "fault": "critical",
+            "fault_resolved": "informational"
+        }
+        return event_type_severity_map[self._comp_info["event_type"]]
+
 
 if __name__ == "__main__":
     element = ""
     component_name = ""
     resource_id = ""
-    event_type = ""
-    event_severity = ""
     comp_info = {}
-    event = Event(element, component_name, resource_id, event_type, event_severity, comp_info)
+    event = Event(element, component_name, resource_id, comp_info)
     print(event.get_message())

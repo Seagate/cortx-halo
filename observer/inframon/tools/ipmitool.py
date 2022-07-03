@@ -27,9 +27,17 @@ class Ipmitool:
     def format_stdout(self):
         pass
 
-    def get_response(self, func, component, component_id=None):
+    def get_response(self, func, component, component_id=None, index=None):
         component = "Fan"
         func = "get"
         component_id = "FAN 1"
         response = {}
+        if index:
+            # read sel list with index
+            # response = {}
+            return response
+        elif component_id:
+            # sdr get 'Fan 1'
+            # response = {}
+            return response
         return response

@@ -12,14 +12,13 @@
 # For any questions about this software or licensing,
 # please email opensource@seagate.com or cortx-questions@seagate.com.
 
-# import pdb;pdb.set_trace()
-# import sys, os
-
+import json
+import time
 import const
-from component_monitor_collection.component import Component
+from component import Component
 from tools.tool_factory import ToolFactory, ToolManager
 from cortx.utils.log import Log
-from event.event import Event
+from common.resp_schema import RespSchema
 
 
 class Fan(Component):
@@ -30,9 +29,9 @@ class Fan(Component):
 
     def __init__(self):
         """Initialize component"""
-        self.events = []
+        self.data_collection = []
         self.tool_manager = ToolManager(self.ELEMENT, self.NAME)
-        self.fan_list = self._get_component_list()
+        self.component_list = self._get_component_list()
         Log.info(f"Initialized {self.ELEMENT} - {self.NAME} component monitor")
 
     def check_health_status(self):
@@ -41,7 +40,13 @@ class Fan(Component):
         If health status change in any of the identified fan modules is
         detected, create event on that specific fan module.
         """
-        for fan_id in self.fan_list:
+        for fan_id in self.component_list:
+
+            # TODO: Monitor Ipmitool sel list  ## log
+            # index = "0xa30"
+            # tool.get_response(const.GET, index=index)
+            # self._monitor_ipmitool_sel_list()
+
             fan_info = self.get_data(fan_id)
             stored_health = self._read_status_cache(self.ELEMENT, fan_id)
             current_health = self._get_health_status(fan_info)
@@ -51,9 +56,8 @@ class Fan(Component):
             if current_health != stored_health:
                 # Health status mismatch found
                 Log.debug(f"{fan_id} - Health status is changed to {current_health}")
-                event_msg = self._convert_to_event(fan_id, fan_info)
-                if event_msg:
-                    self.events.append(event_msg)
+                if fan_info:
+                    self.data_collection.append(json.dumps(fan_info))
 
     def _get_component_list(self):
         """Get list of fan components"""
@@ -66,14 +70,39 @@ class Fan(Component):
         Get component information
         Args:
             component_id - unique id of the fan module
+        Returns:
+            data: dict - component information
+            Example,
+                # Mock data
+                data = {"health": "not ok",
+                        "health-reason-numeric": 1,
+                        "health-reason": "powered off",
+                        "health-recommendation-numeric": 24,
+                        "health-recommendation": "Check AC supply cable connection.",
+                        "event_type": "fault",
+                        "sensor_id": "PSU 1",
+                        "specific_info": {
+                            "created_time": ""
+                        }
+                    }
         """
         data = self.tool_manager.get_response(const.GET, component_id)
         Log.debug(f"{component_id} data: {data}")
         if not data:
-            Log.error(f"unable to fetch {component_id} information")
+            Log.error(f"Unable to fetch {component_id} information")
         return data
 
-    def update_status_cache(self, element_type, component_id, status):
+    def commit_changes(self, element_type, component_id, status):
+        """
+        Post event publishing, component monitor receives acknowledgment
+        to complete the cycle.
+        Args:
+            component_id - unique id of the fan module
+            status - current health status
+        """
+        self._update_status_cache(element_type, component_id, status)
+
+    def _update_status_cache(self, element_type, component_id, status):
         """
         Update status cache if current health status is not matched
         with previous health status.
@@ -98,21 +127,39 @@ class Fan(Component):
         Args:
             info - unique id of the fan module
         """
-        health = info.get("health", "NA")
+        health = info.get("health", "Not available")
         return health
 
-    def _convert_to_event(self, resource_id: str, comp_info: dict, result: dict = {}):
+    def _format_data(self, comp_info: dict):
         """
-        Returns fields required for events.
+        Returns fields required for event to be published.
         """
-        event_type = ""
-        event_severity = ""
-        event = Event(self.ELEMENT, self.NAME, resource_id, event_type, event_severity, comp_info)
-        return event.get_message()
+        schema = RespSchema.get_schema()
+        data = schema.get("data")
+        try:
+            data["health_status"] = comp_info.get("health", data["health_status"])
+
+            data["health_reason"]["code"] = comp_info.get("health-reason-numeric",
+                                                        data["health_reason"]["code"])
+
+            data["health_reason"]["message"] = comp_info.get("health-reason",
+                                                            data["health_reason"]["message"])
+
+            data["health_recommendation"]["code"] = comp_info.get("health-recommendation-numeric",
+                                                                data["health_recommendation"]["code"])
+
+            data["health_recommendation"]["message"] = comp_info.get("health-recommendation",
+                                                                    data["health_recommendation"]["message"])
+            data["created_time"] = time.time()
+        except KeyError as e:
+            raise Exception(f"Schema Error: {str(e)}")
+        if not data:
+            raise Exception(f"Component '{Fan.NAME}' not fetching enough data.")
+        return data
 
 
 if __name__ == "__main__":
     fan = Fan()
     fan.fan_list = ["Fan 1", "Fan 2"]
     fan.check_health_status()
-    print(fan.events)
+    print(fan.data_collection)

@@ -34,7 +34,7 @@ STORAGE_TOOL_MAPPING = {
 LIST = "list"
 GET = "get"
 
-EVENT_SCHEMA_FILE = "event/response.json"
+EVENT_SCHEMA_FILE = "common/response.json"
 
 DEFAULT_HEALTH_ATTRIBUTES = [
     "health",
