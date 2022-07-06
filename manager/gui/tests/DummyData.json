@@ -41,7 +41,7 @@
     "list": [
       {
         "alert_uuid": "1638276506e3b3954d1c03463b8ca4ecaa84a6b92f",
-        "recommendation": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ",
+        "recommendation": "This is a sample recommendation text for the alert.",
         "module_name": "node:os:memory_usage",
         "description": "Host memory usage has increased to 94.2%,beyond the configured threshold of 80% for more than 30 seconds.",
         "health": "",
@@ -65,7 +65,7 @@
       },
       {
         "alert_uuid": "16382764691ff81c418c254fb2957e68a8019d8066",
-        "recommendation": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ",
+        "recommendation": "This is a sample recommendation text for the alert.",
         "module_name": "node:sw:cortx_sw_services:sspl",
         "description": "IEMSensor is stopped and unrecoverable. IEMSensor, Failed in monitoring IEM, (2, 'No such file or directory') /var/log/cortx/iem/iem_messages",
         "health": "",
@@ -89,7 +89,7 @@
       },
       {
         "alert_uuid": "1638276456edf95e5fdf1b4bebbe4d1d7fea55ae9c",
-        "recommendation": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ",
+        "recommendation": "This is a sample recommendation text for the alert.",
         "module_name": "node:interface:nw",
         "description": "Network interface lo is DOWN.",
         "health": "",
@@ -113,7 +113,7 @@
       },
       {
         "alert_uuid": "1638276456d0929b2225854705868a778095e76a91",
-        "recommendation": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ",
+        "recommendation": "This is a sample recommendation text for the alert.",
         "module_name": "node:interface:nw",
         "description": "Network interface ebmc0 is DOWN.",
         "health": "",
@@ -137,7 +137,7 @@
       },
       {
         "alert_uuid": "1640554971f7870d69dd9a4eef87938804521c8fe6",
-        "recommendation": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ",
+        "recommendation": "This is a sample recommendation text for the alert.",
         "module_name": "node:sw:os:service",
         "description": "kafka.service in active state from last 30 seconds.",
         "health": "",
@@ -161,7 +161,7 @@
       },
       {
         "alert_uuid": "1640554951a7ba1781cd2d4bb4985f944ead459bf2",
-        "recommendation": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ",
+        "recommendation": "This is a sample recommendation text for the alert.",
         "module_name": "node:os:cpu_usage",
         "description": "CPU usage has increased to 98.5%, beyond the configured threshold of 80% for more than 30 seconds.",
         "health": "",
@@ -185,7 +185,7 @@
       },
       {
         "alert_uuid": "1640554941a954491755004381b79c179f33916943",
-        "recommendation": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ",
+        "recommendation": "This is a sample recommendation text for the alert.",
         "module_name": "node:sw:os:service",
         "description": "Elasticsearch.service in activating state for more than 180 seconds.",
         "health": "",
@@ -264,7 +264,7 @@
   "alerts/comment/1638276506e3b3954d1c03463b8ca4ecaa84a6b92f": {
     "data": [
       {
-        "comment_id": "naytvce2892ncqeoi",
+        "comment_id": "naytvce2892pqtnoi",
         "created_by": "admin1",
         "comment_text": "This is a sample comment",
         "created_time": 1655882086,
@@ -280,11 +280,23 @@
             "created_by": "admin2",
             "comment_text": "This is a sample reply comment two.",
             "created_time": 1655882765
+          },
+          {
+            "comment_id": "naytvce2892qrqweu",
+            "created_by": "admin2",
+            "comment_text": "This is a sample reply comment three.",
+            "created_time": 1655882765
+          },
+          {
+            "comment_id": "naytvce2892qrqweu",
+            "created_by": "admin2",
+            "comment_text": "This is a sample reply comment four.",
+            "created_time": 1655882765
           }
         ]
       },
       {
-        "comment_id": "naytvce2892pqtnoi",
+        "comment_id": "naytvce2892ncqeoi",
         "created_by": "admin1",
         "comment_text": "This is a sample comment",
         "created_time": 1655882086,

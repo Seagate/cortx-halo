@@ -50,37 +50,11 @@
                 {{ formattedTime(new Date(comment.created_time * 1000)) }}
               </div>
             </div>
-            <ul class="comment-replies-container" v-if="comment.replies">
-              <li
-                class="comment-reply"
-                v-for="reply in comment.replies"
-                :key="reply.comment_id"
-              >
-                <div class="created-by">
-                  {{ reply.created_by }}
-                </div>
-                <div class="comment-text mt-1">
-                  {{ reply.comment_text }}
-                </div>
-                <div class="mt-2 comment-timestamp">
-                  {{ formattedTime(new Date(reply.created_time * 1000)) }}
-                </div>
-              </li>
-            </ul>
-            <div class="add-reply">
-              <v-text-field
-                outlined
-                dense
-                class="mt-2"
-                name="reply"
-                label="Reply"
-                height="40"
-                hide-details="auto"
-                append-icon="mdi-send-circle"
-                @click:append="replyToComment(comment.comment_id, $event)"
-                @keyup.enter="replyToComment(comment.comment_id, $event)"
-              ></v-text-field>
-            </div>
+
+            <LrAlertCommentReplies
+              :comment_id="comment.comment_id"
+              :replies="comment.replies"
+            />
           </div>
         </div>
         <div class="comment-input">
@@ -112,9 +86,12 @@ import { Component, Vue, Prop, PropSync } from "vue-property-decorator";
 import { Api } from "../../services/Api";
 import { AlertCommentModel } from "./LrAlertComment.model";
 import { formatTime } from "@/utils/CommonUtilFunctions";
+import LrAlertCommentReplies from "./LrAlertCommentReplies.vue";
 @Component({
   name: "LrAlertComments",
-  components: {},
+  components: {
+    LrAlertCommentReplies,
+  },
 })
 export default class LrAlertComments extends Vue {
   @Prop({ required: true }) private id: any;
@@ -182,7 +159,7 @@ export default class LrAlertComments extends Vue {
   padding: 0 1.5rem 0.5rem 1.5rem !important;
 
   .comments-container {
-    max-height: 340px;
+    max-height: 47vh;
     overflow-y: auto;
     padding-right: 10px;
     margin: 1em 0;
@@ -190,8 +167,6 @@ export default class LrAlertComments extends Vue {
     .lr-comment {
       border: 1px solid #eceeef;
       border-radius: 8px;
-      max-height: 500px;
-      overflow-y: auto;
       background-color: #fcfcfd;
 
       &:not(:last-child) {
@@ -208,22 +183,6 @@ export default class LrAlertComments extends Vue {
 
       .comment-timestamp {
         font-weight: bold;
-      }
-
-      .comment-replies-container {
-        padding: 0 1em 0.5em 3em;
-        border-top: 1px solid #eceeef;
-
-        .comment-reply {
-          padding: 0.5em 0;
-          &:not(:last-child) {
-            border-bottom: 1px solid #eceeef;
-          }
-        }
-      }
-
-      .add-reply {
-        padding: 0.5em 1em 1em;
       }
     }
   }

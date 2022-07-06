@@ -23,5 +23,5 @@ export interface IAlertComment {
 }
 
 export interface AlertCommentModel extends IAlertComment {
-  replies: IAlertComment;
+  replies: IAlertComment[];
 }
