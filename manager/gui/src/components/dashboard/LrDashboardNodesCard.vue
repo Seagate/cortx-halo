@@ -15,16 +15,24 @@
 * please email opensource@seagate.com.
 -->
 <template>
-  <div class="alert-widget-container">
-    <SgtCard title="alerts" :showZoomIcon="true" @zoom-click="zoomIconHandler">
-      <div class="alert-cards-container">
+  <div class="health-widget-container">
+    <SgtCard
+      :title="nodeCount + ' nodes'"
+      :showZoomIcon="true"
+      titleInfo="Total number of nodes in the cluster"
+      @zoom-click="zoomIconHandler"
+    >
+      <div class="node-health-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <SgtInfoCard
+          <SgtInfoContainer
             :key="index"
-            :title="cardDetail.title"
-            :description="cardDetail.description"
+            :title="$t(cardDetail.title)"
+            :count="cardDetail.count"
+            :unit="$t(cardDetail.unit)"
             :imgUrl="cardDetail.imgUrl"
-            @click="cardClickHandler(cardDetail.navPath)"
+            @click="cardClickHandler(cardDetail.description)"
+            :backgroundColor="cardDetail.color"
+            data-test="info-card"
           />
         </template>
       </div>
@@ -33,56 +41,64 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
+import SgtInfoContainer from "@/lib/components/SgtInfoContainer/SgtInfoContainer.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
-import { AlertData, DashboardCardDetail } from "./LrDashboardData.model";
+import { DashboardCardDetail, HealthData } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
 import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
-  name: "LrDashboardAlertCard",
-  components: { SgtInfoCard, SgtCard },
+  name: "LrDashboardNodesCard",
+  components: { SgtInfoContainer, SgtCard },
 })
-export default class LrDashboardAlertCard extends Vue {
+export default class LrDashboardNodesCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
+  public nodeCount = 0;
 
-  public async mounted() {
-    const data = (await Api.getData("/dashboard/alerts", {
+  public mounted() {
+    this.getHealthData();
+  }
+
+  async getHealthData(){
+    const data = (await Api.getData("/dashboard/health", {
       isDummy: true,
-    })) as AlertData;
-    this.dashboardCardDetails = dashboardCardData.alerts.map((datum) => {
-      const count = +data[datum.description as keyof AlertData];
+    })) as HealthData;
+    this.nodeCount =
+      data.nodes.online +
+      data.nodes.offline +
+      data.nodes.degraded +
+      data.nodes.failed;
+    this.dashboardCardDetails = dashboardCardData.clusterNodes.map((datum) => {
       return {
         ...datum,
-        title: count,
-        imgUrl: count === 0 ? "zero-" + datum.imgUrl : datum.imgUrl,
+        count: data.nodes[datum.title],
+        imgUrl: this.nodeCount === 0 ? "health-zero-nodes.svg" : datum.imgUrl,
       };
     });
   }
 
-  cardClickHandler(routePath: string) {
-    this.$router.push(routePath);
+  cardClickHandler(status: string) {
+    this.$router.push("/health");
   }
 
   zoomIconHandler() {
-    this.$router.push("/alerts");
+    this.$router.push("/health");
   }
 }
 </script>
 <style lang="scss" scoped>
-.alert-cards-container {
+.node-health-cards-container {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 }
-.alert-cards-container > * {
-  width: 48%;
+.info-card-container {
   margin-bottom: 1em;
 }
-.alert-cards-container > *:last-child {
+.health-widget-container > .info-card-container {
   width: 100%;
 }
-.alert-cards-container > *:not(:last-child) {
-  justify-content: flex-start;
+.node-health-cards-container > * {
+  width: 24%;
 }
 </style>

@@ -15,11 +15,13 @@
 * please email opensource@seagate.com.
 -->
 <template>
-  <div class="info-card-container" @click="$emit('click')">
-    <img :src="imagePath" alt />
-    <div class="card-info">
-      <span class="title">{{ title }}</span>
-      <span class="description">{{ $t(description) }}</span>
+  <div>
+    <div class="info-card-container" @click="$emit('click')">
+      <img :src="require(`@/assets/images/${imgUrl}`)" alt />
+      <div class="card-info">
+        <span class="title">{{ title }}</span>
+        <span class="description">{{ description }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -28,17 +30,13 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component({
-  name: "LrDashboardInfoCard",
+  name: "SgtInfoCard",
   components: {},
 })
-export default class LrDashboardInfoCard extends Vue {
+export default class SgtInfoCard extends Vue {
   @Prop({ required: true }) public imgUrl: string;
   @Prop({ required: true }) public title: string;
   @Prop({ required: false }) public description: string;
-
-  get imagePath() {
-    return require(`@/assets/images/${this.imgUrl}`);
-  }
 }
 </script>
 
@@ -60,10 +58,12 @@ export default class LrDashboardInfoCard extends Vue {
 .card-info {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   margin-left: 1em;
+  width: 80%;
 }
-.title {
+.count {
   font-weight: bold;
+  font-size: 1.5rem;
 }
 </style>
