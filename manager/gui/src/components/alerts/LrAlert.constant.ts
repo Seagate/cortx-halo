@@ -53,7 +53,7 @@ export const lrAlertConst = {
         name: "severity",
         label: "Severity",
         placeholder: "select",
-        options: [],
+        options: ["fatal", "critical", "error", "warning", "informational"],
         required: false,
         value: "",
       },

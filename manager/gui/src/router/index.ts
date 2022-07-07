@@ -58,6 +58,12 @@ const routes: Array<RouteConfig> = [
     props: true,
   },
   {
+    path: "/alerts/:severity",
+    name: "alerts",
+    component: LrAlert,
+    props: true,
+  },
+  {
     path: "/manage",
     name: "manage",
     component: LrManageUser,
@@ -121,7 +127,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "support",
         name: "support",
-        component: LrSupport
+        component: LrSupport,
       },
       {
         path: "system-health",

@@ -82,8 +82,8 @@ import { create } from "vue-modal-dialogs";
   components: { SgtDataTable, LrAlertDialog, LrAlertComments },
 })
 export default class LrAlert extends Vue {
-  @Prop({ required: false, default: "" }) private severity: string;
   @Prop({ required: false }) private alertId: string;
+  @Prop({ required: false }) private severity: string;
   alertConst: any = JSON.parse(JSON.stringify(lrAlertConst));
   alerts: any = [];
   showDataTable = false;
@@ -94,9 +94,8 @@ export default class LrAlert extends Vue {
   public acknowledgeModal = create<SgtDialogModel>(SgtDialog);
 
   mounted() {
-    Api.getData("alerts/list", { isDummy: true }).then((resp: any) => {
-      this.alerts = resp["list"];
-    });
+    this.getAlertsList();
+    this.setSeverityFilter();
     if (this.alertId) {
       let headers = this.alertConst?.alertTable?.headers;
       let actionColumn = headers[headers?.length - 1];
@@ -106,6 +105,28 @@ export default class LrAlert extends Vue {
       this.showDataTable = true;
     } else {
       this.showDataTable = true;
+    }
+  }
+
+  getAlertsList() {
+    const endpoint = this.severity
+      ? `alerts/list?severity=${this.severity}`
+      : "alerts/list";
+    Api.getData(endpoint, { isDummy: true }).then((resp: any) => {
+      this.alerts = resp["data"];
+    });
+  }
+
+  setSeverityFilter() {
+    if (this.severity) {
+      const advanceForm = [...this.alertConst.searchConfig.advanceForm];
+      const updatedAdvanceForm = advanceForm.map((element) => {
+        if (element.name === "severity") {
+          element.value = this.severity;
+        }
+        return element;
+      });
+      this.alertConst.searchConfig.advanceForm = updatedAdvanceForm;
     }
   }
 
@@ -165,6 +186,12 @@ export default class LrAlert extends Vue {
       name: "alert-details",
       params: { alertId: selectedRow.alert_uuid },
     });
+  }
+
+  @Watch("$route")
+  public routeChangeHandler() {
+    this.getAlertsList();
+    this.setSeverityFilter();
   }
 }
 </script>
