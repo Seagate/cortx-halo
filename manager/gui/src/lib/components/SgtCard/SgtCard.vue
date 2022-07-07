@@ -64,6 +64,7 @@ export default class SgtCard extends Vue {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+  font-weight: bold !important;
 }
 .title-section .widget-title {
   margin: 0;

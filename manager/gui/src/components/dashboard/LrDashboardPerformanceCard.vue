@@ -17,19 +17,45 @@
 <template>
   <div class="performance-widget-container">
     <SgtCard
-      title="performance"
+      :title="$t('performance')"
       :showZoomIcon="true"
       @zoom-click="zoomIconHandler"
     >
       <div class="performance-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <SgtInfoCard
+          <div
+            class="info-card-container"
             :key="index"
-            :title="cardDetail.title"
-            :description="cardDetail.description"
-            :imgUrl="cardDetail.imgUrl"
             @click="cardClickHandler(cardDetail.navPath)"
-          />
+          >
+            <v-row>
+              <v-col cols="5">
+                <div class="info-title">{{ $t(cardDetail.title) }}</div>
+                <v-row>
+                  <v-col cols="5">
+                    <img
+                      :src="require(`@/assets/images/${cardDetail.imgUrl}`)"
+                      alt
+                    />
+                  </v-col>
+                  <v-col cols="7">
+                    <div class="card-info">
+                      <span
+                        ><span class="count">{{ cardDetail.count }}</span>
+                        {{ cardDetail.unit }}</span
+                      >
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="7" class="graph-img">
+                <img
+                  :src="require(`@/assets/images/${cardDetail.imgUrl2}`)"
+                  alt
+                />
+              </v-col>
+            </v-row>
+          </div>
         </template>
       </div>
     </SgtCard>
@@ -51,12 +77,12 @@ export default class LrDashboardPerformanceCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
 
   public async mounted() {
-    const data = (await Api.getData("/dashboard/performance", {
+    const data: any = await Api.getData("/dashboard/performance", {
       isDummy: true,
-    })) as PerformanceData;
+    });
     this.dashboardCardDetails = dashboardCardData.performance.map((datum) => ({
       ...datum,
-      title: `${data[datum.description as keyof PerformanceData]} ${data.unit}`,
+      count: data[datum.title],
     }));
   }
 
@@ -70,12 +96,22 @@ export default class LrDashboardPerformanceCard extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.performance-cards-container {
-  display: flex;
-  flex-direction: column;
+.info-card-container {
+  border: 1px solid #e5e5e5;
+  padding: 20px 20px;
+  margin-bottom: 12px;
+  .info-title {
+    padding-bottom: 16px;
+  }
+  .count {
+    font-weight: bold;
+    font-size: 2rem;
+  }
 }
-.performance-cards-container > * {
-  margin-bottom: 1em;
-  justify-content: flex-start;
+.graph-img {
+  text-align: right;
+}
+.info-card-container:hover {
+  box-shadow: 0px 6px 15px #e5e5e5;
 }
 </style>
