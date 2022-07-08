@@ -6,15 +6,15 @@ from common.db_store.error import DBError
 class DBAdmin(ABC):
 
     @abstractmethod
-    def create_index(self, bucket_name, index_key, **kwargs):
+    def create_index(self, collection, index_key, **kwargs):
         pass
 
     @abstractmethod
-    def list_indexes(self, bucket_name, **kwargs):
+    def list_indexes(self, collection, **kwargs):
         pass
 
     @abstractmethod
-    def drop_index(self, bucket_name, index_name, **kwargs):
+    def drop_index(self, collection, index_name, **kwargs):
         pass
 
     @abstractmethod
@@ -22,11 +22,11 @@ class DBAdmin(ABC):
         pass
 
     @abstractmethod
-    def create_timeseries_bucket(self, bucket_name, **kwargs):
+    def create_timeseries_collection(self, collection, **kwargs):
         pass
 
     @abstractmethod
-    def get_list_of_bucket(self):
+    def get_list_of_collections(self):
         pass
 
 
@@ -49,42 +49,42 @@ class MongoDBAdmin(DBAdmin):
             raise DBError(f"Unable to connect database server endpoints \
                           {endpoint} with Error : {e}")
 
-    def create_index(self, bucket_name: str, index_key: str, **kwargs):
+    def create_index(self, collection: str, index_key: str, **kwargs):
         """
         Create an index on this collection.
         Args -
             index_key (str): Key/field on which index is created.
-            bucket_name (str): Name of bucket.
+            collection (str): Name of collection.
         """
         try:
-            return self._db[bucket_name].create_index(index_key)
+            return self._db[collection].create_index(index_key)
         except Exception as e:
             # Log.error(f"Unable to create Index. Error : {e}")
             raise DBError(f"Index '{index_key}' creation failed. {e}")
 
-    def list_indexes(self, bucket_name: str, **kwargs):
+    def list_indexes(self, collection: str, **kwargs):
         """
-        List all index present in bucket.
+        List all index present in collection.
         Args -
-            bucket_name (str): Name of bucket
+            collection (str): Name of collection
         Returns:
             List of indexes.
         """
         index_list = []
-        indexes = self._db[bucket_name].list_indexes()
+        indexes = self._db[collection].list_indexes()
         for index in indexes:
             index_list.append(index["name"])
         return index_list
 
-    def drop_index(self, bucket_name: str, index_name: str, **kwargs):
+    def drop_index(self, collection: str, index_name: str, **kwargs):
         """
-        Drop index from bucket.
+        Drop index from collection.
         Args:
             index_name (str): Index name.
-            bucket_name (str): Name of bucket.
+            collection (str): Name of collection.
         """
-        if index_name in self.list_indexes(bucket_name):
-            self._db[bucket_name].drop_index(index_name)
+        if index_name in self.list_indexes(collection):
+            self._db[collection].drop_index(index_name)
         else:
             raise DBError(f"Invalid index key {index_name}.")
 
@@ -93,46 +93,46 @@ class MongoDBAdmin(DBAdmin):
             and disconnect from MongoDB."""
         self._client.close()
 
-    def create_timeseries_bucket(self, bucket_name: str, **kwargs):
+    def create_timeseries_collection(self, collection: str,
+                                 timeField: str, **kwargs):
         """
-        Create Time series bucket.
+        Create Time series collection.
         Args:
-            bucket_name (str): Name of bucket.
+            collection (str): Name of Collection.
+            timeField : Field containing the timestamp.
         Keyword Args:
-            timeField : Field containing the timestamp. [ Required ]
             metaField : Meta information.[ Optional ]
             granularity: Default value 'seconds'
         """
-        timesField = kwargs.get('timeField')
         metaField = kwargs.get('metaField')
         granularity = kwargs.get('granularity')
         try:
-            if bucket_name not in self._db.list_collection_names():
+            if collection not in self._db.list_collections():
                 return self._db.create_collection(
-                    bucket_name,
+                    collection,
                     timeseries={
-                        'timeField': timesField,
+                        'timeField': timeField,
                         'metaField': metaField,
                         'granularity': granularity})
             else:
-                return f"Bucket {bucket_name} already exists."
+                return f"Collection {collection} already exists."
         except Exception as e:
-            # Log.error(f"Unable to create Time Series bucket {bucket_name}.\
+            # Log.error(f"Unable to create TimeSeries collection {collection}\
             #     Error : {e}")
-            raise DBError(f"Unable to create Time Series bucket \
-                {bucket_name}. Error : {e}")
+            raise DBError(f"Unable to create Time Series collection \
+                {collection}. Error : {e}")
 
-    def remove_buckets(self, bucket_name: str):
+    def remove_collection(self, collection: str):
         """
-        Remove bucket from db store.
+        Remove collection from db store.
         Args:
-            bucket_name (str): Name of a bucket to drop.
+            collection (str): Name of a collection to drop.
         """
-        if bucket_name in self.get_list_of_bucket():
-            self._db.drop_collection(bucket_name)
+        if collection in self.get_list_of_collections():
+            self._db.drop_collection(collection)
         else:
-            raise DBError(f"Invalid bucket name {bucket_name}.")
+            raise DBError(f"Invalid collection {collection}.")
 
-    def get_list_of_bucket(self):
-        """Get list of buckets in db store."""
+    def get_list_of_collections(self):
+        """Get list of collections in db store."""
         return self._db.list_collection_names()
