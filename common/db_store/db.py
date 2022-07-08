@@ -1,5 +1,4 @@
 from enum import Enum
-from sre_constants import SUCCESS
 import pymongo
 from abc import ABC, abstractmethod
 from common.db_store.error import DBError

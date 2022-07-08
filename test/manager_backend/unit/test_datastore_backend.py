@@ -3,6 +3,9 @@ from datetime import datetime
 from common.db_store.db import MongoDB
 from common.db_store.admin_db import MongoDBAdmin
 
+admin_db = None
+db = None
+
 
 @pytest.fixture
 def setup_admin_db():

@@ -22,7 +22,7 @@ class DBAdmin(ABC):
         pass
 
     @abstractmethod
-    def create_timeseries_collection(self, collection, **kwargs):
+    def create_timeseries_collection(self, collection, timeField, **kwargs):
         pass
 
     @abstractmethod
