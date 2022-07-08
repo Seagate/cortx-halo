@@ -6,27 +6,36 @@ from common.db_store.error import DBError
 class DBAdmin(ABC):
 
     @abstractmethod
-    def create_index(self, index_key, **kwargs):
+    def create_index(self, bucket_name, index_key, **kwargs):
         pass
 
     @abstractmethod
-    def list_indexes(self, **kwargs):
+    def list_indexes(self, bucket_name, **kwargs):
         pass
 
     @abstractmethod
-    def drop_index(self, index_name, **kwargs):
+    def drop_index(self, bucket_name, index_name, **kwargs):
         pass
 
     @abstractmethod
     def close_connection(self):
         pass
 
+    @abstractmethod
+    def create_timeseries_bucket(self, bucket_name, **kwargs):
+        pass
+
+    @abstractmethod
+    def get_list_of_bucket(self):
+        pass
+
 
 class MongoDBAdmin(DBAdmin):
 
     def __init__(self, endpoint: str, db_name: str, **kwargs) -> None:
-        """Initialize DB connection.
-        Args:
+        """
+        Initialize DB connection.
+        Args -
             endpoint (str): MongoDB server endpoints.
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
             db_name (str): Name of database.
@@ -40,42 +49,40 @@ class MongoDBAdmin(DBAdmin):
             raise DBError(f"Unable to connect database server endpoints \
                           {endpoint} with Error : {e}")
 
-    def create_index(self, index_key: str, **kwargs):
-        """Creates an index on this collection.
-        Args:
+    def create_index(self, bucket_name: str, index_key: str, **kwargs):
+        """
+        Create an index on this collection.
+        Args -
             index_key (str): Key/field on which index is created.
-        kwargs -
             bucket_name (str): Name of bucket.
         """
-        bucket_name = kwargs.get('bucket_name')
         try:
             return self._db[bucket_name].create_index(index_key)
         except Exception as e:
             # Log.error(f"Unable to create Index. Error : {e}")
             raise DBError(f"Index '{index_key}' creation failed. {e}")
 
-    def list_indexes(self, **kwargs):
-        """List all index present in bucket.
-        Keywords Args:
+    def list_indexes(self, bucket_name: str, **kwargs):
+        """
+        List all index present in bucket.
+        Args -
             bucket_name (str): Name of bucket
         Returns:
             List of indexes.
         """
         index_list = []
-        bucket_name = kwargs.get('bucket_name')
         indexes = self._db[bucket_name].list_indexes()
         for index in indexes:
             index_list.append(index["name"])
         return index_list
 
-    def drop_index(self, index_name: str, **kwargs):
-        """Drop index from bucket.
+    def drop_index(self, bucket_name: str, index_name: str, **kwargs):
+        """
+        Drop index from bucket.
         Args:
             index_name (str): Index name.
-        Keywords Args:
             bucket_name (str): Name of bucket.
         """
-        bucket_name = kwargs.get('bucket_name')
         if index_name in self.list_indexes(bucket_name):
             self._db[bucket_name].drop_index(index_name)
         else:
@@ -87,7 +94,8 @@ class MongoDBAdmin(DBAdmin):
         self._client.close()
 
     def create_timeseries_bucket(self, bucket_name: str, **kwargs):
-        """Create Time series bucket.
+        """
+        Create Time series bucket.
         Args:
             bucket_name (str): Name of bucket.
         Keyword Args:
@@ -115,7 +123,8 @@ class MongoDBAdmin(DBAdmin):
                 {bucket_name}. Error : {e}")
 
     def remove_buckets(self, bucket_name: str):
-        """Remove bucket from db store.
+        """
+        Remove bucket from db store.
         Args:
             bucket_name (str): Name of a bucket to drop.
         """

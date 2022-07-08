@@ -5,43 +5,43 @@ from common.db_store.error import DBError
 
 class DB(ABC):
     @abstractmethod
-    def get_data(self, **kwargs):
+    def get_data(self, bucket_name, **kwargs):
         pass
 
     @abstractmethod
-    def save_data(self, data, **kwargs):
+    def save_data(self, bucket_name, data, **kwargs):
         pass
 
 
 class MongoDB(DB):
 
-    def __init__(self, endpoint, db_name, **kwargs) -> None:
-        """Initialize DB connection.
+    def __init__(self, endpoint, bucket_name, **kwargs) -> None:
+        """
+        Initialize DB connection.
         Args:
             endpoint (str): MongoDB server endpoints.
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
-            db_name (str): Name of database.
+            bucket_name (str): Name of Bucket.
         """
         # TODO : Maintain maximum 10 connection in connection pool
         try:
             self._client = pymongo.MongoClient(endpoint)
-            self._db = self._client[db_name]
+            self._db = self._client[bucket_name]
         except Exception as e:
             # Log.error(f"Unable to connect database server endpoints \
             #     {endpoint} {e}")
             raise DBError(f"Unable to connect database server endpoints \
                 {endpoint} with Error : {e}")
 
-    def get_data(self, **kwargs):
+    def get_data(self, bucket_name: str, **kwargs):
         """
         Get list of documents that match the query criteria.
-
+        Args -
+            bucket_name (str): Name of bucket.
         Returns:
             result_list : List of document.
         """
         result_list = []
-
-        bucket_name = kwargs.get('bucket_name')
         query_params = kwargs.get('queryparams')
 
         try:
@@ -54,11 +54,11 @@ class MongoDB(DB):
 
         return result_list
 
-    def save_data(self, data, **kwargs):
+    def save_data(self, bucket_name: str, data, **kwargs):
         """
         Save data to the collection.
-
-        Args:
+        Args -
+            bucket_name (str): Name of bucket.
             data : JSON / BSON document to save to the collection.
         """
         bucket_name = kwargs.get('bucket_name')
