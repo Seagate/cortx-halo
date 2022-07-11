@@ -17,7 +17,12 @@
 <template>
   <v-card class="card-container pa-3" :v-bind="$props" :v-on="$listeners">
     <div class="title-section">
-      <p class="widget-title text-h6 font-weight-medium">{{ $t(title) }}</p>
+      <p class="widget-title text-h6 font-weight-medium">
+        {{ title }}
+        <SgtTooltipIcon v-if="titleInfo">
+          {{ titleInfo }}
+        </SgtTooltipIcon>
+      </p>
       <SgtSvgIcon
         icon="zoom-in.svg"
         hoverIcon="zoom-in-hover.svg"
@@ -33,16 +38,19 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import SgtSvgIcon from "@/lib/components/SgtSvgIcon/SgtSvgIcon.vue";
+import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
 
 @Component({
   name: "SgtCard",
   components: {
     SgtSvgIcon,
+    SgtTooltipIcon,
   },
 })
 export default class SgtCard extends Vue {
   @Prop({ required: true }) public title: string;
   @Prop({ required: false, default: false }) public showZoomIcon: boolean;
+  @Prop({ required: false }) public titleInfo: string;
 }
 </script>
 

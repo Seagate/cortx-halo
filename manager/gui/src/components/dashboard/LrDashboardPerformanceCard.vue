@@ -23,7 +23,7 @@
     >
       <div class="performance-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <LrDashboardInfoCard
+          <SgtInfoCard
             :key="index"
             :title="cardDetail.title"
             :description="cardDetail.description"
@@ -37,7 +37,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LrDashboardInfoCard from "./LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import { PerformanceData, DashboardCardDetail } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
@@ -45,7 +45,7 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardPerformanceCard",
-  components: { LrDashboardInfoCard, SgtCard },
+  components: { SgtInfoCard, SgtCard },
 })
 export default class LrDashboardPerformanceCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];

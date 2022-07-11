@@ -17,13 +17,13 @@
 <template>
   <div class="bg-activities-widget-container">
     <SgtCard
-      title="backgroundActivities"
+      :title="$t('backgroundActivities')"
       :showZoomIcon="true"
       @zoom-click="zoomIconHandler"
     >
       <div class="bg-activities-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <LrDashboardInfoCard
+          <SgtInfoCard
             :key="index"
             :title="cardDetail.title"
             :description="cardDetail.description"
@@ -37,7 +37,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LrDashboardInfoCard from "./LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import {
   DashboardCardDetail,
@@ -48,7 +48,7 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardBgActivitiesCard",
-  components: { LrDashboardInfoCard, SgtCard },
+  components: { SgtInfoCard, SgtCard },
 })
 export default class LrDashboardBgActivitiesCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
