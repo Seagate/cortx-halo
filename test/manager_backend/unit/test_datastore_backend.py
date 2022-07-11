@@ -23,6 +23,8 @@ def setup_db():
     db = MongoDB(
         endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
         db_name="test")
+    yield
+    db.close_connection()
 
 
 def test_create_time_series_collection(setup_admin_db):

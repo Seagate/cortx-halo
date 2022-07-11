@@ -21,12 +21,15 @@ class STATUSES(Enum):
 class MongoDB(DB):
 
     def __init__(self, endpoint, db_name, **kwargs) -> None:
-        """
-        Initialize DB connection.
+        """Initialize DB connection.
+
         Args:
             endpoint (str): MongoDB server endpoints.
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
             db_name (str): Name of Database.
+
+        Raises:
+            DBError: Unable to connect.
         """
         # TODO : Maintain maximum 10 connection in connection pool
         try:
@@ -39,12 +42,16 @@ class MongoDB(DB):
                 {endpoint} with Error : {e}")
 
     def get_data(self, collection: str, **kwargs):
-        """
-        Get list of documents that match the query criteria.
-        Args -
+        """Get list of documents that match the query criteria.
+
+        Args:
             collection (str): Name of collection.
+
+        Raises:
+            DBError: Unable to fetch data.
+
         Returns:
-            result_list : List of document.
+            list: List of records.
         """
         result_list = []
         query_params = kwargs.get('queryparams')
@@ -60,11 +67,17 @@ class MongoDB(DB):
         return result_list
 
     def save_data(self, collection: str, data, **kwargs):
-        """
-        Save data to the collection.
-        Args -
+        """Save data to the collection.
+
+        Args:
             collection (str): Name of collection.
-            data : JSON / BSON document to save to the collection.
+            data (json/bson): JSON / BSON document to save to the collection.
+
+        Raises:
+            DBError: Unable to save data.
+
+        Returns:
+            JSON: {status: "", matched_count: "", insert_id: ""}
         """
         try:
             if '_id' in data:
@@ -82,3 +95,8 @@ class MongoDB(DB):
         except Exception as e:
             # Log.error(f"Unable to fetch data from data store. Error {e}")
             raise DBError(f"Unable to save data to data store. Error {e}")
+
+    def close_connection(self):
+        """End all server sessions created by current client \
+            and disconnect from MongoDB."""
+        self._client.close()
