@@ -17,6 +17,7 @@
 export const lrAlertConst = {
   searchConfig: {
     placeholder: "Search",
+    initialSearch: true,
     advanceForm: [
       {
         type: "date",

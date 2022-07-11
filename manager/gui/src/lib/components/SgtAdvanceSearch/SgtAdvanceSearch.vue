@@ -173,6 +173,10 @@ export default class SgtAdvanceSearch extends Vue {
   mounted() {
     if (this.config.advanceForm && this.config.advanceForm.length > 0) {
       this.advanceSearchActive = true;
+
+      if (this.config.initialSearch) {
+        this.emitSearch();
+      }
     }
   }
 

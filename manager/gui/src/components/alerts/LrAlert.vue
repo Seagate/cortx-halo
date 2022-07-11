@@ -95,7 +95,9 @@ export default class LrAlert extends Vue {
 
   mounted() {
     this.getAlertsList();
-    this.setSeverityFilter();
+    if (this.severity) {
+      this.setSeverityFilter();
+    }
     if (this.alertId) {
       let headers = this.alertConst?.alertTable?.headers;
       let actionColumn = headers[headers?.length - 1];
@@ -108,10 +110,9 @@ export default class LrAlert extends Vue {
     }
   }
 
-  getAlertsList() {
-    const endpoint = this.severity
-      ? `alerts/list?severity=${this.severity}`
-      : "alerts/list";
+  getAlertsList(queryFilters?: string) {
+    const filter = queryFilters ? `?${queryFilters}` : "";
+    const endpoint = `alerts/list${filter}`;
     Api.getData(endpoint, { isDummy: true }).then((resp: any) => {
       this.alerts = resp["data"];
     });
@@ -119,10 +120,16 @@ export default class LrAlert extends Vue {
 
   setSeverityFilter() {
     if (this.severity) {
+      let filterList: SgtFilterObject[] = [];
       const advanceForm = [...this.alertConst.searchConfig.advanceForm];
       const updatedAdvanceForm = advanceForm.map((element) => {
         if (element.name === "severity") {
           element.value = this.severity;
+          filterList.push({
+            label: element.label,
+            name: element.name,
+            value: element.value,
+          });
         }
         return element;
       });
@@ -135,7 +142,11 @@ export default class LrAlert extends Vue {
   }
 
   updateRecord(tableDataConfig: SgtDataTableFilterSortPag) {
-    // code for API call
+    let queryFilters = ``;
+    tableDataConfig.filterList.forEach((filter) => {
+      queryFilters += `${filter.name}=${filter.value}`;
+    });
+    this.getAlertsList(queryFilters);
     this.chips = tableDataConfig.filterList;
   }
 
@@ -186,12 +197,6 @@ export default class LrAlert extends Vue {
       name: "alert-details",
       params: { alertId: selectedRow.alert_uuid },
     });
-  }
-
-  @Watch("$route")
-  public routeChangeHandler() {
-    this.getAlertsList();
-    this.setSeverityFilter();
   }
 }
 </script>

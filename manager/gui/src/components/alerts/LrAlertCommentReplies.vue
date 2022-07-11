@@ -20,7 +20,7 @@
       class="expand-collapse"
       v-if="replies && replies.length > 0"
       @click="isRepliesVisible = !isRepliesVisible"
-      >{{ isRepliesVisible ? "Hide Replies" : "Show Replies" }}</span
+      >{{ isRepliesVisible ? "Hide replies" : "Show replies" }}</span
     >
 
     <ul
@@ -35,11 +35,11 @@
         <div class="created-by">
           {{ reply.created_by }}
         </div>
+        <div class="comment-timestamp">
+          {{ formattedTime(reply.created_time) }}
+        </div>
         <div class="comment-text mt-1">
           {{ reply.comment_text }}
-        </div>
-        <div class="mt-2 comment-timestamp">
-          {{ formattedTime(new Date(reply.created_time * 1000)) }}
         </div>
       </li>
     </ul>
@@ -74,8 +74,8 @@ export default class LrAlertCommentReplies extends Vue {
   @Prop({ required: true }) private comment_id: string;
   @Prop({ required: true }) private replies: IAlertComment[];
 
-  formattedTime(time: string) {
-    return formatTime(time).replace(" ", " | ");
+  formattedTime(time: number) {
+    return formatTime(`${new Date(time * 1000)}`).replace(" ", " | ");
   }
 
   replyToComment(event: any) {
@@ -87,15 +87,18 @@ export default class LrAlertCommentReplies extends Vue {
 .expand-collapse {
   cursor: pointer;
   font-weight: bold;
+  font-size: 0.8rem;
   margin-bottom: 20px;
   padding: 0 1.2em;
+  color: $primary;
+  text-decoration: underline;
 }
 .created-by {
   font-weight: bold;
 }
 
 .comment-timestamp {
-  font-weight: bold;
+  color: #c4c4c4;
 }
 
 .comment-replies-container {

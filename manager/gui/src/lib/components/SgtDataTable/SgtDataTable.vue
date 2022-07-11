@@ -26,6 +26,7 @@
         <v-col class="pl-0 margin-auto">
           <SgtAdvanceSearch
             v-if="searchConfig"
+            ref="advanceSearch"
             :config="searchConfig"
             @filter-click="updateFilter($event)"
           />
@@ -389,12 +390,13 @@ export default class SgtDataTable extends Vue {
    * On chip cancel button click. event emitted from chips component.
    */
   updateFilterByChip(chip: SgtFilterObject) {
-    const ind = this.tableDataConfig.filterList.findIndex(
+    const formField = this.searchConfig.advanceForm?.find(
       (ele) => ele.name == chip.name
     );
-    if (ind >= 0) {
-      this.tableDataConfig.filterList.splice(ind, 1);
-      this.updateRecord();
+    if (formField) {
+      formField.value = "";
+      const refAdvanceSearch = this.$refs.advanceSearch as SgtAdvanceSearch;
+      refAdvanceSearch.emitSearch();
     }
   }
 

@@ -58,12 +58,6 @@ const routes: Array<RouteConfig> = [
     props: true,
   },
   {
-    path: "/alerts/:severity",
-    name: "alerts",
-    component: LrAlert,
-    props: true,
-  },
-  {
     path: "/manage",
     name: "manage",
     component: LrManageUser,

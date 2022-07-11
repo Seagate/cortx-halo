@@ -24,7 +24,7 @@
             :title="cardDetail.title"
             :description="cardDetail.description"
             :imgUrl="cardDetail.imgUrl"
-            @click="cardClickHandler(cardDetail.navPath)"
+            @click="cardClickHandler(cardDetail.description)"
           />
         </template>
       </div>
@@ -60,8 +60,11 @@ export default class LrDashboardAlertCard extends Vue {
     });
   }
 
-  cardClickHandler(routePath: string) {
-    this.$router.push(routePath);
+  cardClickHandler(status: string) {
+    this.$router.push({
+      name: "alerts",
+      params: { severity: status },
+    });
   }
 
   zoomIconHandler() {

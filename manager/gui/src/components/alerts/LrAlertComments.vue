@@ -43,11 +43,11 @@
               <div class="created-by">
                 {{ comment.created_by }}
               </div>
+              <div class="comment-timestamp">
+                {{ formattedTime(new Date(comment.created_time * 1000)) }}
+              </div>
               <div class="comment-text mt-1">
                 {{ comment.comment_text }}
-              </div>
-              <div class="mt-2 comment-timestamp">
-                {{ formattedTime(new Date(comment.created_time * 1000)) }}
               </div>
             </div>
 
@@ -182,7 +182,7 @@ export default class LrAlertComments extends Vue {
       }
 
       .comment-timestamp {
-        font-weight: bold;
+        color: #c4c4c4;
       }
     }
   }
