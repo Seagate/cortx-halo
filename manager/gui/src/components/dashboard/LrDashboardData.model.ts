@@ -25,6 +25,9 @@ export interface StorageComponentsData {
   buckets: number;
   objects: number;
   underReplicated: number;
+  S3Accounts: number;
+  IAMUser: number;
+  dummyText: number;
 }
 
 export interface PerformanceData {
@@ -59,12 +62,13 @@ export interface NodeStatus {
 }
 export interface HealthData {
   cluster: ClusterDetails;
-  nodes: NodeStatus;
+  nodes: any;
 }
 
 export interface DashboardCardDetail {
   title: number | string;
-  description: string;
+  count?: number;
+  unit?: string;
+  description?: string;
   imgUrl: string;
-  navPath: string;
 }

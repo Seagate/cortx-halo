@@ -30,7 +30,7 @@
     </div>
 
     <div class="current-release-card">
-      <LrDashboardInfoCard
+      <SgtInfoCard
         imgUrl="current-software.svg"
         title="Current Release"
         description="LR 2.5"
@@ -125,7 +125,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { create } from "vue-modal-dialogs";
 import SgtDataTable from "@/lib/components/SgtDataTable/SgtDataTable.vue";
 import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
-import LrDashboardInfoCard from "@/components/dashboard/LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import {
   lrMaintenanceAvailableSoftwareConst,
   lrMaintenanceSoftwareUpdateStatusConst,
@@ -141,7 +141,7 @@ import SgtDropFile from "@/lib/components/SgtDropFile/SgtDropFile.vue";
   components: {
     SgtDataTable,
     SgtTooltipIcon,
-    LrDashboardInfoCard,
+    SgtInfoCard,
     SgtSvgIcon,
     SgtDropFile,
   },

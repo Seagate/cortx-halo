@@ -19,7 +19,7 @@
     <SgtCard title="storageComponents">
       <div class="storage-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <LrDashboardInfoCard
+          <SgtInfoCard
             :key="index"
             :title="cardDetail.title"
             :description="cardDetail.description"
@@ -33,7 +33,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LrDashboardInfoCard from "./LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import { Api } from "../../services/Api";
 import {
@@ -44,7 +44,7 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardStorageComponentsCard",
-  components: { LrDashboardInfoCard, SgtCard },
+  components: { SgtInfoCard, SgtCard },
 })
 export default class LrDashboardStorageComponentsCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
@@ -69,10 +69,11 @@ export default class LrDashboardStorageComponentsCard extends Vue {
 <style lang="scss" scoped>
 .storage-cards-container {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 .storage-cards-container > * {
   margin-bottom: 1em;
-  justify-content: flex-start;
+  width: 32%;
 }
 </style>

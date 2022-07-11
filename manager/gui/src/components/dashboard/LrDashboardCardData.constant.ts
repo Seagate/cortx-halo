@@ -34,6 +34,24 @@ export const dashboardCardData = {
       imgUrl: "storage-objects.svg",
       navPath: "",
     },
+    {
+      title: 0,
+      description: "S3Account",
+      imgUrl: "storage-buckets.svg",
+      navPath: "",
+    },
+    {
+      title: 0,
+      description: "IAMUser",
+      imgUrl: "storage-objects.svg",
+      navPath: "",
+    },
+    {
+      title: 0,
+      description: "dummyText",
+      imgUrl: "storage-objects.svg",
+      navPath: "",
+    },
   ],
   performance: [
     {
@@ -51,28 +69,32 @@ export const dashboardCardData = {
   ],
   clusterNodes: [
     {
-      title: 0,
-      description: "online",
+      count: 0,
+      unit: "nodes",
+      title: "online",
       imgUrl: "health-online-nodes.svg",
-      navPath: "/health",
+      color: "#E2F2DB"
     },
     {
-      title: 0,
-      description: "offline",
+      count: 0,
+      unit: "nodes",
+      title: "offline",
       imgUrl: "health-offline-nodes.svg",
-      navPath: "/health",
+      color: "#EEEEEE"
     },
     {
-      title: 0,
-      description: "failed",
+      count: 0,
+      unit: "nodes",
+      title: "failed",
       imgUrl: "health-failed-nodes.svg",
-      navPath: "/health",
+      color: "#FBE9EA"
     },
     {
-      title: 0,
-      description: "degraded",
+      count: 0,
+      unit: "nodes",
+      title: "degraded",
       imgUrl: "health-degraded-nodes.svg",
-      navPath: "/health",
+      color: "#FDEDD4"
     },
   ],
   alerts: [
@@ -115,4 +137,22 @@ export const dashboardCardData = {
       navPath: "",
     },
   ],
+  clusterHealth: {
+    online: {
+      color: "#E2F2DB",
+      image: "health-online-cluster.svg"
+    },
+    offline: {
+      color: "#EEEEEE",
+      image: "health-offline-cluster.svg"
+    },
+    degraded: {
+      color: "#FDEDD4",
+      image: "health-degraded-cluster.svg"
+    },
+    failed: {
+      color: "#FBE9EA",
+      image: "health-failed-cluster.svg"
+    }
+  }
 };
