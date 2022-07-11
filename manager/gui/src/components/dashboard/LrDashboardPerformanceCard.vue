@@ -38,7 +38,7 @@
                       alt
                     />
                   </v-col>
-                  <v-col cols="7">
+                  <v-col cols="7 py-7 pl-7">
                     <div class="card-info">
                       <span
                         ><span class="count">{{ cardDetail.count }}</span>
@@ -50,6 +50,7 @@
               </v-col>
               <v-col cols="7" class="graph-img">
                 <img
+                  width="250"
                   :src="require(`@/assets/images/${cardDetail.imgUrl2}`)"
                   alt
                 />

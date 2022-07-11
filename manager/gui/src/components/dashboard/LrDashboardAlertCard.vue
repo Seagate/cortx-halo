@@ -102,7 +102,7 @@ export default class LrDashboardAlertCard extends Vue {
       },
       size: {
         width: 220,
-        height: 220
+        height: 220,
       },
       tooltip: {
         format: {
@@ -140,7 +140,7 @@ export default class LrDashboardAlertCard extends Vue {
   cardClickHandler(status: string) {
     this.$router.push({
       name: "alerts",
-      params: { status: status },
+      params: { severity: status },
     });
   }
 
