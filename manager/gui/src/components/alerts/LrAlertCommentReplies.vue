@@ -49,7 +49,7 @@
         dense
         class="mt-2"
         name="reply"
-        label="Reply"
+        placeholder="Reply"
         height="40"
         hide-details="auto"
         append-icon="mdi-send-circle"
