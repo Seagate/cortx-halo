@@ -29,9 +29,18 @@ describe('Dashboard-LrDashboardAlertCard.vue', () => {
         })
     })
 
-    it('Check if title exist and is Alerts', async () => {
+    it('Check if title exist and total count is visible', async () => {
+        expect(mockGetData).toHaveBeenCalled()
         expect(wrapper.text()).toContain("Alerts");
+        expect(wrapper.text()).toContain("55");
+    })
 
+    it('Check if the alert and their counts are visible', async () => {
+        expect(wrapper.text()).toContain("Fatal 10");
+        expect(wrapper.text()).toContain("Critical 5");
+        expect(wrapper.text()).toContain("Error 3");
+        expect(wrapper.text()).toContain("Warning 20");
+        expect(wrapper.text()).toContain("Informational 17");
     })
 
 
