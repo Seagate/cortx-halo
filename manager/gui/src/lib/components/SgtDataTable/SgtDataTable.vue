@@ -75,8 +75,9 @@
     >
       <template v-slot:header="{}">
         <tr class="table-header">
-          <th v-if="isMultiSelect">
+          <th v-if="isMultiSelect" width="50px">
             <v-simple-checkbox
+              class="header-checkbox"
               :value="selected.length == records.length"
               :indeterminate="
                 selected.length > 0 && selected.length < records.length
@@ -439,6 +440,10 @@ export default class SgtDataTable extends Vue {
       font-weight: bold;
       margin: 15px 0 0;
     }
+  }
+  .header-checkbox {
+    text-align: left;
+    padding-left: 1rem;
   }
   .sgt-table-header {
     border: 1px solid #dfe0eb;
