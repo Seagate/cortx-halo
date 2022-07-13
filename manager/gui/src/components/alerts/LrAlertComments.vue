@@ -44,7 +44,7 @@
                 {{ comment.created_by }}
               </div>
               <div class="comment-timestamp">
-                {{ formattedTime(new Date(comment.created_time * 1000)) }}
+                {{ formatCommentTime(new Date(comment.created_time * 1000)) }}
               </div>
               <div class="comment-text mt-1">
                 {{ comment.comment_text }}
@@ -85,7 +85,7 @@
 import { Component, Vue, Prop, PropSync } from "vue-property-decorator";
 import { Api } from "../../services/Api";
 import { AlertCommentModel } from "./LrAlertComment.model";
-import { formatTime } from "@/utils/CommonUtilFunctions";
+import { formatCommentTime } from "@/utils/CommonUtilFunctions";
 import LrAlertCommentReplies from "./LrAlertCommentReplies.vue";
 @Component({
   name: "LrAlertComments",
@@ -110,8 +110,8 @@ export default class LrAlertComments extends Vue {
     this.alertComments = res.data;
   }
 
-  formattedTime(time: string) {
-    return formatTime(time).replace(" ", " | ");
+  formatCommentTime(time: number) {
+    return formatCommentTime(time);
   }
 
   addComment() {

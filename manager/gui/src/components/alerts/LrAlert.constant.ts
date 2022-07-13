@@ -92,12 +92,12 @@ export const lrAlertConst = {
         text: "Description",
         value: "description",
         type: "custom",
-        width: "200px",
       },
       { text: "Alert Type", value: "alert_type", width: "135px" },
       {
         text: "",
         value: "action",
+        width: "150px",
         type: "action",
         align: "end",
         sortable: false,

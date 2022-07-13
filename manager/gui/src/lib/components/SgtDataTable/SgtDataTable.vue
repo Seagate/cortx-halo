@@ -395,7 +395,7 @@ export default class SgtDataTable extends Vue {
       (ele) => ele.name == chip.name
     );
     if (formField) {
-      formField.value = "";
+      formField.value = null;
       const refAdvanceSearch = this.$refs.advanceSearch as SgtAdvanceSearch;
       refAdvanceSearch.emitSearch();
     }

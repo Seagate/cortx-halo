@@ -19,8 +19,12 @@ export const capitalizeFirstLetter = (value: string) => {
   return value.charAt(0).toUpperCase() + value.substring(1);
 };
 
-export const formatTime = (date: string) => {
+export const formatTime = (date: string | number) => {
   return moment.default(date).format("DD-MM-YYYY hh:mm A");
+};
+
+export const formatCommentTime = (time: number) => {
+  return formatTime(time * 1000).replace(" ", " | ");
 };
 
 export function passwordTest(str: string, reg?: string) {
@@ -33,7 +37,7 @@ export function passwordTest(str: string, reg?: string) {
 export function usernameTest(str: string, reg?: string) {
   const standardRegex = "^[ A-Za-z0-9_-]*$";
   const regex = new RegExp(reg ? reg : standardRegex);
-  return regex.test(str)
+  return regex.test(str);
 }
 
 export const strEqualityCaseInsensitive = (first: string, second: string) =>
@@ -49,7 +53,9 @@ export function jsonTest(str: string) {
 }
 
 export function hexToRGB(h: string) {
-  let r: string | number = 0, g: string | number = 0, b: string | number = 0;
+  let r: string | number = 0,
+    g: string | number = 0,
+    b: string | number = 0;
 
   // 3 digits
   if (h.length == 4) {

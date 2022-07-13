@@ -94,9 +94,10 @@ export default class LrAlert extends Vue {
   public acknowledgeModal = create<SgtDialogModel>(SgtDialog);
 
   mounted() {
-    this.getAlertsList();
     if (this.severity) {
       this.setSeverityFilter();
+    } else {
+      this.getAlertsList();
     }
     if (this.alertId) {
       let headers = this.alertConst?.alertTable?.headers;
@@ -110,12 +111,14 @@ export default class LrAlert extends Vue {
     }
   }
 
-  getAlertsList(queryFilters?: string) {
+  async getAlertsList(queryFilters?: string, chipsData?: any[]) {
     const filter = queryFilters ? `?${queryFilters}` : "";
     const endpoint = `alerts/list${filter}`;
-    Api.getData(endpoint, { isDummy: true }).then((resp: any) => {
-      this.alerts = resp["data"];
-    });
+    const res: any = await Api.getData(endpoint, { isDummy: true });
+    this.alerts = res["data"];
+    if (chipsData) {
+      this.chips = chipsData;
+    }
   }
 
   setSeverityFilter() {
@@ -146,8 +149,7 @@ export default class LrAlert extends Vue {
     tableDataConfig.filterList.forEach((filter) => {
       queryFilters += `${filter.name}=${filter.value}`;
     });
-    this.getAlertsList(queryFilters);
-    this.chips = tableDataConfig.filterList;
+    this.getAlertsList(queryFilters, tableDataConfig.filterList);
   }
 
   openDetails(selectedRow: any) {
