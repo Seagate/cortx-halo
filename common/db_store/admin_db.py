@@ -33,7 +33,8 @@ class DBAdmin(ABC):
 class MongoDBAdmin(DBAdmin):
 
     def __init__(self, endpoint: str, db_name: str, **kwargs) -> None:
-        """Initialize DB connection.
+        """
+        Initialize DB connection.
 
         Args:
             endpoint (str): MongoDB server endpoints.
@@ -69,7 +70,8 @@ class MongoDBAdmin(DBAdmin):
             raise DBError(f"Index '{index_key}' creation failed. {e}")
 
     def list_indexes(self, collection: str, **kwargs):
-        """List all index present in collection.
+        """
+        List all index present in collection.
 
         Args:
             collection (str): Name of collection.
