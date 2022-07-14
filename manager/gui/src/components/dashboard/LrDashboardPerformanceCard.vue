@@ -77,14 +77,17 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 export default class LrDashboardPerformanceCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
 
-  public async mounted() {
-    const data: any = await Api.getData("/dashboard/performance", {
-      isDummy: true,
-    });
-    this.dashboardCardDetails = dashboardCardData.performance.map((datum) => ({
-      ...datum,
-      count: data[datum.title],
-    }));
+  public mounted() {
+    Api.getData("/dashboard/performance", { isDummy: true }).then(
+      (resp: any) => {
+        this.dashboardCardDetails = dashboardCardData.performance.map(
+          (datum) => ({
+            ...datum,
+            count: resp.data[datum.title],
+          })
+        );
+      }
+    );
   }
 
   public zoomIconHandler() {
@@ -99,10 +102,10 @@ export default class LrDashboardPerformanceCard extends Vue {
 <style lang="scss" scoped>
 .info-card-container {
   border: 1px solid #e5e5e5;
-  padding: 20px 20px;
-  margin-bottom: 12px;
+  padding: 1.25em 1.25em;
+  margin-bottom: 0.75em;
   .info-title {
-    padding-bottom: 16px;
+    padding-bottom: 1em;
   }
   .count {
     font-weight: bold;

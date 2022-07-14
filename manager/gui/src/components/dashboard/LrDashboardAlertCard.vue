@@ -49,7 +49,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
-import { AlertData } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
 import { dashboardCardData } from "./LrDashboardCardData.constant";
 import * as c3 from "c3";
@@ -63,11 +62,11 @@ export default class LrDashboardAlertCard extends Vue {
   public dashboardCardDetails: any[] = [];
   totalAlerts = 0;
   public async mounted() {
-    const data = (await Api.getData("/dashboard/alerts", {
+    const data: any = await Api.getData("/dashboard/alerts", {
       isDummy: true,
-    })) as AlertData;
+    });
     this.dashboardCardDetails = dashboardCardData.alerts.map((datum) => {
-      const count = +data[datum.description as keyof AlertData];
+      const count = +data.data[datum.description];
       return {
         ...datum,
         title: count,

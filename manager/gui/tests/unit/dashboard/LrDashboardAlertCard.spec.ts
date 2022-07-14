@@ -11,11 +11,13 @@ describe('Dashboard-LrDashboardAlertCard.vue', () => {
     let wrapper: any;
     const mockGetData = jest.spyOn(Api, 'getData')
         .mockResolvedValue({
+            "data": {
                 "fatal": "10",
                 "critical": "5",
-                "error": "3",
+                "error": "0",
                 "warning": "20",
                 "informational": "17"
+            }
         });
 
     beforeEach(() => {
