@@ -40,17 +40,17 @@
                   </v-col>
                   <v-col cols="7 py-7 pl-7">
                     <div class="card-info">
-                      <span
+                      <span class="count-container"
                         ><span class="count">{{ cardDetail.count }}</span>
-                        {{ cardDetail.unit }}</span
-                      >
+                        <span class="unit">{{ cardDetail.unit }}</span>
+                      </span>
                     </div>
                   </v-col>
                 </v-row>
               </v-col>
               <v-col cols="7" class="graph-img">
                 <img
-                  width="250"
+                  width="100%"
                   :src="require(`@/assets/images/${cardDetail.imgUrl2}`)"
                   alt
                 />
@@ -107,9 +107,17 @@ export default class LrDashboardPerformanceCard extends Vue {
   .info-title {
     padding-bottom: 1em;
   }
-  .count {
-    font-weight: bold;
-    font-size: 2rem;
+  .count-container {
+    display: flex;
+    align-items: flex-end;
+    .count {
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    .unit {
+      padding-bottom: 0.5em;
+      padding-left: 0.2em;
+    }
   }
 }
 .graph-img {
