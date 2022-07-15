@@ -27,13 +27,14 @@ def setup_db():
     db.close_connection()
 
 
-def test_create_time_series_collection(setup_admin_db):
+def test_create_time_series_data_store(setup_admin_db):
     """Test by creating collection & listing it back."""
-    admin_db.create_timeseries_collection(
-        collection="test_coll",
+    admin_db.create_data_store(
+        data_store="timeseries",
+        data_store_name="test_coll",
         timeField="timestamp"
         )
-    collection_list = admin_db.get_list_of_collections()
+    collection_list = admin_db.get_data_stores()
     assert 'test_coll' in collection_list, \
         "Failed to create timeseries collection."
 
@@ -51,14 +52,14 @@ def test_save_data(setup_db):
               "comp": "disk", "measures": {'cpu': '23', 'memory': '235'}}
     result = db.save_data("test_coll", data=record)
     assert result is not None, "Failed to save Data."
-    get_list_of_records = db.get_data(collection="test_coll")
+    get_list_of_records = db.get_data("test_coll")
     assert any(r['measures'] == record['measures']
                for r in get_list_of_records)
 
 
 def test_get_data(setup_db):
     """Test by listing data."""
-    get_list_of_records = db.get_data(collection="test_coll")
+    get_list_of_records = db.get_data("test_coll")
     assert get_list_of_records is not None, "Failed to fetch Data."
 
 
@@ -71,6 +72,6 @@ def test_delete_index(setup_admin_db):
 
 def test_delete_collection(setup_admin_db):
     """Test by deleting collection and confirm by listing collection."""
-    admin_db.remove_collection("test_coll")
-    collection_list = admin_db.get_list_of_collections()
+    admin_db.delete_data_store("test_coll")
+    collection_list = admin_db.get_data_stores()
     assert 'test_coll' not in collection_list, "Failed to delete collection."

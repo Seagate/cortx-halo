@@ -5,12 +5,21 @@ from common.db_store.error import DBError
 
 
 class DB(ABC):
+
     @abstractmethod
-    def get_data(self, collection, **kwargs):
+    def open_connection(self):
         pass
 
     @abstractmethod
-    def save_data(self, collection, data, **kwargs):
+    def close_connection(self):
+        pass
+
+    @abstractmethod
+    def get_data(self, data_store_name, **kwargs):
+        pass
+
+    @abstractmethod
+    def save_data(self, data_store_name, data, **kwargs):
         pass
 
 
@@ -20,32 +29,41 @@ class STATUSES(Enum):
 
 class MongoDB(DB):
 
-    def __init__(self, endpoint, db_name, **kwargs) -> None:
-        """Initialize DB connection.
+    def __init__(self, endpoint: str, data_store_group: str) -> None:
+        """Initialize Data store connection.
 
         Args:
             endpoint (str): MongoDB server endpoints.
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
-            db_name (str): Name of Database.
+            data_store_group (str): Name of data store group.
+        """
+        self._open_connection(endpoint, data_store_group)
+
+    def _open_connection(self, endpoint: str, data_store_group: str):
+        """Open data store connection.
+
+        Args:
+            endpoint (str): Data store endpoints.
+            data_store_group (str): Name of data store group.
 
         Raises:
-            DBError: Unable to connect.
+            DBError: Unable to create connection.
         """
-        # TODO : Maintain maximum 10 connection in connection pool
         try:
             self._client = pymongo.MongoClient(endpoint)
-            self._db = self._client[db_name]
+            self._data_group = self._client[data_store_group]
         except Exception as e:
-            # Log.error(f"Unable to connect database server endpoints \
+            # TODO : Once logging enabled, uncomment all Log comments.
+            # Log.error(f"Unable to connect data store server endpoints \
             #     {endpoint} {e}")
-            raise DBError(f"Unable to connect database server endpoints \
-                {endpoint} with Error : {e}")
+            raise DBError(f"Unable to connect data store server endpoints \
+                          {endpoint} with Error : {e}")
 
-    def get_data(self, collection: str, **kwargs):
+    def get_data(self, data_store_name: str, **kwargs):
         """Get list of documents that match the query criteria.
 
         Args:
-            collection (str): Name of collection.
+            data_store_name (str): Name of data store.
 
         Raises:
             DBError: Unable to fetch data.
@@ -57,7 +75,7 @@ class MongoDB(DB):
         query_params = kwargs.get('queryparams')
 
         try:
-            results = self._db[collection].find(query_params)
+            results = self._data_group[data_store_name].find(query_params)
             for result in results:
                 result_list.append(result)
         except Exception as e:
@@ -66,12 +84,12 @@ class MongoDB(DB):
 
         return result_list
 
-    def save_data(self, collection: str, data, **kwargs):
-        """Save data to the collection.
+    def save_data(self, data_store_name: str, data, **kwargs):
+        """Save data to the data store.
 
         Args:
-            collection (str): Name of collection.
-            data (json/bson): JSON / BSON document to save to the collection.
+            data_store_name (str): Name of data store.
+            data (json/bson): JSON / BSON document to save to the data store.
 
         Raises:
             DBError: Unable to save data.
@@ -81,13 +99,13 @@ class MongoDB(DB):
         """
         try:
             if '_id' in data:
-                result = self._db[collection]. \
+                result = self._data_group[data_store_name]. \
                     replace_one({'_id': data['_id']}, data, upsert=True)
                 return {"status": STATUSES.SUCCESS.value,
                         "matched_count": result.matched_count,
                         "insert_id": None}
             else:
-                result = self._db[collection].insert_one(data)
+                result = self._data_group[data_store_name].insert_one(data)
                 return {"status": STATUSES.SUCCESS.value,
                         "matched_count": None,
                         "insert_id": result.inserted_id}
