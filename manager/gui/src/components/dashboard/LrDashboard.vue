@@ -17,14 +17,37 @@
 <template>
   <div class="dashboard-container">
     <v-row class="top-row">
-      <LrDashboardCapacityCard />
-      <LrDashboardPerformanceCard />
-      <LrDashboardStorageComponentsCard />
+      <v-col cols="3">
+        <LrDashboardClusterHealthCard />
+      </v-col>
+      <v-col cols="9">
+        <LrDashboardNodesCard />
+      </v-col>
     </v-row>
     <v-row class="bottom-row">
-      <LrDashboardClusterHealthCard />
-      <LrDashboardAlertCard />
-      <LrDashboardBgActivitiesCard />
+      <v-col cols="3">
+        <v-row>
+          <v-col>
+            <LrDashboardAlertCard />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <LrDashboardBgActivitiesCard />
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="9">
+        <v-row>
+          <v-col cols="6"> <LrDashboardPerformanceCard /></v-col>
+          <v-col cols="6"><LrDashboardCapacityCard /></v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <LrDashboardStorageComponentsCard />
+          </v-col>
+        </v-row>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -37,7 +60,7 @@ import LrDashboardPerformanceCard from "./LrDashboardPerformanceCard.vue";
 import LrDashboardClusterHealthCard from "./LrDashboardClusterHealthCard.vue";
 import LrDashboardAlertCard from "./LrDashboardAlertCard.vue";
 import LrDashboardBgActivitiesCard from "./LrDashboardBgActivitiesCard.vue";
-
+import LrDashboardNodesCard from "./LrDashboardNodesCard.vue";
 @Component({
   name: "LrDashboard",
   components: {
@@ -47,6 +70,7 @@ import LrDashboardBgActivitiesCard from "./LrDashboardBgActivitiesCard.vue";
     LrDashboardClusterHealthCard,
     LrDashboardAlertCard,
     LrDashboardBgActivitiesCard,
+    LrDashboardNodesCard,
   },
 })
 export default class LrDashboard extends Vue {}
@@ -58,8 +82,7 @@ export default class LrDashboard extends Vue {}
 }
 .top-row,
 .bottom-row {
-  min-height: min(50%, 400px);
-  padding: 12px;
+  min-height: min(30%, 300px);
   display: flex;
   flex-wrap: nowrap;
   gap: 20px;

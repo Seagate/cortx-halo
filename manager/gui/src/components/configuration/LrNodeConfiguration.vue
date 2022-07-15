@@ -267,8 +267,11 @@ export default class LrNodeConfiguration extends Vue {
     await this.setNetworkInfoAllNodes();
   }
 
-  async setNetworkInfoAllNodes() {
-    const networkInfoRes: any = await Api.getData("config/network-info", {
+  async setNetworkInfoAllNodes(isReset = false) {
+    const path = isReset
+      ? "config/default-network-info"
+      : "config/network-info";
+    const networkInfoRes: any = await Api.getData(path, {
       isDummy: true,
     });
     this.networkInfoAllNodes = networkInfoRes.data;

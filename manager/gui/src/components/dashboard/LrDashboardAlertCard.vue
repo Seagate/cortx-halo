@@ -16,16 +16,30 @@
 -->
 <template>
   <div class="alert-widget-container">
-    <SgtCard title="alerts" :showZoomIcon="true" @zoom-click="zoomIconHandler">
+    <SgtCard
+      :title="$t('alerts')"
+      :showZoomIcon="true"
+      titleInfo="Total number of alerts"
+      @zoom-click="zoomIconHandler"
+    >
+      <div id="alert-chart" class="center-align"></div>
       <div class="alert-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <LrDashboardInfoCard
+          <div
+            class="card-details py-2 px-3"
             :key="index"
-            :title="cardDetail.title"
-            :description="cardDetail.description"
-            :imgUrl="cardDetail.imgUrl"
-            @click="cardClickHandler(cardDetail.navPath)"
-          />
+            @click="cardClickHandler(cardDetail.description)"
+          >
+            <img
+              :src="require(`@/assets/images/${cardDetail.imgUrl}`)"
+              alt
+              class="vertical-middle"
+            />
+            <span>
+              {{ $t(cardDetail.description) }}
+              <b> {{ cardDetail.title }} </b></span
+            >
+          </div>
         </template>
       </div>
     </SgtCard>
@@ -33,35 +47,100 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LrDashboardInfoCard from "./LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
-import { AlertData, DashboardCardDetail } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
 import { dashboardCardData } from "./LrDashboardCardData.constant";
+import * as c3 from "c3";
+import * as d3 from "d3";
 
 @Component({
   name: "LrDashboardAlertCard",
-  components: { LrDashboardInfoCard, SgtCard },
+  components: { SgtInfoCard, SgtCard },
 })
 export default class LrDashboardAlertCard extends Vue {
-  public dashboardCardDetails: DashboardCardDetail[] = [];
-
+  public dashboardCardDetails: any[] = [];
+  totalAlerts = 0;
   public async mounted() {
-    const data = (await Api.getData("/dashboard/alerts", {
+    const data: any = await Api.getData("/dashboard/alerts", {
       isDummy: true,
-    })) as AlertData;
+    });
     this.dashboardCardDetails = dashboardCardData.alerts.map((datum) => {
-      const count = +data[datum.description as keyof AlertData];
+      const count = +data.data[datum.description];
       return {
         ...datum,
         title: count,
-        imgUrl: count === 0 ? "zero-" + datum.imgUrl : datum.imgUrl,
       };
     });
+    this.totalAlerts = this.dashboardCardDetails.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.title,
+      0
+    );
+    this.generateAlertChart();
   }
 
-  cardClickHandler(routePath: string) {
-    this.$router.push(routePath);
+  generateAlertChart() {
+    c3.generate({
+      bindto: "#alert-chart",
+      legend: {
+        show: false,
+      },
+      data: {
+        columns: [...this.mapAlertsData(this.dashboardCardDetails)],
+        type: "donut",
+        onclick: (d) => {
+          this.cardClickHandler(d.id);
+        },
+      },
+      color: {
+        pattern: ["#DC1F2E", "#AF131F", "#F7A528", "#EA3947", "#00A1DD"],
+      },
+      donut: {
+        width: 25,
+        label: { show: false },
+      },
+      size: {
+        width: 220,
+        height: 220,
+      },
+      tooltip: {
+        format: {
+          value: function (value: string) {
+            return value;
+          },
+        },
+      },
+    });
+
+    d3.select(".c3-chart-arcs").append("g").attr("class", "inner-circle-div");
+
+    d3.select(".inner-circle-div")
+      .append("circle")
+      .attr("r", 50)
+      .attr("fill", "#FFFFFF")
+      .attr("stroke", "gray");
+
+    d3.select(".inner-circle-div")
+      .append("text")
+      .attr("class", "circle-text")
+      .attr("x", -15)
+      .text(this.totalAlerts)
+      .append("tspan")
+      .attr("class", "circle-desc")
+      .attr("dy", 20)
+      .attr("x", -20)
+      .text("Alerts");
+  }
+
+  mapAlertsData(alertData: any) {
+    return alertData.map((ele: any) => [ele.description, ele.title]);
+  }
+
+  cardClickHandler(status: string) {
+    this.$router.push({
+      name: "alerts",
+      params: { severity: status },
+    });
   }
 
   zoomIconHandler() {
@@ -70,19 +149,37 @@ export default class LrDashboardAlertCard extends Vue {
 }
 </script>
 <style lang="scss" scoped>
+::v-deep .inner-circle-div {
+  filter: drop-shadow(3px 3px 2px gray);
+}
+::v-deep .circle-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  .circle-desc {
+    font-size: 1rem;
+    font-weight: initial;
+  }
+}
+::v-deep .c3-chart-arc {
+  path {
+    border-radius: 5px;
+  }
+}
 .alert-cards-container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  padding: 0 3rem;
+  .card-details {
+    font-size: 1.2rem;
+    min-height: 3rem;
+  }
+  .card-details:hover {
+    cursor: pointer;
+    border: 1px solid #e5e5e5;
+  }
 }
-.alert-cards-container > * {
-  width: 48%;
-  margin-bottom: 1em;
+.center-align {
+  text-align: center;
 }
-.alert-cards-container > *:last-child {
-  width: 100%;
-}
-.alert-cards-container > *:not(:last-child) {
-  justify-content: flex-start;
+.vertical-middle {
+  vertical-align: middle;
 }
 </style>

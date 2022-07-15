@@ -17,19 +17,46 @@
 <template>
   <div class="performance-widget-container">
     <SgtCard
-      title="performance"
+      :title="$t('performance')"
       :showZoomIcon="true"
       @zoom-click="zoomIconHandler"
     >
       <div class="performance-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
-          <LrDashboardInfoCard
+          <div
+            class="info-card-container"
             :key="index"
-            :title="cardDetail.title"
-            :description="cardDetail.description"
-            :imgUrl="cardDetail.imgUrl"
             @click="cardClickHandler(cardDetail.navPath)"
-          />
+          >
+            <v-row>
+              <v-col cols="5">
+                <div class="info-title">{{ $t(cardDetail.title) }}</div>
+                <v-row>
+                  <v-col cols="5">
+                    <img
+                      :src="require(`@/assets/images/${cardDetail.imgUrl}`)"
+                      alt
+                    />
+                  </v-col>
+                  <v-col cols="7 py-7 pl-7">
+                    <div class="card-info">
+                      <span class="count-container"
+                        ><span class="count">{{ cardDetail.count }}</span>
+                        <span class="unit">{{ cardDetail.unit }}</span>
+                      </span>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="7" class="graph-img">
+                <img
+                  width="100%"
+                  :src="require(`@/assets/images/${cardDetail.imgUrl2}`)"
+                  alt
+                />
+              </v-col>
+            </v-row>
+          </div>
         </template>
       </div>
     </SgtCard>
@@ -37,7 +64,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LrDashboardInfoCard from "./LrDashboardInfoCard.vue";
+import SgtInfoCard from "@/lib/components/SgtInfoCard/SgtInfoCard.vue";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import { PerformanceData, DashboardCardDetail } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
@@ -45,19 +72,22 @@ import { dashboardCardData } from "./LrDashboardCardData.constant";
 
 @Component({
   name: "LrDashboardPerformanceCard",
-  components: { LrDashboardInfoCard, SgtCard },
+  components: { SgtInfoCard, SgtCard },
 })
 export default class LrDashboardPerformanceCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
 
-  public async mounted() {
-    const data = (await Api.getData("/dashboard/performance", {
-      isDummy: true,
-    })) as PerformanceData;
-    this.dashboardCardDetails = dashboardCardData.performance.map((datum) => ({
-      ...datum,
-      title: `${data[datum.description as keyof PerformanceData]} ${data.unit}`,
-    }));
+  public mounted() {
+    Api.getData("/dashboard/performance", { isDummy: true }).then(
+      (resp: any) => {
+        this.dashboardCardDetails = dashboardCardData.performance.map(
+          (datum) => ({
+            ...datum,
+            count: resp.data[datum.title],
+          })
+        );
+      }
+    );
   }
 
   public zoomIconHandler() {
@@ -70,12 +100,30 @@ export default class LrDashboardPerformanceCard extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.performance-cards-container {
-  display: flex;
-  flex-direction: column;
+.info-card-container {
+  border: 1px solid #e5e5e5;
+  padding: 1.25em 1.25em;
+  margin-bottom: 0.75em;
+  .info-title {
+    padding-bottom: 1em;
+  }
+  .count-container {
+    display: flex;
+    align-items: flex-end;
+    .count {
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    .unit {
+      padding-bottom: 0.5em;
+      padding-left: 0.2em;
+    }
+  }
 }
-.performance-cards-container > * {
-  margin-bottom: 1em;
-  justify-content: flex-start;
+.graph-img {
+  text-align: right;
+}
+.info-card-container:hover {
+  box-shadow: 0px 6px 15px #e5e5e5;
 }
 </style>

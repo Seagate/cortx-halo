@@ -1,3 +1,5 @@
+import { graphImages } from '../health/LrHeathGraphImages.constant';
+
 /*
  * CORTX-CSM: CORTX Management web.
  * Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates
@@ -34,45 +36,71 @@ export const dashboardCardData = {
       imgUrl: "storage-objects.svg",
       navPath: "",
     },
+    {
+      title: 0,
+      description: "S3Account",
+      imgUrl: "storage-buckets.svg",
+      navPath: "",
+    },
+    {
+      title: 0,
+      description: "IAMUser",
+      imgUrl: "storage-objects.svg",
+      navPath: "",
+    },
+    {
+      title: 0,
+      description: "dummyText",
+      imgUrl: "storage-objects.svg",
+      navPath: "",
+    },
   ],
   performance: [
     {
-      title: 0,
-      description: "readThroughput",
       imgUrl: "performance-read-throughput-good.svg",
+      imgUrl2: "performance-read-graph.svg",
       navPath: "/performance",
+      count: 0,
+      unit: "Gbps",
+      title: "readThroughput",
     },
     {
-      title: 0,
-      description: "writeThroughput",
       imgUrl: "performance-write-throughput-good.svg",
+      imgUrl2: "performance-write-graph.svg",
       navPath: "/performance",
-    },
+      count: 0,
+      unit: "Gbps",
+      title: "writeThroughput",
+    }
   ],
   clusterNodes: [
     {
-      title: 0,
-      description: "online",
+      count: 0,
+      unit: "nodes",
+      title: "online",
       imgUrl: "health-online-nodes.svg",
-      navPath: "/health",
+      color: "#E2F2DB"
     },
     {
-      title: 0,
-      description: "offline",
+      count: 0,
+      unit: "nodes",
+      title: "offline",
       imgUrl: "health-offline-nodes.svg",
-      navPath: "/health",
+      color: "#EEEEEE"
     },
     {
-      title: 0,
-      description: "failed",
+      count: 0,
+      unit: "nodes",
+      title: "failed",
       imgUrl: "health-failed-nodes.svg",
-      navPath: "/health",
+      color: "#FBE9EA"
     },
     {
-      title: 0,
-      description: "degraded",
+      count: 0,
+      unit: "nodes",
+      title: "degraded",
       imgUrl: "health-degraded-nodes.svg",
-      navPath: "/health",
+      color: "#FDEDD4"
     },
   ],
   alerts: [
@@ -80,31 +108,26 @@ export const dashboardCardData = {
       title: 0,
       description: "fatal",
       imgUrl: "alert-fatal.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "critical",
       imgUrl: "alert-critical.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "error",
       imgUrl: "alert-error.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "warning",
       imgUrl: "alert-warning.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "informational",
       imgUrl: "alert-informational.svg",
-      navPath: "/alerts",
     },
   ],
   bgActivities: [
@@ -115,4 +138,22 @@ export const dashboardCardData = {
       navPath: "",
     },
   ],
+  clusterHealth: {
+    online: {
+      color: "#E2F2DB",
+      image: "health-online-cluster.svg"
+    },
+    offline: {
+      color: "#EEEEEE",
+      image: "health-offline-cluster.svg"
+    },
+    degraded: {
+      color: "#FDEDD4",
+      image: "health-degraded-cluster.svg"
+    },
+    failed: {
+      color: "#FBE9EA",
+      image: "health-failed-cluster.svg"
+    }
+  }
 };
