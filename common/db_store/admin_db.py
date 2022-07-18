@@ -19,7 +19,7 @@ class DBAdmin(ABC):
         pass
 
     @abstractmethod
-    def open_connection(self, endpoint, data_store_group):
+    def open_connection(self):
         pass
 
     @abstractmethod
@@ -27,11 +27,11 @@ class DBAdmin(ABC):
         pass
 
     @abstractmethod
-    def create_data_store(self, data_store, data_store_name, **kwargs):
+    def create_data_store(self, data_store_name, data_store_type, **kwargs):
         pass
 
     @abstractmethod
-    def delete_data_store(self, data_store_name):
+    def delete_data_store(self, data_store_name, data_store_type, **kwargs):
         pass
 
     @abstractmethod
@@ -40,7 +40,10 @@ class DBAdmin(ABC):
 
 
 class DATASTORE(Enum):
-    TIMESERIES = "timeseries"
+    TIMESERIES_STORE = "timeseries_store"
+    ALERT_STORE = "alert_store"
+    CONFIG_STORE = "config_store"
+    PERF_STORE = "perf_store"
 
 
 class MongoDBAdmin(DBAdmin):
@@ -53,27 +56,25 @@ class MongoDBAdmin(DBAdmin):
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
             data_store_group (str): Name of data store group.
         """
-        self._open_connection(endpoint, data_store_group)
+        self._endpoint = endpoint
+        self._data_store_group = data_store_group
+        self.open_connection()
 
-    def _open_connection(self, endpoint: str, data_store_group: str):
+    def open_connection(self):
         """Open data store connection.
-
-        Args:
-            endpoint (str): Data store endpoints.
-            data_store_group (str): Name of data store group.
 
         Raises:
             DBError: Unable to create connection.
         """
         try:
-            self._client = pymongo.MongoClient(endpoint)
-            self._data_group = self._client[data_store_group]
+            self._client = pymongo.MongoClient(self._endpoint)
+            self._data_group = self._client[self._data_store_group]
         except Exception as e:
             # TODO : Once logging enabled, uncomment all Log comments.
             # Log.error(f"Unable to connect data store server endpoints \
-            #     {endpoint} {e}")
+            #     {self._endpoint} {e}")
             raise DBError(f"Unable to connect data store server endpoints \
-                          {endpoint} with Error : {e}")
+                          {self._endpoint} with Error : {e}")
 
     def create_index(self, data_store_name: str, index_key: str, **kwargs):
         """Create an index on this data store.
@@ -126,8 +127,8 @@ class MongoDBAdmin(DBAdmin):
             and disconnect from MongoDB."""
         self._client.close()
 
-    def create_data_store(self, data_store: str,
-                          data_store_name: str, **kwargs):
+    def create_data_store(self, data_store_name: str,
+                          data_store_type: str = None, **kwargs):
         """Create data store.
 
         Args:
@@ -135,7 +136,8 @@ class MongoDBAdmin(DBAdmin):
             data_store_name (str): Name of data store.
             kwargs (_type_): keyword arguments.
         """
-        if data_store == DATASTORE.TIMESERIES.value:
+        if data_store_type == DATASTORE.TIMESERIES_STORE.value:
+            timeField = kwargs.get('timeField')
             metaField = kwargs.get('metaField')
             granularity = kwargs.get('granularity')
             expire_time = kwargs.get('expire_time')
@@ -144,7 +146,7 @@ class MongoDBAdmin(DBAdmin):
                     return self._data_group.create_collection(
                         data_store_name,
                         timeseries={
-                            'timeField': data_store_name,
+                            'timeField': timeField,
                             'metaField': metaField,
                             'granularity': granularity},
                         expireAfterSeconds=expire_time)
@@ -156,13 +158,15 @@ class MongoDBAdmin(DBAdmin):
                 raise DBError(f"Unable to create Time Series data store \
                     {data_store_name}. Error : {e}")
         else:
-            self._data_group[data_store_name]
+            return self._data_group[data_store_name]
 
-    def delete_data_store(self, data_store_name: str):
+    def delete_data_store(self, data_store_name: str,
+                          data_store_type: str = None, **kwargs):
         """Remove data store.
 
         Args:
             data_store_name (str): Name of data store.
+            data_store_type (str): Type of data store.
 
         Raises:
             DBError: Invalid data store.

@@ -7,11 +7,11 @@ from common.db_store.error import DBError
 class DB(ABC):
 
     @abstractmethod
-    def open_connection(self):
+    def open(self):
         pass
 
     @abstractmethod
-    def close_connection(self):
+    def close(self):
         pass
 
     @abstractmethod
@@ -37,27 +37,25 @@ class MongoDB(DB):
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
             data_store_group (str): Name of data store group.
         """
-        self._open_connection(endpoint, data_store_group)
+        self._endpoint = endpoint
+        self._data_store_group = data_store_group
+        self.open()
 
-    def _open_connection(self, endpoint: str, data_store_group: str):
+    def open(self):
         """Open data store connection.
 
-        Args:
-            endpoint (str): Data store endpoints.
-            data_store_group (str): Name of data store group.
-
         Raises:
-            DBError: Unable to create connection.
+            DBError: Unable to open connection.
         """
         try:
-            self._client = pymongo.MongoClient(endpoint)
-            self._data_group = self._client[data_store_group]
+            self._client = pymongo.MongoClient(self._endpoint)
+            self._data_group = self._client[self._data_store_group]
         except Exception as e:
             # TODO : Once logging enabled, uncomment all Log comments.
             # Log.error(f"Unable to connect data store server endpoints \
-            #     {endpoint} {e}")
+            #     {self._endpoint} {e}")
             raise DBError(f"Unable to connect data store server endpoints \
-                          {endpoint} with Error : {e}")
+                          {self._endpoint} with Error : {e}")
 
     def get_data(self, data_store_name: str, **kwargs):
         """Get list of documents that match the query criteria.
@@ -114,7 +112,7 @@ class MongoDB(DB):
             # Log.error(f"Unable to fetch data from data store. Error {e}")
             raise DBError(f"Unable to save data to data store. Error {e}")
 
-    def close_connection(self):
+    def close(self):
         """End all server sessions created by current client \
             and disconnect from MongoDB."""
         self._client.close()

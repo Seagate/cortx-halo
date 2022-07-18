@@ -3,6 +3,8 @@ from datetime import datetime
 from common.db_store.db import MongoDB
 from common.db_store.admin_db import MongoDBAdmin
 
+
+pytestmark = pytest.mark.unit
 admin_db = None
 db = None
 
@@ -12,7 +14,7 @@ def setup_admin_db():
     global admin_db
     admin_db = MongoDBAdmin(
         endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
-        db_name="test")
+        data_store_group="test")
     yield
     admin_db.close_connection()
 
@@ -22,21 +24,21 @@ def setup_db():
     global db
     db = MongoDB(
         endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
-        db_name="test")
+        data_store_group="test")
     yield
-    db.close_connection()
+    db.close()
 
 
 def test_create_time_series_data_store(setup_admin_db):
-    """Test by creating collection & listing it back."""
+    """Test by creating data store & listing it back."""
     admin_db.create_data_store(
-        data_store="timeseries",
+        data_store_type="timeseries_store",
         data_store_name="test_coll",
         timeField="timestamp"
         )
     collection_list = admin_db.get_data_stores()
     assert 'test_coll' in collection_list, \
-        "Failed to create timeseries collection."
+        "Failed to create timeseries data store."
 
 
 def test_create_index(setup_admin_db):
