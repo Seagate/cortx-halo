@@ -1,3 +1,5 @@
+import { graphImages } from '../health/LrHeathGraphImages.constant';
+
 /*
  * CORTX-CSM: CORTX Management web.
  * Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates
@@ -55,17 +57,21 @@ export const dashboardCardData = {
   ],
   performance: [
     {
-      title: 0,
-      description: "readThroughput",
       imgUrl: "performance-read-throughput-good.svg",
+      imgUrl2: "performance-read-graph.svg",
       navPath: "/performance",
+      count: 0,
+      unit: "Gbps",
+      title: "readThroughput",
     },
     {
-      title: 0,
-      description: "writeThroughput",
       imgUrl: "performance-write-throughput-good.svg",
+      imgUrl2: "performance-write-graph.svg",
       navPath: "/performance",
-    },
+      count: 0,
+      unit: "Gbps",
+      title: "writeThroughput",
+    }
   ],
   clusterNodes: [
     {
@@ -102,31 +108,26 @@ export const dashboardCardData = {
       title: 0,
       description: "fatal",
       imgUrl: "alert-fatal.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "critical",
       imgUrl: "alert-critical.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "error",
       imgUrl: "alert-error.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "warning",
       imgUrl: "alert-warning.svg",
-      navPath: "/alerts",
     },
     {
       title: 0,
       description: "informational",
       imgUrl: "alert-informational.svg",
-      navPath: "/alerts",
     },
   ],
   bgActivities: [
