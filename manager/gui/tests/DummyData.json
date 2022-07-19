@@ -1,9 +1,11 @@
 {
   "/dashboard/capacity": {
+    "data": {
     "size": 77309411328,
     "available": 67309411328,
     "used": 10000000000,
     "usagePercentage": 13
+    }
   },
   "/dashboard/storage-components": {
     "buckets": 5,
