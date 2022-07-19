@@ -1,3 +1,22 @@
+#!/usr/bin/env python3
+
+# Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates
+
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+# For any questions about this software or licensing, please email
+# opensource@seagate.com or cortx-questions@seagate.com.
+
 from enum import Enum
 import pymongo
 from abc import ABC, abstractmethod
@@ -40,10 +59,10 @@ class DBAdmin(ABC):
 
 
 class DATASTORE(Enum):
-    TIMESERIES_STORE = "timeseries_store"
-    ALERT_STORE = "alert_store"
-    CONFIG_STORE = "config_store"
-    PERF_STORE = "perf_store"
+    TIMESERIES = "timeseries"
+    ALERT = "alert"
+    CONFIG = "config"
+    PERF = "perf"
 
 
 class MongoDBAdmin(DBAdmin):
@@ -136,7 +155,7 @@ class MongoDBAdmin(DBAdmin):
             data_store_name (str): Name of data store.
             kwargs (_type_): keyword arguments.
         """
-        if data_store_type == DATASTORE.TIMESERIES_STORE.value:
+        if data_store_type == DATASTORE.TIMESERIES.value:
             timeField = kwargs.get('timeField')
             metaField = kwargs.get('metaField')
             granularity = kwargs.get('granularity')
