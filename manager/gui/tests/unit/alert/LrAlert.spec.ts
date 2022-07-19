@@ -3,6 +3,7 @@ import LrAlert from "@/components/alerts/LrAlert.vue";
 import SgtDataTable from "@/lib/components/SgtDataTable/SgtDataTable.vue";
 import Vuetify from "vuetify";
 import Vue from "vue";
+import { Api } from "@/services/Api";
 
 Vue.use(Vuetify);
 describe("All alert - LrAlert.vue", () => {
@@ -18,9 +19,42 @@ describe("All alert - LrAlert.vue", () => {
     });
   });
 
-  it("Checks whether the data table exists", async () => {
+  it("Checks whether the data table and proper header exists", async () => {
     const alertDataTable = wrapper.findAll(".sgt-data-table");
+    expect(wrapper.html()).toContain("Alert Time");
+    expect(wrapper.html()).toContain("Category");
+    expect(wrapper.html()).toContain("Severity");
+    expect(wrapper.html()).toContain("State");
+    expect(wrapper.html()).toContain("Description");
+    expect(wrapper.html()).toContain("Alert Type");
     expect(alertDataTable.exists()).toBe(true);
+  });
+
+  it("Checks whether the advance search toggle and filter items exists", async () => {
+    const advanceSearchToggle = wrapper.find(
+      "[data-test='advance-search-toggle']"
+    );
+
+    const advanceSearchContainer = wrapper.find(".advance-search-container");
+    expect(advanceSearchContainer.attributes("style")).toContain(
+      "display: none"
+    );
+
+    expect(advanceSearchToggle.exists()).toBe(true);
+    await advanceSearchToggle.trigger("click");
+    expect(wrapper.html()).toContain("Update Date");
+    expect(wrapper.html()).toContain("Resource Info");
+    expect(wrapper.html()).toContain("Description");
+    expect(wrapper.html()).toContain("Status");
+    expect(wrapper.html()).toContain("Severity");
+    expect(wrapper.html()).toContain("Category");
+  });
+
+  it("Checks whether the search button triggers the handler", async () => {
+    const updateRecordHandler = jest.spyOn(wrapper.vm, "updateRecord");
+    const searchButton = wrapper.find(".search-btn");
+    searchButton.trigger("click");
+    expect(updateRecordHandler).toHaveBeenCalled();
   });
 
   it("Checks whether recommendation handler is called", async () => {

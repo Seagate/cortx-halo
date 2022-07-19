@@ -36,6 +36,7 @@
           icon
           color="primary"
           class="mt-1"
+          data-test="advance-search-toggle"
           v-if="advanceSearchActive"
           @click="toggleAdvanceSearch"
         >
