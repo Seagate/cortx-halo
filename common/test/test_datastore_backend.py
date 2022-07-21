@@ -32,8 +32,8 @@ db = None
 def setup_admin_db():
     global admin_db
     admin_db = MongoDBAdmin(
-        endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
-        data_store_group="test")
+       db_endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
+       db_name="test")
     yield
     admin_db.close_connection()
 
@@ -42,8 +42,8 @@ def setup_admin_db():
 def setup_db():
     global db
     db = MongoDB(
-        endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
-        data_store_group="test")
+       db_endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
+       db_name="test")
     yield
     db.close()
 

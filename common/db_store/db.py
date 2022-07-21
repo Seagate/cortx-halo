@@ -25,6 +25,10 @@ from common.db_store.error import DBError
 
 class DB(ABC):
 
+    def __init__(self, db_endpoint, db_name) -> None:
+        self._endpoint = db_endpoint
+        self._db_name = db_name
+
     @abstractmethod
     def open(self):
         pass
@@ -48,16 +52,17 @@ class STATUSES(Enum):
 
 class MongoDB(DB):
 
-    def __init__(self, endpoint: str, data_store_group: str) -> None:
+    def __init__(self, db_endpoint: str, db_name: str) -> None:
         """Initialize Data store connection.
 
         Args:
-            endpoint (str): MongoDB server endpoints.
+            db_endpoint (str): MongoDB server endpoints.
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
-            data_store_group (str): Name of data store group.
+            db_name (str): Name of data base.
         """
-        self._endpoint = endpoint
-        self._data_store_group = data_store_group
+        super().__init__(db_endpoint, db_name)
+        # TODO : Use singleton design pattern Or make sure every
+        # open connection should be closed after use.
         self.open()
 
     def open(self):
@@ -68,7 +73,7 @@ class MongoDB(DB):
         """
         try:
             self._client = pymongo.MongoClient(self._endpoint)
-            self._data_group = self._client[self._data_store_group]
+            self._db = self._client[self._db_name]
         except Exception as e:
             # TODO : Once logging enabled, uncomment all Log comments.
             # Log.error(f"Unable to connect data store server endpoints \
@@ -92,7 +97,7 @@ class MongoDB(DB):
         query_params = kwargs.get('queryparams')
 
         try:
-            results = self._data_group[data_store_name].find(query_params)
+            results = self._db[data_store_name].find(query_params)
             for result in results:
                 result_list.append(result)
         except Exception as e:
@@ -116,13 +121,13 @@ class MongoDB(DB):
         """
         try:
             if '_id' in data:
-                result = self._data_group[data_store_name]. \
+                result = self._db[data_store_name]. \
                     replace_one({'_id': data['_id']}, data, upsert=True)
                 return {"status": STATUSES.SUCCESS.value,
                         "matched_count": result.matched_count,
                         "insert_id": None}
             else:
-                result = self._data_group[data_store_name].insert_one(data)
+                result = self._db[data_store_name].insert_one(data)
                 return {"status": STATUSES.SUCCESS.value,
                         "matched_count": None,
                         "insert_id": result.inserted_id}

@@ -25,6 +25,10 @@ from common.db_store.error import DBError
 
 class DBAdmin(ABC):
 
+    def __init__(self, db_endpoint, db_name) -> None:
+        self._endpoint = db_endpoint
+        self._db_name = db_name
+
     @abstractmethod
     def create_index(self, data_store_name, index_key, **kwargs):
         pass
@@ -67,16 +71,17 @@ class DATASTORE(Enum):
 
 class MongoDBAdmin(DBAdmin):
 
-    def __init__(self, endpoint: str, data_store_group: str) -> None:
+    def __init__(self, db_endpoint: str, db_name: str) -> None:
         """Initialize Data store connection.
 
         Args:
-            endpoint (str): MongoDB server endpoints.
+            db_endpoint (str): MongoDB server endpoints.
                 Ex. mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017
-            data_store_group (str): Name of data store group.
+            db_name (str): Name of database.
         """
-        self._endpoint = endpoint
-        self._data_store_group = data_store_group
+        super().__init__(db_endpoint, db_name)
+        # TODO : Use singleton design pattern Or make sure every
+        # open connection should be closed after use.
         self.open_connection()
 
     def open_connection(self):
@@ -87,7 +92,7 @@ class MongoDBAdmin(DBAdmin):
         """
         try:
             self._client = pymongo.MongoClient(self._endpoint)
-            self._data_group = self._client[self._data_store_group]
+            self._db = self._client[self._db_name]
         except Exception as e:
             # TODO : Once logging enabled, uncomment all Log comments.
             # Log.error(f"Unable to connect data store server endpoints \
@@ -106,7 +111,7 @@ class MongoDBAdmin(DBAdmin):
             DBError: Unable to create index.
         """
         try:
-            return self._data_group[data_store_name].create_index(index_key)
+            return self._db[data_store_name].create_index(index_key)
         except Exception as e:
             # Log.error(f"Unable to create Index. Error : {e}")
             raise DBError(f"Index '{index_key}' creation failed. {e}")
@@ -121,7 +126,7 @@ class MongoDBAdmin(DBAdmin):
             list: List of indexes.
         """
         index_list = []
-        indexes = self._data_group[data_store_name].list_indexes()
+        indexes = self._db[data_store_name].list_indexes()
         for index in indexes:
             index_list.append(index["name"])
         return index_list
@@ -137,7 +142,7 @@ class MongoDBAdmin(DBAdmin):
             DBError: Unable to drop index.
         """
         if index_name in self.list_indexes(data_store_name):
-            self._data_group[data_store_name].drop_index(index_name)
+            self._db[data_store_name].drop_index(index_name)
         else:
             raise DBError(f"Invalid index key {index_name}.")
 
@@ -162,7 +167,7 @@ class MongoDBAdmin(DBAdmin):
             expire_time = kwargs.get('expire_time')
             try:
                 if data_store_name not in self.get_data_stores():
-                    return self._data_group.create_collection(
+                    return self._db.create_collection(
                         data_store_name,
                         timeseries={
                             'timeField': timeField,
@@ -177,7 +182,7 @@ class MongoDBAdmin(DBAdmin):
                 raise DBError(f"Unable to create Time Series data store \
                     {data_store_name}. Error : {e}")
         else:
-            return self._data_group[data_store_name]
+            return self._db[data_store_name]
 
     def delete_data_store(self, data_store_name: str,
                           data_store_type: str = None, **kwargs):
@@ -191,10 +196,10 @@ class MongoDBAdmin(DBAdmin):
             DBError: Invalid data store.
         """
         if data_store_name in self.get_data_stores():
-            self._data_group.drop_collection(data_store_name)
+            self._db.drop_collection(data_store_name)
         else:
             raise DBError(f"Invalid data store {data_store_name}.")
 
     def get_data_stores(self):
         """Get list of data stores."""
-        return self._data_group.list_collection_names()
+        return self._db.list_collection_names()
