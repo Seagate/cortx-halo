@@ -121,7 +121,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "support",
         name: "support",
-        component: LrSupport
+        component: LrSupport,
       },
       {
         path: "system-health",

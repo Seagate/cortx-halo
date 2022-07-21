@@ -18,7 +18,8 @@ import { SgtDropdownOption } from "../SgtDropdown/SgtDropdown.model";
 
 export interface SgtAdvanceSearchConfig {
   placeholder?: string;
-  autoSearch?: boolean;
+  autoSearch?: boolean; // Search on type on primary search (not on advance search)
+  initialSearch?: boolean; // Trigger the search with values in advance search filter config on load
   advanceForm?: SgtAdvanceFormField[];
 }
 export interface SgtAdvanceFormField {
