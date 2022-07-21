@@ -17,6 +17,7 @@
 export const lrAlertConst = {
   searchConfig: {
     placeholder: "Search",
+    initialSearch: true,
     advanceForm: [
       {
         type: "date",
@@ -53,7 +54,7 @@ export const lrAlertConst = {
         name: "severity",
         label: "Severity",
         placeholder: "select",
-        options: [],
+        options: ["fatal", "critical", "error", "warning", "informational"],
         required: false,
         value: "",
       },
@@ -87,16 +88,47 @@ export const lrAlertConst = {
         align: "middle",
       },
       { text: "State", value: "state", width: "125px" },
-      { text: "Description", value: "description", type: "custom" },
+      {
+        text: "Description",
+        value: "description",
+        type: "custom",
+      },
       { text: "Alert Type", value: "alert_type", width: "135px" },
       {
         text: "",
         value: "action",
+        width: "150px",
         type: "action",
         align: "end",
         sortable: false,
         zoomIcon: true,
-        actionList: ["notification", "comment"],
+        actionList: [],
+        customActionList: [
+          {
+            name: "recommend",
+            path: "recommendation-icon.svg",
+            hoverPath: "recommendation-hover-icon.svg",
+            tooltip: "Recommendation",
+          },
+          {
+            name: "singleAcknowledge",
+            path: "acknowledge-icon.svg",
+            hoverPath: "acknowledge-hover-icon.svg",
+            tooltip: "Acknowledge",
+          },
+          {
+            name: "comment",
+            path: "comment-default.svg",
+            hoverPath: "comment-hover.svg",
+            tooltip: "Comment",
+          },
+          {
+            name: "occurrences",
+            path: "occurrences-icon.svg",
+            hoverPath: "occurrences-hover-icon.svg",
+            tooltip: "Occurrences",
+          },
+        ],
       },
     ],
     multiSelectButtons: [
