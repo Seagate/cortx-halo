@@ -16,13 +16,13 @@
 -->
 <template>
   <div class="storage-components-widget-container">
-    <SgtCard title="storageComponents">
+    <SgtCard :title="$t('storageComponents')" titleInfo="Cluster component list">
       <div class="storage-cards-container">
         <template v-for="(cardDetail, index) in dashboardCardDetails">
           <SgtInfoCard
             :key="index"
             :title="cardDetail.title"
-            :description="cardDetail.description"
+            :description="$t(cardDetail.description)"
             :imgUrl="cardDetail.imgUrl"
             @click="cardClickHandler(cardDetail.navPath)"
           />
@@ -50,13 +50,13 @@ export default class LrDashboardStorageComponentsCard extends Vue {
   public dashboardCardDetails: DashboardCardDetail[] = [];
 
   public async mounted() {
-    const data = (await Api.getData("/dashboard/storage-components", {
+    const data:any = (await Api.getData("/dashboard/storage-components", {
       isDummy: true,
-    })) as StorageComponentsData;
+    }));
     this.dashboardCardDetails = dashboardCardData.storageComponents.map(
       (datum) => ({
         ...datum,
-        title: data[datum.description as keyof StorageComponentsData],
+        title: data.data[datum.description as keyof StorageComponentsData],
       })
     );
   }

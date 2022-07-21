@@ -19,6 +19,7 @@
     <SgtCard
       :title="$t('capacity')"
       :showZoomIcon="true"
+      titleInfo="Cluster Capacity"
       @zoom-click="zoomIconHandler"
     >
       <div class="capacity-info-wrapper">
@@ -29,18 +30,18 @@
           </div>
         </div>
       </div>
-      <div class="content-section pa-2 mt-2">
+      <div class="content-section pa-2 mt-3">
         <div>
           <div>
             <b>{{ capacityChartVal(capacityDetails.used) }} </b>
           </div>
-          <div>{{ $t("used") }}</div>
+          <div><img :src="require(`@/assets/images/capacity-used.svg`)" class="capacity-detail-icons pr-1" alt />{{ $t("used") }}</div>
         </div>
         <div>
           <div>
             <b>{{ capacityChartVal(capacityDetails.available) }}</b>
           </div>
-          <div>{{ $t("available") }}</div>
+          <div><img :src="require(`@/assets/images/capacity-available.svg`)" class="capacity-detail-icons pr-1" alt />{{ $t("available") }}</div>
         </div>
       </div>
     </SgtCard>
@@ -112,6 +113,7 @@ export default class LrDashboardCapacityCard extends Vue {
       },
       size: {
         width: 280,
+        height: 280,
       },
     });
 
@@ -211,5 +213,8 @@ export default class LrDashboardCapacityCard extends Vue {
   path {
     border-radius: 5px;
   }
+}
+.capacity-detail-icons {
+  vertical-align: text-bottom;
 }
 </style>
