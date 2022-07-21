@@ -19,7 +19,7 @@
     <v-card>
       <v-card-title>
         <div class="title-container">
-          Add Comment
+          Comments
           <img
             :src="require(`@/assets/icons/close-green.svg`)"
             @click="dialog = false"
@@ -33,24 +33,31 @@
         <div class="no-comment-label" v-if="alertComments.length === 0">
           No Comments
         </div>
-        <div
-          v-else
-          class="lr-comment"
-          v-for="comment in alertComments"
-          :key="comment.comment_id"
-        >
-          <div>
-            <span>{{ comment.comment_text }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="sub-txt">{{
-              new Date(comment.created_time * 1000) | timeago
-            }}</span>
-            <span class="sub-txt mx-3">|</span>
-            <span class="sub-txt">{{ comment.created_by }}</span>
+        <div class="comments-container" v-else>
+          <div
+            class="lr-comment"
+            v-for="comment in alertComments"
+            :key="comment.comment_id"
+          >
+            <div class="comment-wrapper">
+              <div class="created-by">
+                {{ comment.created_by }}
+              </div>
+              <div class="comment-timestamp">
+                {{ formatCommentTime(new Date(comment.created_time * 1000)) }}
+              </div>
+              <div class="comment-text mt-1">
+                {{ comment.comment_text }}
+              </div>
+            </div>
+
+            <LrAlertCommentReplies
+              :comment_id="comment.comment_id"
+              :replies="comment.replies"
+            />
           </div>
         </div>
-        <div class="comment-text">
+        <div class="comment-input">
           <v-textarea
             outlined
             name="comment"
@@ -58,14 +65,21 @@
             rows="3"
             row-height="30"
             v-model.trim="commentText"
+            :no-resize="true"
+            hide-details="auto"
           ></v-textarea>
           <span class="error-txt sub-txt">{{ errorMsg }}</span>
         </div>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions class="action-button-container">
-        <v-btn color="primary" @click="addComment()" class="mr-2" dark
-          >Save</v-btn
+        <v-btn
+          color="primary"
+          @click="addComment()"
+          data-test="comment-btn"
+          class="mr-2"
+          dark
+          >Comment</v-btn
         >
         <v-btn color="csmdisabled" @click="dialog = false" dark>Cancel</v-btn>
       </v-card-actions>
@@ -76,22 +90,33 @@
 import { Component, Vue, Prop, PropSync } from "vue-property-decorator";
 import { Api } from "../../services/Api";
 import { AlertCommentModel } from "./LrAlertComment.model";
+import { formatCommentTime } from "@/utils/CommonUtilFunctions";
+import LrAlertCommentReplies from "./LrAlertCommentReplies.vue";
 @Component({
   name: "LrAlertComments",
-  components: {},
+  components: {
+    LrAlertCommentReplies,
+  },
 })
 export default class LrAlertComments extends Vue {
   @Prop({ required: true }) private id: any;
+  private alertComments: AlertCommentModel[] = [];
   @PropSync("showAlertCommentsDialog", { required: false, default: false })
   private dialog: boolean;
   private commentText = "";
-  private alertComments: AlertCommentModel[] = [];
   private errorMsg = "";
 
-  mounted() {
-    Api.getData("alerts/comment", { isDummy: true }).then((resp: any) => {
-      this.alertComments = resp["comments"];
-    });
+  async mounted() {
+    //Id in the below api path should be alert id (this.id)
+    const res: any = await Api.getData(
+      "alerts/comment/1638276506e3b3954d1c03463b8ca4ecaa84a6b92f",
+      { isDummy: true }
+    );
+    this.alertComments = res.data;
+  }
+
+  formatCommentTime(time: number) {
+    return formatCommentTime(time);
   }
 
   addComment() {
@@ -100,8 +125,12 @@ export default class LrAlertComments extends Vue {
       this.errorMsg = "Comment Cannot Be More Than 250 Char";
     else {
       this.errorMsg = "";
-      // code to post date
+      // code to post the comment
     }
+  }
+
+  replyToComment(comment_id: string, event: any) {
+    //Make the API call to reply to the comment.
   }
 }
 </script>
@@ -120,14 +149,47 @@ export default class LrAlertComments extends Vue {
 .error-txt {
   color: red;
 }
-.comment-text {
+.comment-input {
   margin-top: 1rem;
+
+  .v-text-field__details {
+    display: none;
+  }
 }
 .no-comment-label {
   display: block;
   margin-top: 1rem;
 }
 .card-content-container {
-  padding: 0 1.5rem;
+  padding: 0 1.5rem 0.5rem 1.5rem !important;
+
+  .comments-container {
+    max-height: 47vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin: 1em 0;
+
+    .lr-comment {
+      border: 1px solid #eceeef;
+      border-radius: 8px;
+      background-color: #fcfcfd;
+
+      &:not(:last-child) {
+        margin-bottom: 1em;
+      }
+
+      .comment-wrapper {
+        padding: 1rem 1.2rem 0.5em;
+      }
+
+      .created-by {
+        font-weight: bold;
+      }
+
+      .comment-timestamp {
+        color: #c4c4c4;
+      }
+    }
+  }
 }
 </style>

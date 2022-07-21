@@ -25,8 +25,11 @@
       :multiSelectButtons="alertConst.alertTable.multiSelectButtons"
       :chips="chips"
       :itemKey="alertConst.alertTable.itemKey"
-      @zoom="openDetails($event)"
+      @recommend="recommendation($event)"
       @comment="comment($event)"
+      @singleAcknowledge="singleAcknowledge($event)"
+      @occurrences="occurrencesHandler($event)"
+      @zoom="openDetails($event)"
       @acknowledge="multiAcknowledge($event)"
       @update-record="updateRecord($event)"
     >
@@ -70,13 +73,17 @@ import {
   PaginationModel,
 } from "@/lib/components/SgtDataTable/SgtDataTableFilterSortPag.model";
 import { SgtFilterObject } from "@/lib/components/SgtChips/SgtFilterObject.model";
+import SgtDialog from "@/lib/components/SgtDialog/SgtDialog.vue";
+import { SgtDialogModel } from "@/lib/components/SgtDialog/SgtDialog.model";
+import { create } from "vue-modal-dialogs";
+
 @Component({
   name: "LrAlert",
   components: { SgtDataTable, LrAlertDialog, LrAlertComments },
 })
 export default class LrAlert extends Vue {
-  @Prop({ required: false, default: "" }) private severity: string;
   @Prop({ required: false }) private alertId: string;
+  @Prop({ required: false }) private severity: string;
   alertConst: any = JSON.parse(JSON.stringify(lrAlertConst));
   alerts: any = [];
   showDataTable = false;
@@ -84,11 +91,14 @@ export default class LrAlert extends Vue {
   showAlertDetailsDialog = false;
   selectedRecord: any = null;
   showAlertCommentsDialog = false;
+  public acknowledgeModal = create<SgtDialogModel>(SgtDialog);
 
   mounted() {
-    Api.getData("alerts/list", { isDummy: true }).then((resp: any) => {
-      this.alerts = resp["list"];
-    });
+    if (this.severity) {
+      this.setSeverityFilter();
+    } else {
+      this.getAlertsList();
+    }
     if (this.alertId) {
       let headers = this.alertConst?.alertTable?.headers;
       let actionColumn = headers[headers?.length - 1];
@@ -100,35 +110,95 @@ export default class LrAlert extends Vue {
       this.showDataTable = true;
     }
   }
+
+  async getAlertsList(queryFilters?: string, chipsData?: any[]) {
+    const filter = queryFilters ? `?${queryFilters}` : "";
+    const endpoint = `alerts/list${filter}`;
+    const res: any = await Api.getData(endpoint, { isDummy: true });
+    this.alerts = res["data"];
+    if (chipsData) {
+      this.chips = chipsData;
+    }
+  }
+
+  setSeverityFilter() {
+    if (this.severity) {
+      let filterList: SgtFilterObject[] = [];
+      const advanceForm = [...this.alertConst.searchConfig.advanceForm];
+      const updatedAdvanceForm = advanceForm.map((element) => {
+        if (element.name === "severity") {
+          element.value = this.severity;
+          filterList.push({
+            label: element.label,
+            name: element.name,
+            value: element.value,
+          });
+        }
+        return element;
+      });
+      this.alertConst.searchConfig.advanceForm = updatedAdvanceForm;
+    }
+  }
+
   getColor(item: any) {
     return this.alertConst.severityList[item.severity];
   }
+
   updateRecord(tableDataConfig: SgtDataTableFilterSortPag) {
-    // code for API call
-    this.chips = tableDataConfig.filterList;
+    let queryFilters = ``;
+    tableDataConfig.filterList.forEach((filter) => {
+      queryFilters += `${filter.name}=${filter.value}`;
+    });
+    this.getAlertsList(queryFilters, tableDataConfig.filterList);
   }
+
   openDetails(selectedRow: any) {
-    if (this.alertId) {
-      this.selectedRecord = null;
-      this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
-      this.selectedRecord.extended_info = JSON.parse(
-        this.selectedRecord.extended_info
-      );
-      this.showAlertDetailsDialog = true;
-    } else {
-      this.$router.push({
-        name: "alert-details",
-        params: { alertId: selectedRow.alert_uuid },
-      });
-    }
+    this.selectedRecord = null;
+    this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
+    this.selectedRecord.extended_info = JSON.parse(
+      this.selectedRecord.extended_info
+    );
+    this.showAlertDetailsDialog = true;
   }
+
   comment(selectedRow: any) {
     this.selectedRecord = null;
     this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
     this.showAlertCommentsDialog = true;
   }
+
   multiAcknowledge(data: any) {
     //multi select action
+  }
+
+  async singleAcknowledge(data: any) {
+    const result = await this.acknowledgeModal({
+      modalTitle: "Confirmation",
+      modalContent: `Are you sure you want to acknowledge this alert?`,
+      modalType: "prompt",
+      modalContentType: "text",
+    }).then((resp) => {
+      if (resp === "yes") {
+        //API call to acknowledge this alert
+      }
+    });
+  }
+
+  async recommendation(data: any) {
+    const result = await this.acknowledgeModal({
+      modalTitle: "Recommendation",
+      modalContent: data.recommendation,
+      modalType: "message",
+      modalContentType: "text",
+      okButtonLabel: "Close",
+    });
+  }
+
+  occurrencesHandler(selectedRow: any) {
+    this.$router.push({
+      name: "alert-details",
+      params: { alertId: selectedRow.alert_uuid },
+    });
   }
 }
 </script>
