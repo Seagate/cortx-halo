@@ -25,9 +25,10 @@ import argparse
 
 if __name__ == "__main__":
     sys.path.append(os.path.join(os.path.dirname
-                                 (pathlib.Path(__file__)), '..'))
+                                 (pathlib.Path(__file__)), '..', '..'))
 
-    default_path = os.path.join(os.path.dirname(pathlib.Path(__file__)), '..')
+    default_path = os.path.join(os.path.dirname
+                                (pathlib.Path(__file__)), '..', '..')
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', dest='path',
                         help='Any combination of directories,\
@@ -42,3 +43,4 @@ if __name__ == "__main__":
     args_list.append(args.path)
 
     pytest.main(args_list)
+
