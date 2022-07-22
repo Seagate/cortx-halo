@@ -35,13 +35,25 @@
           <div>
             <b>{{ capacityChartVal(capacityDetails.used) }} </b>
           </div>
-          <div><img :src="require(`@/assets/images/capacity-used.svg`)" class="capacity-detail-icons pr-1" alt />{{ $t("used") }}</div>
+          <div>
+            <img
+              :src="require(`@/assets/images/capacity-used.svg`)"
+              class="capacity-detail-icons pr-1"
+              alt
+            />{{ $t("used") }}
+          </div>
         </div>
         <div>
           <div>
             <b>{{ capacityChartVal(capacityDetails.available) }}</b>
           </div>
-          <div><img :src="require(`@/assets/images/capacity-available.svg`)" class="capacity-detail-icons pr-1" alt />{{ $t("available") }}</div>
+          <div>
+            <img
+              :src="require(`@/assets/images/capacity-available.svg`)"
+              class="capacity-detail-icons pr-1"
+              alt
+            />{{ $t("available") }}
+          </div>
         </div>
       </div>
     </SgtCard>
