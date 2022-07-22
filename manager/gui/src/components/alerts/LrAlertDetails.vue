@@ -16,12 +16,42 @@
 -->
 <template>
   <div>
+    <div class="top-section">
+      <span class="section-title">Alert</span>
+      <div class="action-icons">
+        <SgtSvgIcon
+          icon="recommendation-icon.svg"
+          hoverIcon="recommendation-hover-icon.svg"
+          tooltip="Recommendation"
+          @click="recommendation(alertDetails)"
+        />
+        <SgtSvgIcon
+          :disabled="alertDetails && alertDetails.acknowledged"
+          icon="acknowledge-icon.svg"
+          hoverIcon="acknowledge-hover-icon.svg"
+          tooltip="Acknowledge"
+          @click="singleAcknowledge(alertDetails)"
+        />
+        <SgtSvgIcon
+          icon="comment-default.svg"
+          hoverIcon="comment-hover.svg"
+          tooltip="Comment"
+          @click="comment(alertDetails)"
+        />
+        <SgtSvgIcon
+          icon="magnify-icon.svg"
+          hoverIcon="magnify-hover-icon.svg"
+          tooltip="View"
+          @click="openDetails(alertDetails)"
+        />
+      </div>
+    </div>
     <LrAlertInformation
       v-if="alertDetails && alertDetails.alert_uuid"
       :alert="alertDetails"
     />
-    <v-divider></v-divider>
-    <h2 class="alert-title-container pt-2 pb-2">
+
+    <h2 class="alert-title-container mt-2 py-3">
       Occurrences
       <SgtTooltipIcon>
         <template>
@@ -32,21 +62,48 @@
       </SgtTooltipIcon>
     </h2>
     <v-divider></v-divider>
-    <LrAlert :alertId="alertId" />
+    <LrAlert
+      v-if="alertDetails"
+      :alertId="alertId"
+      :resourceInfo="alertDetails && alertDetails.host_id"
+    />
+    <LrAlertComments
+      v-if="showAlertCommentsDialog"
+      :id="selectedRecord.alert_uuid"
+      :showAlertCommentsDialog.sync="showAlertCommentsDialog"
+    />
+    <LrAlertDialog
+      v-if="selectedRecord"
+      :modalTitle="'Alert Details'"
+      :modalData="selectedRecord"
+      :showAlertDetailsDialog.sync="showAlertDetailsDialog"
+    />
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import { lrAlertConst } from "./LrAlert.constant";
 import LrAlert from "./LrAlert.vue";
 import LrAlertInformation from "./LrAlertInformation.vue";
 import { Api } from "../../services/Api";
 import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
+import SgtSvgIcon from "@/lib/components/SgtSvgIcon/SgtSvgIcon.vue";
+import AlertMixin from "../../mixins/AlertMixin";
+import LrAlertComments from "@/components/alerts/LrAlertComments.vue";
+import LrAlertDialog from "@/components/alerts/LrAlertDialog.vue";
+
 @Component({
   name: "LrAlertDetails",
-  components: { LrAlert, LrAlertInformation, SgtTooltipIcon },
+  components: {
+    LrAlert,
+    LrAlertInformation,
+    SgtTooltipIcon,
+    SgtSvgIcon,
+    LrAlertComments,
+    LrAlertDialog,
+  },
 })
-export default class LrAlertDetails extends Vue {
+export default class LrAlertDetails extends Mixins(AlertMixin) {
   @Prop({ required: true }) private alertId: string;
   alertDetails: any = null;
   mounted() {
@@ -62,5 +119,18 @@ export default class LrAlertDetails extends Vue {
 <style lang="scss" scoped>
 .alert-title-container {
   font-weight: bold;
+}
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .action-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 </style>

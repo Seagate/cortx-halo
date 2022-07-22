@@ -16,105 +16,83 @@
 -->
 <template>
   <div class="alert-details-container" v-if="alert">
-    <div v-if="alert && alertExtendedInfo">
-      <SgtLabel name="Id" :value="alertExtendedInfo.resource_id" />
-      <SgtLabel name="Name" :value="alert.module_type" />
-      <SgtLabel name="Cluster" :value="alertExtendedInfo.cluster_id" />
-      <SgtLabel name="Site" :value="alertExtendedInfo.site_id" />
-      <SgtLabel name="Rack" :value="alertExtendedInfo.rack_id" />
-      <SgtLabel name="Host Name" :value="alert.hostname" />
-    </div>
-    <div>
-      <SgtLabel name="Resource Type" :value="alertExtendedInfo.resource_type" />
-      <SgtLabel name="State" :value="alert.state" />
-      <SgtLabel name="Created Time" :value="new Date(alert.created_time*1000)" />
-      <SgtLabel name="Updated Time" :value="new Date(alert.updated_time*1000)" />
-    </div>
-
-    <div>
-      <template v-if="alert.module_type === 'logical_volume'">
-        <SgtLabel name="Volume Group" :value="alert.volume_group" />
-        <SgtLabel name="Volume Name" :value="alert.name" />
-      </template>
-      <template v-else-if="alert.module_type === 'system'">
-        <SgtLabel name="Version" :value="alert.version" />
-        <SgtLabel name="Node Name" :value="alert.name" />
-      </template>
-      <template v-else-if="alert.module_type === 'volume'">
-        <SgtLabel name="Size" :value="alert.volume_size" />
-        <SgtLabel name="Total Size" :value="alert.volume_total_size" />
-      </template>
-      <template v-else-if="alert.module_type === 'current'">
-        <SgtLabel name="Sensor Name" :value="alert.name" />
-      </template>
-      <template v-else-if="alert.module_type === 'controller'">
-        <SgtLabel name="Serial Number" :value="alert.serial_number" />
-      </template>
-    </div>
-
-    <div>
-      <template v-if="alert.module_name === 'enclosure:fru:psu'">
-        <SgtLabel name="Location" :value="alert.location" />
-      </template>
-      <template
-        v-if="alert.module_name === 'enclosure:fru:fan' || alert.module_name === 'enclosure:fru:sideplane'"
-      >
-        <SgtLabel name="Name" :value="alert.Name" />
-        <SgtLabel name="Location" :value="alert.location" />
-      </template>
-      <template v-if="alert.module_name === 'enclosure:fru:disk'">
-        <SgtLabel name="Serial Number" :value="alert.serial_number" />
-        <SgtLabel name="Size" :value="alert.volume_size" />
-      </template>
-    </div>
-
-    <template v-if="alertEventDetails.length > 0">
-      <div v-for="(event_detail, i) in alertEventDetails" v-bind:key="'event_detail_' + i">
-        <SgtLabel name="Name" :value="event_detail.name" />
-        <SgtLabel name="Reason" :value="event_detail.event_reason" />
-        <SgtLabel
-          v-if="event_detail.event_recommendation.length > 0"
-          name
-          :value="alerts.recommendations"
-        />
+    <div class="top-section">
+      <div class="alert-info-card">
+        <div class="alert-info-group">
+          <div class="alert-info-title">Resource name</div>
+          <div class="alert-info-description">
+            {{ alert.hostname }}
+          </div>
+        </div>
+        <div class="alert-info-group">
+          <div class="alert-info-title">Alert Type</div>
+          <div class="alert-info-description">{{ alert.alert_type }}</div>
+        </div>
       </div>
-    </template>
 
-    <div style="text-align:right; padding:1rem 0">
-      <div class="alert-info">
-        <img v-if="alert.resolved" :src="require('@/assets/icons/resolved-disabled.svg')" />
-        <img v-else :src="require('@/assets/icons/resolved-disabled.svg')" />
-        <span>Resolved</span>
+      <div class="alert-info-card">
+        <div class="alert-hr-group">
+          <div class="alert-info-group">
+            <div class="alert-info-title">Severity</div>
+            <div class="alert-info-description">{{ alert.severity }}</div>
+          </div>
+          <div class="alert-info-group">
+            <div class="alert-info-title">Created Time</div>
+            <div class="alert-info-description">
+              {{ formattedTime(alert.created_time) }}
+            </div>
+          </div>
+        </div>
+        <div class="alert-info-group">
+          <div class="alert-info-title">State</div>
+          <div class="alert-info-description">{{ alert.state }}</div>
+        </div>
       </div>
-      <div class="alert-info">
-        <img v-if="alert.acknowledged" :src="require('@/assets/icons/alerts-disabled.svg')" />
-        <img v-else :src="require('@/assets/icons/alert-green.svg')" />
-        <span>Acknowledged</span>
+
+      <div class="alert-info-card">
+        <div class="alert-info-group">
+          <div class="alert-info-title">Reason</div>
+          <div class="alert-info-description">
+            {{ alert.description }}
+          </div>
+        </div>
       </div>
-      <div class="alert-info">
-        <SgtSvgIcon
-          icon="more-info.svg"
-          @click="showAlertDetailsDialog = true"
-          class="action-btn-block"
-        />
-        <SgtSvgIcon
-          icon="comment-default.svg"
-          hoverIcon="comment-hover.svg"
-          @click="showAlertCommentsDialog = true"
-          class="action-btn-block"
-        />
-        <SgtSvgIcon
-          icon="alert-green.svg"
-          hoverIcon="alert-hover.svg"
-          @click="acknowledge"
-          class="action-btn-block"
-        />
+    </div>
+
+    <div class="bottom-section">
+      <div class="alert-info-item">
+        <div class="alert-info-title">Category</div>
+        <div class="alert-info-description">{{ alert.category }}</div>
+      </div>
+      <div class="alert-info-item">
+        <div class="alert-info-title">Site</div>
+        <div class="alert-info-description">{{ alert.site }}</div>
+      </div>
+      <div class="alert-info-item">
+        <div class="alert-info-title">Rack</div>
+        <div class="alert-info-description">
+          {{ alertExtendedInfo.rack_id }}
+        </div>
+      </div>
+      <div class="alert-info-item">
+        <div class="alert-info-title">Node</div>
+        <div class="alert-info-description">{{ alert.node_id }}</div>
+      </div>
+      <div class="alert-info-item">
+        <div class="alert-info-title">Cluster</div>
+        <div class="alert-info-description">
+          {{ alertExtendedInfo.cluster_id }}
+        </div>
       </div>
     </div>
 
     <div>
       <LrAlertDialog
-        v-if="alertDetails && alertExtendedInfo && Object.keys(alertExtendedInfo).length>0"
+        v-if="
+          alertDetails &&
+          alertExtendedInfo &&
+          Object.keys(alertExtendedInfo).length > 0
+        "
         :modalTitle="'Alert Details'"
         :modalData="alertExtendedInfo"
         :showAlertDetailsDialog.sync="showAlertDetailsDialog"
@@ -135,82 +113,138 @@ import SgtLabel from "@/lib/components/SgtLabel/SgtLabel.vue";
 import LrAlertDialog from "./LrAlertDialog.vue";
 import LrAlertComments from "./LrAlertComments.vue";
 import SgtSvgIcon from "@/lib/components/SgtSvgIcon/SgtSvgIcon.vue";
+import { formatTime } from "@/utils/CommonUtilFunctions";
 
 @Component({
-	name: "LrAlertInformation",
-	components: { SgtLabel, LrAlertDialog, SgtSvgIcon, LrAlertComments },
+  name: "LrAlertInformation",
+  components: { SgtLabel, LrAlertDialog, SgtSvgIcon, LrAlertComments },
 })
 export default class LrAlertInformation extends Vue {
-	@Prop({ required: true }) private alert: any;
-	public alertEventDetails: any = [];
-	public alertExtendedInfo: any = {};
-	public alertDetails: any = {};
-	public showAlertDetailsDialog = false;
-	public showAlertCommentsDialog = false;
-	public addCommentForm = {
-		comment_text: "",
-	};
+  @Prop({ required: true }) private alert: any;
+  public alertEventDetails: any = [];
+  public alertExtendedInfo: any = {};
+  public alertDetails: any = {};
+  public showAlertDetailsDialog = false;
+  public showAlertCommentsDialog = false;
+  public addCommentForm = {
+    comment_text: "",
+  };
 
-	public async mounted() {
-		try {
-			if (this.alert.extended_info) {
-				this.alertDetails = JSON.parse(this.alert.extended_info);
-				this.alertExtendedInfo = this.alertDetails.info;
-			}
-			let tempAlertEventDetails = [];
-			if (this.alert.event_details) {
-				tempAlertEventDetails = JSON.parse(this.alert.event_details);
-			}
-			if (tempAlertEventDetails.length > 0) {
-				tempAlertEventDetails.forEach((event_detail: any) => {
-					const alertEventDetail = {
-						name: event_detail.name,
-						event_reason: event_detail.event_reason,
-						event_recommendation: event_detail.event_recommendation.split("-"),
-						showRecommendation: false,
-					};
-					this.alertEventDetails.push(alertEventDetail);
-				});
-			} else {
-				this.alertEventDetails.push({
-					name: this.alertExtendedInfo.resource_id
-						? this.alertExtendedInfo.resource_id
-						: "",
-					event_reason: this.alert.description,
-					event_recommendation: this.alert.health_recommendation
-						? this.alert.health_recommendation.split("-")
-						: [],
-					showRecommendation: false,
-				});
-			}
-		} catch (e) {
-			// tslint:disable-next-line: no-console
-			console.log(e);
-		}
-	}
+  public async mounted() {
+    try {
+      if (this.alert.extended_info) {
+        this.alertDetails = JSON.parse(this.alert.extended_info);
+        this.alertExtendedInfo = this.alertDetails.info;
+      }
+      let tempAlertEventDetails = [];
+      if (this.alert.event_details) {
+        tempAlertEventDetails = JSON.parse(this.alert.event_details);
+      }
+      if (tempAlertEventDetails.length > 0) {
+        tempAlertEventDetails.forEach((event_detail: any) => {
+          const alertEventDetail = {
+            name: event_detail.name,
+            event_reason: event_detail.event_reason,
+            event_recommendation: event_detail.event_recommendation.split("-"),
+            showRecommendation: false,
+          };
+          this.alertEventDetails.push(alertEventDetail);
+        });
+      } else {
+        this.alertEventDetails.push({
+          name: this.alertExtendedInfo.resource_id
+            ? this.alertExtendedInfo.resource_id
+            : "",
+          event_reason: this.alert.description,
+          event_recommendation: this.alert.health_recommendation
+            ? this.alert.health_recommendation.split("-")
+            : [],
+          showRecommendation: false,
+        });
+      }
+    } catch (e) {
+      // tslint:disable-next-line: no-console
+      console.log(e);
+    }
+  }
 
-	comment() {
-		//comment action
-		this.showAlertCommentsDialog = true;
-	}
-	acknowledge() {
-		//acknowledge action
-	}
+  formattedTime(val: number) {
+    return formatTime(val);
+  }
+
+  comment() {
+    //comment action
+    this.showAlertCommentsDialog = true;
+  }
+  acknowledge() {
+    //acknowledge action
+  }
 }
 </script>
 
-<style lang="scss" scoped >
+<style lang="scss" scoped>
 .alert-details-container {
-	margin: 0;
+  margin: 0;
+
+  .top-section {
+    margin: 1em 0;
+    display: flex;
+    gap: 1em;
+
+    & > .alert-info-card {
+      flex: 1 1 0;
+    }
+
+    .alert-info-card {
+      background: #fcfcfd;
+      box-shadow: 0px 4px 8px -2px rgba(9, 30, 66, 0.25),
+        0px 0px 0px 1px rgba(9, 30, 66, 0.08);
+      border-radius: 8px;
+      padding: 0.5em 1em;
+
+      .alert-info-group {
+        margin: 0 0 1em;
+      }
+
+      .alert-hr-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+
+  .alert-info-title {
+    font-weight: bold;
+  }
+
+  .bottom-section {
+    background: #fcfcfd;
+    box-shadow: 0px 4px 8px -2px rgba(9, 30, 66, 0.25),
+      0px 0px 0px 1px rgba(9, 30, 66, 0.08);
+    border-radius: 8px;
+    display: flex;
+    & > *:not(:last-child) {
+      border-right: 1px solid #c4c4c4;
+    }
+    .alert-info-item {
+      flex-grow: 1;
+      padding: 0.5em 1em;
+      text-align: center;
+    }
+    .alert-info-item:last-child {
+      flex-grow: 2;
+    }
+  }
 }
 .alert-info {
-	display: inline-block;
-	padding-left: 1rem;
-	span {
-		vertical-align: super;
-	}
-	.action-btn-block {
-		padding-left: 1rem;
-	}
+  display: inline-block;
+  padding-left: 1rem;
+  span {
+    vertical-align: super;
+  }
+  .action-btn-block {
+    padding-left: 1rem;
+  }
 }
 </style>
