@@ -1,17 +1,21 @@
 {
   "/dashboard/capacity": {
+    "data": {
     "size": 77309411328,
     "available": 67309411328,
     "used": 10000000000,
     "usagePercentage": 13
+    }
   },
   "/dashboard/storage-components": {
+    "data": {
     "buckets": 5,
     "objects": 22,
     "underReplicated": 12,
-    "S3Accounts": 22,
+    "S3Account": 22,
     "IAMUser": 22,
     "dummyText": 22
+    }
   },
   "/dashboard/performance": {
     "data": {
