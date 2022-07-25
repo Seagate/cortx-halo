@@ -76,6 +76,7 @@
                     v-model="row.value"
                     outlined
                     dense
+                    :disabled="row.required"
                   ></v-text-field>
                 </template>
                 <!-- dropdown -->
@@ -84,6 +85,7 @@
                     :placeholder="row.placeholder"
                     :dropdownOptions="row.options"
                     v-model="row.value"
+                    :disabled="row.required"
                   />
                 </template>
                 <!-- radio -->
@@ -94,6 +96,7 @@
                       :key="radio.value"
                       :label="radio.label"
                       :value="radio.value"
+                      :disabled="row.required"
                     ></v-radio>
                   </v-radio-group>
                 </template>
@@ -111,6 +114,7 @@
                         class="pt-0"
                         outlined
                         dense
+                        :disabled="row.required"
                       >
                         <template v-slot:append>
                           <v-icon color="primary"
@@ -134,6 +138,7 @@
                       :key="checkbox.value"
                       :label="checkbox.label"
                       :value="checkbox.value"
+                      :disabled="row.disabled"
                     ></v-checkbox>
                   </v-row>
                 </template>

@@ -127,16 +127,11 @@ export default class LrAlert extends Mixins(AlertMixin) {
   }
 
   setFilter(filterName: string, filterValue: string) {
-    let filterList: SgtFilterObject[] = [];
     const advanceForm = [...this.alertConst.searchConfig.advanceForm];
     const updatedAdvanceForm = advanceForm.map((element) => {
       if (element.name === filterName) {
         element.value = filterValue;
-        filterList.push({
-          label: element.label,
-          name: element.name,
-          value: element.value,
-        });
+        element.required = true;
       }
       return element;
     });
