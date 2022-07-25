@@ -77,11 +77,11 @@ export default class LrDashboardCapacityCard extends Vue {
   public capacityDetails: CapacityData = {} as CapacityData;
 
   public async mounted() {
-    const data: any = await Api.getData("/dashboard/capacity", {
+    const resp: any = await Api.getData("/dashboard/capacity", {
       isDummy: true,
     });
 
-    this.capacityDetails = data.data;
+    this.capacityDetails = resp.data;
     const capacityC3Data: Array<[string, number]> = [
       ["Usage", this.capacityDetails.usagePercentage],
     ];

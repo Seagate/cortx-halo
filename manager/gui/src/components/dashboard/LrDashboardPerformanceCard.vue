@@ -100,6 +100,9 @@ export default class LrDashboardPerformanceCard extends Vue {
 }
 </script>
 <style lang="scss" scoped>
+.performance-widget-container {
+  height: 100%;
+}
 .info-card-container {
   border: 1px solid #e5e5e5;
   padding: 1.25em 1.25em;
