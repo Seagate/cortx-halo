@@ -39,6 +39,7 @@ describe("All alert - LrAlertDetails.vue", () => {
         support_message: "",
         resource_id: "0",
         hostname: "srvnode-1.mgmt.public",
+        site: "Pune",
       },
       {
         alert_uuid: "16382764691ff81c418c254fb2957e68a8019d8066",
@@ -67,6 +68,7 @@ describe("All alert - LrAlertDetails.vue", () => {
           "Please contact Seagate Support via https://www.seagate.com/direct-partners/",
         resource_id: "IEMSensor",
         hostname: "srvnode-1.mgmt.public",
+        site: "Pune",
       },
       {
         alert_uuid: "1640554971f7870d69dd9a4eef87938804521c8fe6",
@@ -93,6 +95,7 @@ describe("All alert - LrAlertDetails.vue", () => {
         support_message: "",
         resource_id: "kafka.service",
         hostname: "srvnode-1.mgmt.public",
+        site: "Pune",
       },
     ],
   });
@@ -128,6 +131,25 @@ describe("All alert - LrAlertDetails.vue", () => {
     expect(alertDetailsContainer.html()).toContain("Rack");
     expect(alertDetailsContainer.html()).toContain("Node");
     expect(alertDetailsContainer.html()).toContain("Cluster");
+  });
+
+  it("Checks whether the alert details section contains all the values.", async () => {
+    const alertDetailsContainer = wrapper.find(".alert-details-container");
+    expect(alertDetailsContainer.html()).toContain("srvnode-1.mgmt.public");
+    expect(alertDetailsContainer.html()).toContain("New");
+    expect(alertDetailsContainer.html()).toContain("warning");
+    expect(alertDetailsContainer.html()).toContain("Fault");
+    expect(alertDetailsContainer.html()).toContain("20-01-1970 04:34 AM");
+    expect(alertDetailsContainer.html()).toContain(
+      "Host memory usage has increased to 94.2%,beyond the configured threshold of 80% for more than 30 seconds."
+    );
+    expect(alertDetailsContainer.html()).toContain("Memory");
+    expect(alertDetailsContainer.html()).toContain("Pune");
+    expect(alertDetailsContainer.html()).toContain("1");
+    expect(alertDetailsContainer.html()).toContain("1");
+    expect(alertDetailsContainer.html()).toContain(
+      "30f1ab70-2468-4fa2-b90a-dca41691019c"
+    );
   });
 
   it("Checks whether the action icons are present", async () => {

@@ -128,14 +128,13 @@ export default class LrAlert extends Mixins(AlertMixin) {
 
   setFilter(filterName: string, filterValue: string) {
     const advanceForm = [...this.alertConst.searchConfig.advanceForm];
-    const updatedAdvanceForm = advanceForm.map((element) => {
-      if (element.name === filterName) {
-        element.value = filterValue;
-        element.required = true;
-      }
-      return element;
-    });
-    this.alertConst.searchConfig.advanceForm = updatedAdvanceForm;
+    const formElementIndex = advanceForm.findIndex(
+      (element) => element.name === filterName
+    );
+    const formElement =
+      this.alertConst.searchConfig.advanceForm[formElementIndex];
+    formElement.value = filterValue;
+    formElement.editable = false;
   }
 
   getColor(item: any) {
