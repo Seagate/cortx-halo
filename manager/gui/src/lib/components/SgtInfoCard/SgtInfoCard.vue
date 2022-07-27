@@ -19,7 +19,7 @@
     <div class="info-card-container" @click="$emit('click')">
       <img :src="require(`@/assets/images/${imgUrl}`)" alt />
       <div class="card-info">
-        <span class="title">{{ title }}</span>
+        <span class="title-text">{{ title }}</span>
         <span class="description">{{ description }}</span>
       </div>
     </div>
@@ -65,5 +65,10 @@ export default class SgtInfoCard extends Vue {
 .count {
   font-weight: bold;
   font-size: 1.5rem;
+}
+.title-text{
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 2rem;
 }
 </style>
