@@ -138,7 +138,7 @@
                       :key="checkbox.value"
                       :label="checkbox.label"
                       :value="checkbox.value"
-                      :disabled="row.disabled"
+                      :disabled="!row.editable"
                     ></v-checkbox>
                   </v-row>
                 </template>

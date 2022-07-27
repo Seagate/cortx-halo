@@ -135,6 +135,7 @@ export default class LrAlert extends Mixins(AlertMixin) {
       this.alertConst.searchConfig.advanceForm[formElementIndex];
     formElement.value = filterValue;
     formElement.editable = false;
+    formElement.required = true;
   }
 
   getColor(item: any) {
