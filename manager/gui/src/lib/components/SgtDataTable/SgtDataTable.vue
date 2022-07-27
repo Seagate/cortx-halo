@@ -26,6 +26,7 @@
         <v-col class="pl-0 margin-auto">
           <SgtAdvanceSearch
             v-if="searchConfig"
+            ref="advanceSearch"
             :config="searchConfig"
             @filter-click="updateFilter($event)"
           />
@@ -74,8 +75,9 @@
     >
       <template v-slot:header="{}">
         <tr class="table-header">
-          <th v-if="isMultiSelect">
+          <th v-if="isMultiSelect" width="50px">
             <v-simple-checkbox
+              class="header-checkbox"
               :value="selected.length == records.length"
               :indeterminate="
                 selected.length > 0 && selected.length < records.length
@@ -207,8 +209,8 @@
                     </div>
                     <div v-if="col.zoomIcon" class="zoom-container">
                       <SgtSvgIcon
-                        icon="zoom-in.svg"
-                        hoverIcon="zoom-in-hover.svg"
+                        icon="magnify-icon.svg"
+                        hoverIcon="magnify-hover-icon.svg"
                         tooltip="View"
                         @click="$emit('zoom', item)"
                       />
@@ -389,12 +391,13 @@ export default class SgtDataTable extends Vue {
    * On chip cancel button click. event emitted from chips component.
    */
   updateFilterByChip(chip: SgtFilterObject) {
-    const ind = this.tableDataConfig.filterList.findIndex(
+    const formField = this.searchConfig.advanceForm?.find(
       (ele) => ele.name == chip.name
     );
-    if (ind >= 0) {
-      this.tableDataConfig.filterList.splice(ind, 1);
-      this.updateRecord();
+    if (formField) {
+      formField.value = null;
+      const refAdvanceSearch = this.$refs.advanceSearch as SgtAdvanceSearch;
+      refAdvanceSearch.emitSearch();
     }
   }
 
@@ -438,6 +441,10 @@ export default class SgtDataTable extends Vue {
       margin: 15px 0 0;
     }
   }
+  .header-checkbox {
+    text-align: left;
+    padding-left: 1rem;
+  }
   .sgt-table-header {
     border: 1px solid #dfe0eb;
   }
@@ -467,6 +474,8 @@ export default class SgtDataTable extends Vue {
       display: flex;
       gap: 10px;
       position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       right: 2rem;
     }
   }

@@ -51,7 +51,7 @@ export default class LrAlertDetails extends Vue {
   alertDetails: any = null;
   mounted() {
     Api.getData("alerts/list", { isDummy: true }).then((resp: any) => {
-      const alertsList: any[] = resp["list"];
+      const alertsList: any[] = resp["data"];
       this.alertDetails = alertsList.find(
         (ele) => ele.alert_uuid === this.alertId
       );

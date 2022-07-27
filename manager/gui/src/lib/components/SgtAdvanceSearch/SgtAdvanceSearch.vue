@@ -36,6 +36,7 @@
           icon
           color="primary"
           class="mt-1"
+          data-test="advance-search-toggle"
           v-if="advanceSearchActive"
           @click="toggleAdvanceSearch"
         >
@@ -173,6 +174,10 @@ export default class SgtAdvanceSearch extends Vue {
   mounted() {
     if (this.config.advanceForm && this.config.advanceForm.length > 0) {
       this.advanceSearchActive = true;
+
+      if (this.config.initialSearch) {
+        this.emitSearch();
+      }
     }
   }
 
