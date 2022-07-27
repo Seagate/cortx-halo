@@ -50,7 +50,6 @@
               </v-col>
               <v-col cols="7" class="graph-img">
                 <img
-                  width="100%"
                   :src="require(`@/assets/images/${cardDetail.imgUrl2}`)"
                   alt
                 />
@@ -125,6 +124,10 @@ export default class LrDashboardPerformanceCard extends Vue {
 }
 .graph-img {
   text-align: right;
+  img {
+    width: 100%;
+    max-width: 250px;
+  }
 }
 .info-card-container:hover {
   box-shadow: 0px 6px 15px #e5e5e5;
