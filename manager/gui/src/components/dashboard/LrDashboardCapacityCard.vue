@@ -16,33 +16,43 @@
 -->
 <template>
   <div class="capacity-widget-container">
-    <SgtCard title="capacity" :showZoomIcon="true" @zoom-click="zoomIconHandler">
+    <SgtCard
+      :title="$t('capacity')"
+      :showZoomIcon="true"
+      titleInfo="Cluster Capacity"
+      @zoom-click="zoomIconHandler"
+    >
       <div class="capacity-info-wrapper">
         <div class="capacity-info">
           <div id="capacity-gauge"></div>
-          <div class="legends-and-value ml-7">
-            <div class="used-section">
-              <div class="d-flex">
-                <div :class="usedLegendClass"></div>
-                <div class="content-section">
-                  <span class="legend-name">{{ $t("used") }}</span>
-                  <span>{{ capacityChartVal(capacityDetails.used) }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="available-section">
-              <div class="d-flex">
-                <div class="capacity-badge capacity-available"></div>
-                <div class="content-section">
-                  <span class="legend-name">{{ $t("available") }}</span>
-                  <span>{{ capacityChartVal(capacityDetails.available) }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="total-section">
-              {{ $t("total") }} -
-              {{ capacityChartVal(capacityDetails.size) }}
-            </div>
+          <div class="total-section">
+            {{ $t("total") }} - {{ capacityChartVal(capacityDetails.size) }}
+          </div>
+        </div>
+      </div>
+      <div class="content-section pa-2 mt-3">
+        <div>
+          <div>
+            <b>{{ capacityChartVal(capacityDetails.used) }} </b>
+          </div>
+          <div>
+            <img
+              :src="require(`@/assets/images/capacity-used.svg`)"
+              class="capacity-detail-icons pr-1"
+              alt
+            />{{ $t("used") }}
+          </div>
+        </div>
+        <div>
+          <div>
+            <b>{{ capacityChartVal(capacityDetails.available) }}</b>
+          </div>
+          <div>
+            <img
+              :src="require(`@/assets/images/capacity-available.svg`)"
+              class="capacity-detail-icons pr-1"
+              alt
+            />{{ $t("available") }}
           </div>
         </div>
       </div>
@@ -55,6 +65,7 @@ import * as c3 from "c3";
 import SgtCard from "@/lib/components/SgtCard/SgtCard.vue";
 import { CapacityData } from "./LrDashboardData.model";
 import { Api } from "../../services/Api";
+import * as d3 from "d3";
 
 @Component({
   name: "LrDashboardCapacityCard",
@@ -66,11 +77,11 @@ export default class LrDashboardCapacityCard extends Vue {
   public capacityDetails: CapacityData = {} as CapacityData;
 
   public async mounted() {
-    const data = await Api.getData("/dashboard/capacity", {
+    const resp: any = await Api.getData("/dashboard/capacity", {
       isDummy: true,
     });
 
-    this.capacityDetails = data as CapacityData;
+    this.capacityDetails = resp.data;
     const capacityC3Data: Array<[string, number]> = [
       ["Usage", this.capacityDetails.usagePercentage],
     ];
@@ -101,6 +112,7 @@ export default class LrDashboardCapacityCard extends Vue {
         label: {
           show: false,
         },
+        fullCircle: true,
       },
       tooltip: {
         show: false,
@@ -113,8 +125,22 @@ export default class LrDashboardCapacityCard extends Vue {
       },
       size: {
         width: 280,
+        height: 280,
       },
     });
+
+    d3.select(".c3-chart-arcs").append("g").attr("class", "inner-circle-div");
+    d3.select(".inner-circle-div")
+      .append("circle")
+      .attr("r", 50)
+      .attr("fill", "#FFFFFF")
+      .attr("stroke", "gray");
+    d3.select(".inner-circle-div")
+      .append("text")
+      .attr("class", "circle-text")
+      .attr("x", -20)
+      .attr("y", 10)
+      .text(this.chartDataVal + "%");
   }
 
   public zoomIconHandler() {
@@ -137,9 +163,7 @@ export default class LrDashboardCapacityCard extends Vue {
 </script>
 <style lang="scss" scoped>
 @import "../../../node_modules/c3/c3.min.css";
-.legends-and-value > div {
-  margin-top: 15px;
-}
+
 .capacity-info-wrapper {
   display: flex;
   justify-content: center;
@@ -156,8 +180,8 @@ export default class LrDashboardCapacityCard extends Vue {
   }
 }
 .content-section {
-  margin-left: 8px;
-  width: min(200px, 75%);
+  border-top: 1px solid #e3e3e3;
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
@@ -179,19 +203,30 @@ export default class LrDashboardCapacityCard extends Vue {
 .capacity-available {
   background: rgb(158, 158, 158);
 }
-.cortx-capacity-separator {
-  width: 100%;
-  border-top: 1px solid #e3e3e3;
-}
-.width-25 {
-  width: 25px;
-}
-.width-110 {
-  width: 110px;
-}
+
 @media screen and (min-height: 600px) {
   .cortx-capacity-container {
     height: 50%;
   }
+}
+
+.total-section {
+  font-weight: bold;
+}
+
+::v-deep .inner-circle-div {
+  filter: drop-shadow(3px 3px 2px gray);
+}
+::v-deep .circle-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+::v-deep .c3-chart-arc {
+  path {
+    border-radius: 5px;
+  }
+}
+.capacity-detail-icons {
+  vertical-align: text-bottom;
 }
 </style>
