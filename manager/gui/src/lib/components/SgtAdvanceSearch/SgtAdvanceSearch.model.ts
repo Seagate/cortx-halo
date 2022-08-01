@@ -29,5 +29,6 @@ export interface SgtAdvanceFormField {
   placeholder?: string;
   options?: SgtDropdownOption[];
   required?: boolean;
+  editable?: boolean;
   value?: any;
 }

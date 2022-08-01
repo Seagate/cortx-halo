@@ -62,7 +62,14 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop, Watch, PropSync } from "vue-property-decorator";
+import {
+  Component,
+  Vue,
+  Prop,
+  Watch,
+  PropSync,
+  Mixins,
+} from "vue-property-decorator";
 import SgtDataTable from "@/lib/components/SgtDataTable/SgtDataTable.vue";
 import { lrAlertConst } from "./LrAlert.constant";
 import { Api } from "../../services/Api";
@@ -76,33 +83,31 @@ import { SgtFilterObject } from "@/lib/components/SgtChips/SgtFilterObject.model
 import SgtDialog from "@/lib/components/SgtDialog/SgtDialog.vue";
 import { SgtDialogModel } from "@/lib/components/SgtDialog/SgtDialog.model";
 import { create } from "vue-modal-dialogs";
+import AlertMixin from "@/mixins/AlertMixin";
 
 @Component({
   name: "LrAlert",
   components: { SgtDataTable, LrAlertDialog, LrAlertComments },
 })
-export default class LrAlert extends Vue {
+export default class LrAlert extends Mixins(AlertMixin) {
   @Prop({ required: false }) private alertId: string;
   @Prop({ required: false }) private severity: string;
+  @Prop({ required: false }) private resourceInfo: string;
   alertConst: any = JSON.parse(JSON.stringify(lrAlertConst));
   alerts: any = [];
   showDataTable = false;
   chips: SgtFilterObject[] = [];
-  showAlertDetailsDialog = false;
-  selectedRecord: any = null;
-  showAlertCommentsDialog = false;
-  public acknowledgeModal = create<SgtDialogModel>(SgtDialog);
 
   mounted() {
     if (this.severity) {
-      this.setSeverityFilter();
+      this.setFilter("severity", this.severity);
+    } else if (this.resourceInfo) {
+      this.setFilter("resourceInfo", this.resourceInfo);
     } else {
       this.getAlertsList();
     }
+
     if (this.alertId) {
-      let headers = this.alertConst?.alertTable?.headers;
-      let actionColumn = headers[headers?.length - 1];
-      actionColumn.actionList = [];
       this.alertConst.alertTable.isMultiSelect = false;
       //   getMethod for selected alert
       this.showDataTable = true;
@@ -121,23 +126,16 @@ export default class LrAlert extends Vue {
     }
   }
 
-  setSeverityFilter() {
-    if (this.severity) {
-      let filterList: SgtFilterObject[] = [];
-      const advanceForm = [...this.alertConst.searchConfig.advanceForm];
-      const updatedAdvanceForm = advanceForm.map((element) => {
-        if (element.name === "severity") {
-          element.value = this.severity;
-          filterList.push({
-            label: element.label,
-            name: element.name,
-            value: element.value,
-          });
-        }
-        return element;
-      });
-      this.alertConst.searchConfig.advanceForm = updatedAdvanceForm;
-    }
+  setFilter(filterName: string, filterValue: string) {
+    const advanceForm = [...this.alertConst.searchConfig.advanceForm];
+    const formElementIndex = advanceForm.findIndex(
+      (element) => element.name === filterName
+    );
+    const formElement =
+      this.alertConst.searchConfig.advanceForm[formElementIndex];
+    formElement.value = filterValue;
+    formElement.editable = false;
+    formElement.required = true;
   }
 
   getColor(item: any) {
@@ -152,46 +150,8 @@ export default class LrAlert extends Vue {
     this.getAlertsList(queryFilters, tableDataConfig.filterList);
   }
 
-  openDetails(selectedRow: any) {
-    this.selectedRecord = null;
-    this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
-    this.selectedRecord.extended_info = JSON.parse(
-      this.selectedRecord.extended_info
-    );
-    this.showAlertDetailsDialog = true;
-  }
-
-  comment(selectedRow: any) {
-    this.selectedRecord = null;
-    this.selectedRecord = JSON.parse(JSON.stringify(selectedRow));
-    this.showAlertCommentsDialog = true;
-  }
-
   multiAcknowledge(data: any) {
     //multi select action
-  }
-
-  async singleAcknowledge(data: any) {
-    const result = await this.acknowledgeModal({
-      modalTitle: "Confirmation",
-      modalContent: `Are you sure you want to acknowledge this alert?`,
-      modalType: "prompt",
-      modalContentType: "text",
-    }).then((resp) => {
-      if (resp === "yes") {
-        //API call to acknowledge this alert
-      }
-    });
-  }
-
-  async recommendation(data: any) {
-    const result = await this.acknowledgeModal({
-      modalTitle: "Recommendation",
-      modalContent: data.recommendation,
-      modalType: "message",
-      modalContentType: "text",
-      okButtonLabel: "Close",
-    });
   }
 
   occurrencesHandler(selectedRow: any) {

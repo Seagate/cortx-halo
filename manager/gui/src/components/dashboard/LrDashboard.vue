@@ -85,7 +85,6 @@ export default class LrDashboard extends Vue {}
   min-height: min(30%, 300px);
   display: flex;
   flex-wrap: nowrap;
-  gap: 20px;
 
   & > * {
     width: 33.33%;

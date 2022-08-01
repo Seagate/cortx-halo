@@ -22,7 +22,7 @@
         dark
         v-for="(chip, i) in chips"
         :key="i"
-        :close="chip.required ? false : true"
+        :close="!chip.required"
         close-label="remove"
         @click="$emit('chip-click', chip)"
         @click:close="$emit('remove-chip', chip)"
