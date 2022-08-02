@@ -140,3 +140,7 @@ class MongoDB(DB):
         """End all server sessions created by current client \
             and disconnect from MongoDB."""
         self._client.close()
+
+    def __del__(self):
+        """Close MongoDB connection."""
+        self.close()

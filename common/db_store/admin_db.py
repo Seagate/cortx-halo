@@ -203,3 +203,7 @@ class MongoDBAdmin(DBAdmin):
     def get_data_stores(self):
         """Get list of data stores."""
         return self._db.list_collection_names()
+
+    def __del__(self):
+        """Close MongoDB admin connection."""
+        self.close_connection()
