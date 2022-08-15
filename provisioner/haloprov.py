@@ -25,7 +25,7 @@ from resource import Component
 from cmdconfig import *
 
 def main():
-    cmdcfg = CmdConfig(FileType.INI,'./config/nodeprep.cfg')
+    cmdcfg = CmdConfig(FileType.INI,'./config/haloprov.cfg')
     resources = cmdcfg.get_resources()
     for resource in resources:
         comp = Component(resource, cmdcfg, None)
