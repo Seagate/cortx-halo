@@ -17,10 +17,22 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from enum import Enum
+#! /usr/bin/env python3
 
-# TODO : Move db types to config file.
-class DBTypes(Enum):
-    MONGODB = 'mongodb'
-    MONGODB_ADMIN = 'mongodb_admin'
+import sys
+import os
+from resource import Software
+from cmdconfig import *
+
+def main():
+    cmdcfg = CmdConfig(FileType.INI,'./config/nodeprep.cfg')
+    for resource in cmdcfg.config_dict.keys():
+        swcomp = Software(resource, cmdcfg, None)
+        if not swcomp.validate():
+            swcomp.setup()
+            swcomp.configure()
+            swcomp.validate()
+
+if __name__ == "__main__":
+    main()
 

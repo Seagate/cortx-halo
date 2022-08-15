@@ -20,7 +20,7 @@
 import configparser
 import collections
 from const import FileType
-from common.error import CustomError
+from error import CustomError
 
 class CmdConfig:
     def get_config_sections(self):

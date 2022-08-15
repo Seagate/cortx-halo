@@ -19,8 +19,19 @@
 
 from enum import Enum
 
-# TODO : Move db types to config file.
-class DBTypes(Enum):
-    MONGODB = 'mongodb'
-    MONGODB_ADMIN = 'mongodb_admin'
+class FileType(Enum):
+    XLSX = 1
+    CSV = 2
+    INI = 3
 
+class ResourceType(Enum):
+    SERVER_NIC = 1
+    SERVER_HBA = 2
+    CLUSTER = 3
+    SOFTWARE = 4
+
+class SOFTWARE(Enum):
+    ANSIBLE = 1
+    NODECLI = 2
+    K8S_CRI = 3
+    

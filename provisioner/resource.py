@@ -19,9 +19,8 @@
 
 from abc import ABC, abstractmethod
 from const import ResourceType
-from provisioner.config import Config
-from common.utils.cmdconfig import *
-from const import *
+from config import Config
+from cmdconfig import *
 import os
 
 class Resource(ABC):
@@ -80,7 +79,7 @@ class Resource(ABC):
 
 class Software(Resource):
     def __init__(self, resource_id: str, cmdcfg: CmdConfig, sitecfg: Config):
-        super().__init__(SOFTWARE, resource_id, cmdcfg, sitecfg)
+        super().__init__(ResourceType.SOFTWARE, resource_id, cmdcfg, sitecfg)
     def setup(self):
         ''' setup software using best practices '''
         setupPath = self.cmdcfg.config_dict[self.id]['install_cmd']
