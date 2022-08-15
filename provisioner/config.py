@@ -17,26 +17,22 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from enum import Enum
+import yaml, csv
+import collections
+from const import FileType, ResourceType
 
-# TODO : Move db types to config file.
-class DBTypes(Enum):
-    MONGODB = 'mongodb'
-    MONGODB_ADMIN = 'mongodb_admin'
+class Config:
+    def __init__(self, file_type: FileType, config_file: str):
+        self.file_type = file_type
+        self.config_file = config_file
+    def create_deployment_config(self) -> bool:
+        ''' read input config (XLSX, site_survey_document.xlsx) into deployment_config yaml object '''
+        self.resource_config = collections.defaultdict()
+        return True
+    def validate_deployment_config(self) -> bool:
+        ''' validate deployment_config for expected configuration format and / or values '''
+        return True
+    def get_resource_config(self, resource_type: ResourceType, resource_id: str) -> dict:
+        ''' read and return config json or yaml subset for given respurce type and id '''
+        return self.resource_config
 
-class FileType(Enum):
-    XLSX = 1
-    CSV = 2
-    INI = 3
-
-class ResourceType(Enum):
-    SERVER_NIC = 1
-    SERVER_HBA = 2
-    CLUSTER = 3
-    SOFTWARE = 4
-
-class SOFTWARE(Enum):
-    ANSIBLE = 1
-    NODECLI = 2
-    K8S_CRI = 3
-    

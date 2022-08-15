@@ -17,26 +17,22 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from enum import Enum
+class CustomError(Exception):
 
-# TODO : Move db types to config file.
-class DBTypes(Enum):
-    MONGODB = 'mongodb'
-    MONGODB_ADMIN = 'mongodb_admin'
+    def __init__(self, message, rc=1, *args):
+        self._rc = rc
+        self._desc = message % (args)
 
-class FileType(Enum):
-    XLSX = 1
-    CSV = 2
-    INI = 3
+    @property
+    def rc(self):
+        return self._rc
 
-class ResourceType(Enum):
-    SERVER_NIC = 1
-    SERVER_HBA = 2
-    CLUSTER = 3
-    SOFTWARE = 4
+    @property
+    def desc(self):
+        return self._desc
 
-class SOFTWARE(Enum):
-    ANSIBLE = 1
-    NODECLI = 2
-    K8S_CRI = 3
-    
+    def __str__(self):
+        """String representation of the object."""
+        if self._rc == 0:
+            return self._desc
+        return "error(%d): %s" % (self._rc, self._desc)
