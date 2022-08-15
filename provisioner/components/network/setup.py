@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates
 
 # This program is free software: you can redistribute it and/or modify it
@@ -15,6 +17,19 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-[INSTALL_CONFIG]
-INSALL_PATH=/opt/installables
+
+import jinja2
+
+def process(src_template_file, dest, data):
+        templateLoader = jinja2.FileSystemLoader(searchpath="./jinja2_templates")
+        templateEnv = jinja2.Environment(loader=templateLoader)
+        template = templateEnv.get_template(src_template_file)
+        network_config_data = template.render(data)
+        try:
+            if os.path.exists(dest):
+                with open(dest, 'w') as fin:
+                    fin.truncate()
+                    fin.write(network_config_data)
+        except Exception as e:
+            print(e)
 

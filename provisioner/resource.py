@@ -19,14 +19,19 @@
 
 from abc import ABC, abstractmethod
 from const import ResourceType
-from config import Config
+from provisioner.config import Config
+from common.utils.cmdconfig import *
+from const import *
+import os
 
 class Resource(ABC):
 
-    def __init__(self, resource_type: ResourceType, resource_id: str, cfg: Config):
+    def __init__(self, resource_type: ResourceType, resource_id: str, cmdcfg: CmdConfig, sitecfg: Config):
         self.type = resource_type
         self.id = resource_id
-        self.cfg = cfg.get_resource_config(resource_type, resource_id)
+        self.cmdcfg = cmdcfg
+        if sitecfg:
+            self.sitecfg = sitecfg.get_resource_config(resource_type, resource_id)
 
     @abstractmethod
     def setup():
@@ -73,4 +78,38 @@ class Resource(ABC):
         ''' teardown resource setup '''
         pass
 
-
+class Software(Resource):
+    def __init__(self, resource_id: str, cmdcfg: CmdConfig, sitecfg: Config):
+        super().__init__(SOFTWARE, resource_id, cmdcfg, sitecfg)
+    def setup(self):
+        ''' setup software using best practices '''
+        setupPath = self.cmdcfg.config_dict[self.id]['install_cmd']
+        os.system("python3 %s" %setupPath)
+        print("hello")
+    def configure(self):
+        ''' configure software '''
+        configPath = self.cmdcfg.config_dict[self.id]['config_cmd']
+        os.system("python3 %s" %configPath)
+    def validate(self):
+        ''' validate resource setup and config '''
+        validatePath = self.cmdcfg.config_dict[self.id]['validate_cmd']
+        os.system("python3 %s" %validatePath)
+    def teardown(self):
+        ''' teardown software'''
+        teardownPath = self.cmdcfg.config_dict[self.id]['teardown_cmd']
+        os.system("python3 %s" %teardownPath)
+    def enable(self):
+        ''' start / online software '''
+        pass
+    def disable(self):
+        ''' stop / offline software'''
+        pass
+    def unconfigure(self):
+        ''' configure software'''
+        pass
+    def upgrade(self):
+        ''' upgrade resource using best practices '''
+        pass
+    def downgrade(self):
+        ''' downgrade resource using best practices '''
+        pass

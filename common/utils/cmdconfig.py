@@ -22,7 +22,7 @@ import collections
 from const import FileType
 from common.error import CustomError
 
-class cfgparser:
+class CmdConfig:
     def get_config_sections(self):
         try:
             section_dict = collections.defaultdict()
