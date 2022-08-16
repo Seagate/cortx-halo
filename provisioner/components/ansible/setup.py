@@ -30,6 +30,7 @@ def createFile():
     except Exception as e:
         print(f'{e}')
 
+
 def setup():
     try:
         os.chdir("%s" %(extract_path))
@@ -38,9 +39,11 @@ def setup():
     except Exception as e:
         print(f'{e}')
 
+
 def main():
     createFile()
     setup()
+
 
 if __name__ == "__main__":
     main()

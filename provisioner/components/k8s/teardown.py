@@ -19,6 +19,7 @@
 
 import os
 
+
 def teardown():
     try:
         if os.system("yum remove -y kubectl kubeadm kubelet") != 0:
@@ -28,8 +29,10 @@ def teardown():
         print(f'{e}') #TODO: Replace print with log
         return False
 
+
 def main():
     teardown()
+
 
 if __name__ == "__main__":
     main()

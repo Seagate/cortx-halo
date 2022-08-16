@@ -22,6 +22,7 @@ import os
 filename = "/opt/halo/install_depot/monitor.tar.gz"
 extract_path = "/opt/halo/install_depot/k8s"
 
+
 def createFile():
     try:
         if os.system("ls %s" %(extract_path)) != 0:
@@ -29,6 +30,7 @@ def createFile():
             print("Directory Created %s" %extract_path)
     except Exception as e:
         print(f'{e}')
+
 
 def setup():
     try:
@@ -38,9 +40,11 @@ def setup():
     except Exception as e:
         print(f'{e}')
 
+
 def main():
     createFile()
     setup()
+
 
 if __name__ == "__main__":
     main()

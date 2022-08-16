@@ -27,8 +27,10 @@ def validate():
     except Exception as e:
         print(f'{e}')
 
+
 def main():
     validate()
+
 
 if __name__ == "__main__":
     main()

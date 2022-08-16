@@ -27,8 +27,10 @@ def teardown():
     except Exception as e:
         print(f'{e}') #TODO: Replace print with log
 
+
 def main():
     teardown()
+
 
 if __name__ == "__main__":
     main()

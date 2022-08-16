@@ -19,6 +19,7 @@
 
 import os
 
+
 def validate():
     try:
         if os.system("monitor --version | grep 0.0.0") != 0:
@@ -27,8 +28,10 @@ def validate():
     except Exception as e:
         print(f'{e}')
 
+
 def main():
     validate()
+
 
 if __name__ == "__main__":
     main()

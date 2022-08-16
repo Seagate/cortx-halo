@@ -20,6 +20,7 @@
 from setup import *
 from teardown import *
 from validate import *
+import os
 
 
 def test_folderCreation():
@@ -27,10 +28,12 @@ def test_folderCreation():
     x = os.system("ls /opt/halo/install_depot/nodecli")
     assert x==0, "File not created"
 
+
 def test_setup():
     setup()
     x = validate()
     assert x!=0, "Software not installed"
+
 
 def test_teardown():
     x = teardown()
