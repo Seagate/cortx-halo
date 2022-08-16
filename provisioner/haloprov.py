@@ -20,7 +20,6 @@
 from resource import Component
 from config import ResourcesConfig
 from const import FileType
-import os
 
 def main():
     haloprovcfg = ResourcesConfig(FileType.INI, './config/haloprov.yaml')
