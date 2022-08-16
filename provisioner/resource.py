@@ -35,47 +35,47 @@ class Resource(ABC):
     @abstractmethod
     def setup(self):
         ''' setup resource using best practices '''
-        pass
+        return
 
     @abstractmethod
     def configure(self):
         ''' apply resource specific config from deployment_config '''
-        pass
+        return
 
     @abstractmethod
     def enable(self):
         ''' turn resource online / available '''
-        pass
+        return
 
     @abstractmethod
     def upgrade(self):
         ''' upgrade resource using best practices '''
-        pass
+        return
 
     @abstractmethod
     def validate(self):
         ''' validate resource setup and config '''
-        pass
+        return
 
     @abstractmethod
     def disable(self):
         ''' turn resource offline / unavailable '''
-        pass
+        return
 
     @abstractmethod
     def downgrade(self):
         ''' downgrade resource using best practices '''
-        pass
+        return
 
     @abstractmethod
     def unconfigure(self):
         ''' reset resource specific config applied '''
-        pass
+        return
 
     @abstractmethod
     def teardown(self):
         ''' teardown resource setup '''
-        pass
+        return
 
 class Component(Resource):
     def __init__(self, resource_id: str, cmdcfg: CmdConfig, sitecfg: Config):
@@ -115,21 +115,21 @@ class Component(Resource):
 
     def enable(self):
         ''' start / online component '''
-        pass
+        return
 
     def disable(self):
         ''' stop / offline component'''
-        pass
+        return
 
     def unconfigure(self):
         ''' configure component'''
-        pass
+        return
 
     def upgrade(self):
         ''' upgrade resource using best practices '''
-        pass
+        return
 
     def downgrade(self):
         ''' downgrade resource using best practices '''
-        pass
+        return
 

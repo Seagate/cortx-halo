@@ -60,6 +60,7 @@ class CmdConfig:
         except Exception as e:
             raise CustomError(f"Unable to Open config file. Error {e}")
 
+
 if __name__ == "__main__":
     cfg = CmdConfig(FileType.INI, './nodeprep.cfg')
     print(cfg.get_resources())

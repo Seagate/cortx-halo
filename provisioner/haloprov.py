@@ -19,9 +19,9 @@
 
 #! /usr/bin/env python3
 
-import sys
 from resource import Component
-from cmdconfig import *
+from cmdconfig import CmdConfig
+from const import FileType
 
 def main():
     cmdcfg = CmdConfig(FileType.INI,'./config/haloprov.cfg')
@@ -32,6 +32,7 @@ def main():
             comp.setup()
             comp.configure()
             comp.validate()
+
 
 if __name__ == "__main__":
     main()
