@@ -18,15 +18,15 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 from resource import Component
-from config import ProvisionerConfig
+from config import ResourcesConfig
 from const import FileType
 import os
 
 def main():
-    cmdcfg = ProvisionerConfig(FileType.INI, os.path.abspath('./config/haloprov.yaml'))
-    resources = cmdcfg.get_resources()
+    haloprovcfg = ResourcesConfig(FileType.INI, os.path.abspath('./config/haloprov.yaml'))
+    resources = haloprovcfg.get_resources()
     for resource in resources:
-        comp = Component(resource, cmdcfg, None)
+        comp = Component(resource, haloprovcfg, None)
         if not comp.validate():
             comp.setup()
             comp.configure()

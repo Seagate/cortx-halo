@@ -20,15 +20,15 @@
 from abc import ABC, abstractmethod
 from const import ResourceType
 from config import SiteConfig
-from config import ProvisionerConfig
+from config import ResourcesConfig
 import os
 
 class Resource(ABC):
 
-    def __init__(self, resource_type: ResourceType, resource_id: str, cmdcfg: ProvisionerConfig, sitecfg: SiteConfig):
+    def __init__(self, resource_type: ResourceType, resource_id: str, provcfg: ResourcesConfig, sitecfg: SiteConfig):
         self.type = resource_type
         self.id = resource_id
-        self.cmdcfg = cmdcfg
+        self.provcfg = provcfg
         if sitecfg:
             self.sitecfg = sitecfg.get_resource_config(resource_type, resource_id)
 
@@ -78,38 +78,38 @@ class Resource(ABC):
         return
 
 class Component(Resource):
-    def __init__(self, resource_id: str, cmdcfg: ProvisionerConfig, sitecfg: SiteConfig):
-        if cmdcfg.get_resource_type(resource_id) == 'SERVER_NIC':
+    def __init__(self, resource_id: str, provcfg: ResourcesConfig, sitecfg: SiteConfig):
+        if provcfg.get_resource_type(resource_id) == 'SERVER_NIC':
             resource_type = ResourceType.SERVER_NIC
-        elif cmdcfg.get_resource_type(resource_id) == 'SERVER_HBA':
+        elif provcfg.get_resource_type(resource_id) == 'SERVER_HBA':
             resource_type = ResourceType.SERVER_HBA
-        elif cmdcfg.get_resource_type(resource_id) == 'CLUSTER':
+        elif provcfg.get_resource_type(resource_id) == 'CLUSTER':
             resource_type = ResourceType.CLUSTER
-        elif cmdcfg.get_resource_type(resource_id) == 'SOFTWARE':
+        elif provcfg.get_resource_type(resource_id) == 'SOFTWARE':
             resource_type = ResourceType.SOFTWARE
-        super().__init__(resource_type, resource_id, cmdcfg, sitecfg)
+        super().__init__(resource_type, resource_id, provcfg, sitecfg)
 
     def setup(self):
         ''' setup component using best practices '''
-        setupPath = self.cmdcfg.get_resource_cmd(self.id, 'install_cmd')
+        setupPath = self.provcfg.get_resource_cmd(self.id, 'install_cmd')
         if setupPath:
             os.system("python3 %s" %setupPath)
 
     def configure(self):
         ''' configure component '''
-        configPath = self.cmdcfg.get_resource_cmd(self.id, 'config_cmd')
+        configPath = self.provcfg.get_resource_cmd(self.id, 'config_cmd')
         if configPath:
             os.system("python3 %s" %configPath)
 
     def validate(self):
         ''' validate resource setup and config '''
-        validatePath = self.cmdcfg.get_resource_cmd(self.id, 'validate_cmd')
+        validatePath = self.provcfg.get_resource_cmd(self.id, 'validate_cmd')
         if validatePath:
             os.system("python3 %s" %validatePath)
 
     def teardown(self):
         ''' teardown component'''
-        teardownPath = self.cmdcfg.get_resource_cmd(self.id, 'teardown_cmd')
+        teardownPath = self.provcfg.get_resource_cmd(self.id, 'teardown_cmd')
         if teardownPath:
             os.system("python3 %s" %teardownPath)
 

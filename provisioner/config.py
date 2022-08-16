@@ -25,7 +25,7 @@ from const import FileType, ResourceType
 from error import CustomError
 
 
-class ProvisionerConfig:
+class ResourcesConfig:
     def get_config_sections(self):
         try:
             with open(self.config_file, 'r') as f:
@@ -81,7 +81,7 @@ class SiteConfig:
 
 
 if __name__ == "__main__":
-    cfg = ProvisionerConfig(FileType.INI, './config/haloprov.yaml')
+    cfg = ResourcesConfig(FileType.INI, './config/haloprov.yaml')
     print(cfg.get_resources())
 
 
