@@ -61,7 +61,6 @@ class CmdConfig:
             raise CustomError(f"Unable to Open config file. Error {e}")
 
 if __name__ == "__main__":
-    cfg = cfgparser(FileType.INI, './nodeprep.cfg')
-    print(cfg.config_dict.keys())
-    print(cfg.config_dict)
+    cfg = CmdConfig(FileType.INI, './nodeprep.cfg')
+    print(cfg.get_resources())
 

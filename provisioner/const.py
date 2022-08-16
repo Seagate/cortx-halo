@@ -34,4 +34,4 @@ class SOFTWARE(Enum):
     ANSIBLE = 1
     NODECLI = 2
     K8S_CRI = 3
-    
+

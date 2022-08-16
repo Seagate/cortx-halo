@@ -20,7 +20,7 @@
 from abc import ABC, abstractmethod
 from const import ResourceType
 from config import Config
-from cmdconfig import *
+from cmdconfig import CmdConfig
 import os
 
 class Resource(ABC):
@@ -33,47 +33,47 @@ class Resource(ABC):
             self.sitecfg = sitecfg.get_resource_config(resource_type, resource_id)
 
     @abstractmethod
-    def setup():
+    def setup(self):
         ''' setup resource using best practices '''
         pass
 
     @abstractmethod
-    def configure():
+    def configure(self):
         ''' apply resource specific config from deployment_config '''
         pass
 
     @abstractmethod
-    def enable():
+    def enable(self):
         ''' turn resource online / available '''
         pass
 
     @abstractmethod
-    def upgrade():
+    def upgrade(self):
         ''' upgrade resource using best practices '''
         pass
 
     @abstractmethod
-    def validate():
+    def validate(self):
         ''' validate resource setup and config '''
         pass
 
     @abstractmethod
-    def disable():
+    def disable(self):
         ''' turn resource offline / unavailable '''
         pass
 
     @abstractmethod
-    def downgrade():
+    def downgrade(self):
         ''' downgrade resource using best practices '''
         pass
 
     @abstractmethod
-    def unconfigure():
+    def unconfigure(self):
         ''' reset resource specific config applied '''
         pass
 
     @abstractmethod
-    def teardown():
+    def teardown(self):
         ''' teardown resource setup '''
         pass
 

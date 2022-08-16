@@ -17,7 +17,7 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-import yaml, csv
+#import yaml, csv
 import collections
 from const import FileType, ResourceType
 
