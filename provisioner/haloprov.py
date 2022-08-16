@@ -23,7 +23,7 @@ from const import FileType
 import os
 
 def main():
-    haloprovcfg = ResourcesConfig(FileType.INI, os.path.abspath('./config/haloprov.yaml'))
+    haloprovcfg = ResourcesConfig(FileType.INI, './config/haloprov.yaml')
     resources = haloprovcfg.get_resources()
     for resource in resources:
         comp = Component(resource, haloprovcfg, None)

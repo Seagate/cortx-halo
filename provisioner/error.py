@@ -17,6 +17,8 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+# TODO: Remove this class if there is no special exception processing to be done
+
 class CustomError(Exception):
 
     def __init__(self, message, rc=1, *args):
