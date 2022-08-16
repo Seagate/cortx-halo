@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import os
 
-filename = "file"
+filename = "/opt/halo/install_depot/nodecli.tar.gz"
 extract_path = "/opt/halo/install_depot/k8s"
 
 def createFile():

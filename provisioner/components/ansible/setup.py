@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import os
 
-filename = "file"
+filename = "/opt/halo/install_depot/ansible.tar.gz"
 extract_path = "/opt/halo/install_depot/ansible"
 
 def createFile():
