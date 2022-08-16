@@ -24,4 +24,3 @@ from enum import Enum
 class DBTypes(Enum):
     MONGODB = 'mongodb'
     MONGODB_ADMIN = 'mongodb_admin'
-
