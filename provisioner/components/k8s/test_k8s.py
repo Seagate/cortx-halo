@@ -17,9 +17,10 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from setup import *
-from teardown import *
-from validate import *
+from setup import setup
+from setup import createFile
+from teardown import teardown
+from validate import validate
 import os
 
 
