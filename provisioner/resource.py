@@ -91,25 +91,25 @@ class Component(Resource):
 
     def setup(self):
         ''' setup component using best practices '''
-        setupPath = self.cmdcfg.get_install_cmd(self.id)
+        setupPath = self.cmdcfg.get_resource_cmd(self.id, 'install_cmd')
         if setupPath:
             os.system("python3 %s" %setupPath)
 
     def configure(self):
         ''' configure component '''
-        configPath = self.cmdcfg.get_config_cmd(self.id)
+        configPath = self.cmdcfg.get_resource_cmd(self.id, 'config_cmd')
         if configPath:
             os.system("python3 %s" %configPath)
 
     def validate(self):
         ''' validate resource setup and config '''
-        validatePath = self.cmdcfg.get_validate_cmd(self.id)
+        validatePath = self.cmdcfg.get_resource_cmd(self.id, 'validate_cmd')
         if validatePath:
             os.system("python3 %s" %validatePath)
 
     def teardown(self):
         ''' teardown component'''
-        teardownPath = self.cmdcfg.get_teardown_cmd(self.id)
+        teardownPath = self.cmdcfg.get_resource_cmd(self.id, 'teardown_cmd')
         if teardownPath:
             os.system("python3 %s" %teardownPath)
 

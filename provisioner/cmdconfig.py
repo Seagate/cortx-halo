@@ -44,29 +44,11 @@ class CmdConfig:
         except Exception as e:
             raise CustomError(f"Unable to parse resource type in config file. Error {e}")
 
-    def get_install_cmd(self, resource_id):
+    def get_resource_cmd(self, resource_id, cmd_type):
         try:
-            return self.config_dict[resource_id]['install_cmd'] if 'install_cmd' in self.config_dict[resource_id] else None
+            return self.config_dict[resource_id][cmd_type] if cmd_type in self.config_dict[resource_id] else None
         except Exception as e:
-            raise CustomError(f"Unable to parse install command in config file. Error {e}")
-
-    def get_validate_cmd(self, resource_id):
-        try:
-            return self.config_dict[resource_id]['validate_cmd'] if 'validate_cmd' in self.config_dict[resource_id] else None
-        except Exception as e:
-            raise CustomError(f"Unable to parse validate command in config file. Error {e}")
-
-    def get_teardown_cmd(self, resource_id):
-        try:
-            return self.config_dict[resource_id]['teardown_cmd'] if 'teardown_cmd' in self.config_dict[resource_id] else None
-        except Exception as e:
-            raise CustomError(f"Unable to parse teardown command in config file. Error {e}")
-
-    def get_config_cmd(self, resource_id):
-        try:
-            return self.config_dict[resource_id]['config_cmd'] if 'config_cmd' in self.config_dict[resource_id] else None
-        except Exception as e:
-            raise CustomError(f"Unable to parse config command in config file. Error {e}")
+            raise CustomError(f"Unable to parse resource command in config file. Error {e}")
 
     def __init__(self, file_type: FileType, config_file: str):
         try:
