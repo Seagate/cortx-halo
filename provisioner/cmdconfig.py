@@ -20,7 +20,7 @@
 import configparser
 import collections
 from const import FileType
-from common.error import CustomError
+from error import CustomError
 
 class CmdConfig:
     def get_config_sections(self):
@@ -31,6 +31,24 @@ class CmdConfig:
             return section_dict
         except Exception as e:
             raise CustomError(f"Unable to parse config file. Error {e}")
+
+    def get_resources(self):
+        try:
+            return self.config_dict.keys()
+        except Exception as e:
+            raise CustomError(f"Unable to parse resources in config file. Error {e}")
+
+    def get_resource_type(self, resource_id):
+        try:
+            return self.config_dict[resource_id]['resource_type']
+        except Exception as e:
+            raise CustomError(f"Unable to parse resource type in config file. Error {e}")
+
+    def get_resource_cmd(self, resource_id, cmd_type):
+        try:
+            return self.config_dict[resource_id][cmd_type] if cmd_type in self.config_dict[resource_id] else None
+        except Exception as e:
+            raise CustomError(f"Unable to parse resource command in config file. Error {e}")
 
     def __init__(self, file_type: FileType, config_file: str):
         try:

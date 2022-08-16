@@ -17,10 +17,23 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from enum import Enum
+#! /usr/bin/env python3
 
-# TODO : Move db types to config file.
-class DBTypes(Enum):
-    MONGODB = 'mongodb'
-    MONGODB_ADMIN = 'mongodb_admin'
+import sys
+import os
+from resource import Component
+from cmdconfig import *
+
+def main():
+    cmdcfg = CmdConfig(FileType.INI,'./config/haloprov.cfg')
+    resources = cmdcfg.get_resources()
+    for resource in resources:
+        comp = Component(resource, cmdcfg, None)
+        if not comp.validate():
+            comp.setup()
+            comp.configure()
+            comp.validate()
+
+if __name__ == "__main__":
+    main()
 

@@ -19,9 +19,8 @@
 
 from abc import ABC, abstractmethod
 from const import ResourceType
-from provisioner.config import Config
-from common.utils.cmdconfig import *
-from const import *
+from config import Config
+from cmdconfig import *
 import os
 
 class Resource(ABC):
@@ -78,38 +77,59 @@ class Resource(ABC):
         ''' teardown resource setup '''
         pass
 
-class Software(Resource):
+class Component(Resource):
     def __init__(self, resource_id: str, cmdcfg: CmdConfig, sitecfg: Config):
-        super().__init__(SOFTWARE, resource_id, cmdcfg, sitecfg)
+        if cmdcfg.get_resource_type(resource_id) == 'SERVER_NIC':
+            resource_type = ResourceType.SERVER_NIC
+        elif cmdcfg.get_resource_type(resource_id) == 'SERVER_HBA':
+            resource_type = ResourceType.SERVER_HBA
+        elif cmdcfg.get_resource_type(resource_id) == 'CLUSTER':
+            resource_type = ResourceType.CLUSTER
+        elif cmdcfg.get_resource_type(resource_id) == 'SOFTWARE':
+            resource_type = ResourceType.SOFTWARE
+        super().__init__(resource_type, resource_id, cmdcfg, sitecfg)
+
     def setup(self):
-        ''' setup software using best practices '''
-        setupPath = self.cmdcfg.config_dict[self.id]['install_cmd']
-        os.system("python3 %s" %setupPath)
-        print("hello")
+        ''' setup component using best practices '''
+        setupPath = self.cmdcfg.get_resource_cmd(self.id, 'install_cmd')
+        if setupPath:
+            os.system("python3 %s" %setupPath)
+
     def configure(self):
-        ''' configure software '''
-        configPath = self.cmdcfg.config_dict[self.id]['config_cmd']
-        os.system("python3 %s" %configPath)
+        ''' configure component '''
+        configPath = self.cmdcfg.get_resource_cmd(self.id, 'config_cmd')
+        if configPath:
+            os.system("python3 %s" %configPath)
+
     def validate(self):
         ''' validate resource setup and config '''
-        validatePath = self.cmdcfg.config_dict[self.id]['validate_cmd']
-        os.system("python3 %s" %validatePath)
+        validatePath = self.cmdcfg.get_resource_cmd(self.id, 'validate_cmd')
+        if validatePath:
+            os.system("python3 %s" %validatePath)
+
     def teardown(self):
-        ''' teardown software'''
-        teardownPath = self.cmdcfg.config_dict[self.id]['teardown_cmd']
-        os.system("python3 %s" %teardownPath)
+        ''' teardown component'''
+        teardownPath = self.cmdcfg.get_resource_cmd(self.id, 'teardown_cmd')
+        if teardownPath:
+            os.system("python3 %s" %teardownPath)
+
     def enable(self):
-        ''' start / online software '''
+        ''' start / online component '''
         pass
+
     def disable(self):
-        ''' stop / offline software'''
+        ''' stop / offline component'''
         pass
+
     def unconfigure(self):
-        ''' configure software'''
+        ''' configure component'''
         pass
+
     def upgrade(self):
         ''' upgrade resource using best practices '''
         pass
+
     def downgrade(self):
         ''' downgrade resource using best practices '''
         pass
+
