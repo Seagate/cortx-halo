@@ -19,8 +19,8 @@
 
 from enum import Enum
 
+
 # TODO : Move db types to config file.
 class DBTypes(Enum):
     MONGODB = 'mongodb'
     MONGODB_ADMIN = 'mongodb_admin'
-
