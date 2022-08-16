@@ -19,13 +19,13 @@
 
 from abc import ABC, abstractmethod
 from const import ResourceType
-from config import Config
-from cmdconfig import CmdConfig
+from config import SiteConfig
+from config import ProvisionerConfig
 import os
 
 class Resource(ABC):
 
-    def __init__(self, resource_type: ResourceType, resource_id: str, cmdcfg: CmdConfig, sitecfg: Config):
+    def __init__(self, resource_type: ResourceType, resource_id: str, cmdcfg: ProvisionerConfig, sitecfg: SiteConfig):
         self.type = resource_type
         self.id = resource_id
         self.cmdcfg = cmdcfg
@@ -78,7 +78,7 @@ class Resource(ABC):
         return
 
 class Component(Resource):
-    def __init__(self, resource_id: str, cmdcfg: CmdConfig, sitecfg: Config):
+    def __init__(self, resource_id: str, cmdcfg: ProvisionerConfig, sitecfg: SiteConfig):
         if cmdcfg.get_resource_type(resource_id) == 'SERVER_NIC':
             resource_type = ResourceType.SERVER_NIC
         elif cmdcfg.get_resource_type(resource_id) == 'SERVER_HBA':
