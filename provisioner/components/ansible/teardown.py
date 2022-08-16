@@ -4,8 +4,10 @@ import os
 def teardown():
     try:
         os.system("yum remove -y ansible")
+        return True
     except Exception as e:
         print(f'{e}')
+        return False
 
 def main():
     teardown()

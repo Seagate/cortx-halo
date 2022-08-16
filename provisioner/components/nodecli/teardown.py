@@ -3,10 +3,11 @@ import os
 
 def teardown():
     try:
-        os.chdir("./nodecli")
         os.system("yum remove -y nodecli")
+        return True
     except Exception as e:
         print(f'{e}')
+        return False
 
 def main():
     teardown()
