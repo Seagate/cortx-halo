@@ -33,6 +33,10 @@ import LrClusterConfiguration from "../components/configuration/LrClusterConfigu
 import LrSystemHealthConfiguration from "../components/configuration/LrSystemHealthConfiguration.vue";
 import LrMaintenanceUpdateSoftware from "../components/maintenance/LrMaintenanceUpdateSoftware.vue";
 import LrSupport from "../components/configuration/LrSupport.vue";
+import LrUsers from "../components/users/LrUsers.vue";
+import LrTenant from "../components/users/LrTenant.vue";
+import LrUsersHome from "../components/users/LrUsersHome.vue";
+
 
 Vue.use(VueRouter);
 
@@ -130,6 +134,22 @@ const routes: Array<RouteConfig> = [
       },
     ],
   },
+  {
+    path: "/users",
+    component: LrUsers,
+    children: [
+      {
+        path: "",
+        name: "users",
+        component: LrUsersHome,
+      },
+      {
+        path: "tenant",
+        name: "tenant",
+        component: LrTenant,
+      }
+    ],
+  }
 ];
 
 const router = new VueRouter({
