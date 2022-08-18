@@ -16,10 +16,10 @@
 -->
 <template>
   <div class="lr-header pa-3">
-    <v-btn text icon color="#000000" @click.stop="$emit('menu-click')">
+    <v-btn text icon color="#fff" @click.stop="$emit('menu-click')">
       <v-icon>mdi-menu</v-icon>
     </v-btn>
-    <img :src="require('@/assets/images/lyve-rack-logo.svg')" class="lr-brand-logo" />
+    <img :src="require('@/assets/images/halo-logo.svg')" class="lr-brand-logo" />
     <div class="flex-filler"></div>
 
     <div class="header-alert-icon">
@@ -60,6 +60,7 @@ export default class LrHeader extends Vue {
   align-items: center;
   height: 4rem;
   box-shadow: 0px 4px 4px #f2f2f2;
+  background-color: #000;
   z-index: 5;
 
   .header-alert-icon {
@@ -69,7 +70,7 @@ export default class LrHeader extends Vue {
   }
 
   .lr-brand-logo {
-    height: 20px;
+    height: 30px;
     margin-left: 1em;
   }
 }

@@ -73,6 +73,7 @@ export default class LrHeaderDropdown extends Vue {
 
   .username-label {
     cursor: pointer;
+    color: #fff;
   }
 
   .lr-dropdown-menu {
