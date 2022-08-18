@@ -112,15 +112,15 @@ export default class LrDashboardAlertCard extends Vue {
       },
     });
 
-    d3.select(".c3-chart-arcs").append("g").attr("class", "inner-circle-div");
+    d3.select("#alert-chart .c3-chart-arcs").append("g").attr("class", "inner-circle-div");
 
-    d3.select(".inner-circle-div")
+    d3.select("#alert-chart .inner-circle-div")
       .append("circle")
       .attr("r", 50)
       .attr("fill", "#FFFFFF")
       .attr("stroke", "gray");
 
-    d3.select(".inner-circle-div")
+    d3.select("#alert-chart .inner-circle-div")
       .append("text")
       .attr("class", "circle-text")
       .attr("x", -15)
@@ -149,9 +149,6 @@ export default class LrDashboardAlertCard extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-::v-deep .inner-circle-div {
-  filter: drop-shadow(3px 3px 2px gray);
-}
 ::v-deep .circle-text {
   font-size: 1.5rem;
   font-weight: bold;
