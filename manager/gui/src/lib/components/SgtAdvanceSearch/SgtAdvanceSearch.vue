@@ -46,7 +46,7 @@
     </v-row>
 
     <v-expand-transition v-if="advanceSearchActive">
-      <v-card v-show="expand" hover class="mx-auto advance-search-container">
+      <v-card v-show="expand" hover class="mx-auto advance-search-container" :class="{'pa-0':!expand}">
         <div
           v-for="row in config.advanceForm"
           :key="row.name"
