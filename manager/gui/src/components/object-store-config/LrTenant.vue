@@ -15,7 +15,7 @@
 * please email opensource@seagate.com.
 -->
 <template>
-  <div class="manage-user-page-container users-page">
+  <div class="manage-user-page-container object-store-config-page">
     <div class="page-title">
         Tenant
     </div>

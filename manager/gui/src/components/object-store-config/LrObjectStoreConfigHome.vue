@@ -27,10 +27,10 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
 
 @Component({
-  name: "LrUsersHome",
+  name: "LrObjectStoreConfigHome",
   components: {},
 })
-export default class LrUsersHome extends Vue {
+export default class LrObjectStoreConfigHome extends Vue {
 
 }
 </script>

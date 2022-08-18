@@ -22,5 +22,5 @@ export const basePathList = [
   "/settings",
   "/maintenance",
   "/configuration",
-  "/users",
+  "/object-store",
 ];

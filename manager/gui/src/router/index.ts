@@ -33,9 +33,9 @@ import LrClusterConfiguration from "../components/configuration/LrClusterConfigu
 import LrSystemHealthConfiguration from "../components/configuration/LrSystemHealthConfiguration.vue";
 import LrMaintenanceUpdateSoftware from "../components/maintenance/LrMaintenanceUpdateSoftware.vue";
 import LrSupport from "../components/configuration/LrSupport.vue";
-import LrUsers from "../components/users/LrUsers.vue";
-import LrTenant from "../components/users/LrTenant.vue";
-import LrUsersHome from "../components/users/LrUsersHome.vue";
+import LrObjectStoreConfig from "../components/object-store-config/LrObjectStoreConfig.vue";
+import LrTenant from "../components/object-store-config/LrTenant.vue";
+import LrObjectStoreConfigHome from "../components/object-store-config/LrObjectStoreConfigHome.vue";
 
 
 Vue.use(VueRouter);
@@ -135,13 +135,13 @@ const routes: Array<RouteConfig> = [
     ],
   },
   {
-    path: "/users",
-    component: LrUsers,
+    path: "/object-store",
+    component: LrObjectStoreConfig,
     children: [
       {
         path: "",
-        name: "users",
-        component: LrUsersHome,
+        name: "object-store",
+        component: LrObjectStoreConfigHome,
       },
       {
         path: "tenant",

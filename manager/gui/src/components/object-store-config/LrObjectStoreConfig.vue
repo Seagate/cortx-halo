@@ -22,10 +22,10 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
-  name: "LrUsers",
+  name: "LrObjectStoreConfig",
   components: {},
 })
-export default class LrUsers extends Vue {
+export default class LrObjectStoreConfig extends Vue {
 
 }
 </script>

@@ -52,10 +52,10 @@ export const AppConst = {
       requiredAccess: "sysconfig",
     },
     {
-      title: "users",
-      path: "/users",
-      iconDefault: "icons/users-grey.svg", // #TODO: change the users-white.svg
-      iconActive: "icons/users-white.svg",
+      title: "object-store",
+      path: "/object-store",
+      iconDefault: "icons/object-store-grey.svg", // #TODO: change the object-store-white.svg
+      iconActive: "icons/object-store-white.svg",
       requiredAccess: "sysconfig", // #TODO: this is temp untill i get fixed thing
     }
   ],
