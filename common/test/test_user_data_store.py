@@ -17,9 +17,9 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+import uuid
 import pytest
-from datetime import datetime
-from common.data_stores.data_store import AlertStore
+from common.data_stores.data_store import UserMgmtStore
 from common.db_store.db_manager import DBManager
 
 
@@ -30,9 +30,9 @@ data_store = None
 @pytest.fixture
 def setup_datastore():
     global data_store
-    data_store = AlertStore(
+    data_store = UserMgmtStore(
         'mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017',
-        db_name='test', data_store_name='alert')
+        db_name='test', data_store_name='user_mgmt')
 
 
 @pytest.fixture
@@ -46,31 +46,39 @@ def setup_admin_db():
 
 def test_save_data(setup_datastore):
     """Test by saving data and reading it back."""
-    record = {"timestamp": datetime.now(),
-              "comp": "disk", "measures": {'cpu': '23', 'memory': '235'}}
+    record = {
+        "user_id": str(uuid.uuid4().hex),
+        "username": "admin",
+        "password": "admin",
+        "email": "admin@gmail.com",
+        "user_type": "manager"
+    }
     result = data_store.store_data(data=record)
     assert result is not None, "Failed to save Data."
+
     get_list_of_records = data_store.get_data()
-    assert any(r['measures'] == record['measures']
+    assert any(r['username'] == record['username']
                for r in get_list_of_records)
 
 
 def test_get_data(setup_datastore):
     """Test by listing data."""
     get_list_of_records = data_store.get_data()
+    print(get_list_of_records)
     assert get_list_of_records is not None, "Failed to fetch Data."
 
 
 def test_delete_data(setup_datastore):
     """Test by deleting data."""
     record = {
-        "comp": "disk"
+        "username": "admin"
     }
     result = data_store.delete_data(data=record)
+    print(result)
     assert result, "Failed to Delete Data."
 
 
 # Clean Up.
 def test_delete_collection(setup_admin_db):
     """Delete collection."""
-    admin_db.delete_data_store("alert")
+    admin_db.delete_data_store("user_mgmt")
