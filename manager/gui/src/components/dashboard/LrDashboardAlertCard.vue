@@ -163,10 +163,12 @@ export default class LrDashboardAlertCard extends Vue {
   }
 }
 .alert-cards-container {
-  padding-left: 3rem;
+  margin: 0 auto;
+  width: 204px;
   .card-details {
     font-size: 1.2rem;
     min-height: 3.3rem;
+    border: 1px solid #ffffff;
   }
   .card-details:hover {
     cursor: pointer;
