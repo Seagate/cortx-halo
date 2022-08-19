@@ -25,6 +25,7 @@ from common.db_store.db_manager import DBManager
 
 pytestmark = pytest.mark.unit
 data_store = None
+admin_db = None
 
 
 @pytest.fixture
@@ -64,7 +65,6 @@ def test_save_data(setup_datastore):
 def test_get_data(setup_datastore):
     """Test by listing data."""
     get_list_of_records = data_store.get_data()
-    print(get_list_of_records)
     assert get_list_of_records is not None, "Failed to fetch Data."
 
 
@@ -74,7 +74,6 @@ def test_delete_data(setup_datastore):
         "username": "admin"
     }
     result = data_store.delete_data(data=record)
-    print(result)
     assert result, "Failed to Delete Data."
 
 

@@ -25,6 +25,7 @@ from common.db_store.db_manager import DBManager
 
 pytestmark = pytest.mark.unit
 data_store = None
+admin_db = None
 
 
 @pytest.fixture
