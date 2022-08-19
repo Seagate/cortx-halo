@@ -22,7 +22,7 @@
     <v-divider></v-divider>
     <div class="row-padding">
       <v-row class="field-row">
-        <v-col cols="10" class="field-label">
+        <v-col cols="3" class="field-label">
           Enable TLS <SgtTooltipIcon>
                   Enable TLS for the tenant, this is required for Encryption Configuration
                 </SgtTooltipIcon> 
@@ -38,7 +38,7 @@
         </v-col>
       </v-row>
       <v-row class="field-row">
-        <v-col cols="10" class="field-label">
+        <v-col cols="3" class="field-label">
           AutoCert <SgtTooltipIcon>
                   MinIO Operator will generate all TLS certificates automatically.<br>Custom certificates: Allow user to provide your own certificates
                 </SgtTooltipIcon> 
@@ -47,7 +47,7 @@
         </v-col>
       </v-row>
       <v-row class="field-row">
-        <v-col cols="10" class="field-label">
+        <v-col cols="3" class="field-label">
           Enable AutoCert
         </v-col>
         <v-col cols="2" class="toggle-col">
@@ -61,7 +61,7 @@
         </v-col>
       </v-row>
       <v-row class="field-row">
-        <v-col cols="10" class="field-label">
+        <v-col cols="3" class="field-label">
           Custom Certificates 
         </v-col>
         <v-col cols="2" class="toggle-col">
@@ -82,7 +82,7 @@
     <v-divider></v-divider>
     <div class="row-padding">
       <v-row class="field-row">
-        <v-col cols="10" class="field-label">
+        <v-col cols="3" class="field-label">
           Enable Server Side Encryption 
         </v-col>
         <v-col cols="2" class="toggle-col">

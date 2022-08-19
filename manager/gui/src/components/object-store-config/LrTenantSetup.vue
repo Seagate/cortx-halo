@@ -77,6 +77,7 @@
               placeholder="Enter Total Size"
               outlined
               dense
+              disabled="true"
             ></v-text-field>
         </v-col>
       </v-row>
@@ -106,7 +107,7 @@
             color="csmdisabled"
             depressed
             dark
-            >Cancel</v-btn
+            >Reset</v-btn
           >
         </v-col>
       </v-row>
@@ -114,7 +115,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
  
 
@@ -123,10 +124,11 @@ import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
   components: { SgtDropdown },
 })
 export default class LrTenantSetup extends Vue {
-  userName = "user name";
-  noOfServers = 4;
-  drivesPerServer = 4;
-  totalSize = "1024";
+  userName: string = "Tenant1";
+  noOfServers: number = 4;
+  drivesPerServer: number = 4;
+  driveSize: number = 64;
+  totalSize: number = this.noOfServers * this.drivesPerServer * this.driveSize;
   ensureCodeParity = {
     data: [
       {
@@ -148,10 +150,18 @@ export default class LrTenantSetup extends Vue {
       },
   };
 
+  @Watch("noOfServers")
+  onNoOfServersChanged(newValue: number, oldValue: number) {
+    this.totalSize = this.noOfServers * this.drivesPerServer * this.driveSize;
+  }
+  @Watch("drivesPerServer")
+  onDrivesPerServerChanged(newValue: number, oldValue: number) {
+    this.totalSize = this.noOfServers * this.drivesPerServer * this.driveSize;
+  }
   
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .row-padding {
   padding: 20px 0 0 20px;
 }
