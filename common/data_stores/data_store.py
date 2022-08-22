@@ -95,6 +95,9 @@ class UserMgmtStore(DocumentDataStore):
     def get_data(self, **kwargs):
         """Fetch data from store.
 
+        Kwargs:
+            queryparams (json/bson): JSON / BSON string.
+
         Returns:
             list: List of records.
         """
