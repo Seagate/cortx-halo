@@ -78,6 +78,7 @@
               outlined
               dense
               disabled="true"
+              append-icon="mdi-post-size"
             ></v-text-field>
         </v-col>
       </v-row>
@@ -164,5 +165,11 @@ export default class LrTenantSetup extends Vue {
 <style lang="scss">
 .row-padding {
   padding: 20px 0 0 20px;
+}
+.mdi-post-size:before{
+  content: "Gi";
+  font-family: $font-family, sans-serif;
+  font-size: 20px;
+
 }
 </style>
