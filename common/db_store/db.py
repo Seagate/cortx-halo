@@ -90,6 +90,7 @@ class MongoDB(DB):
 
         Args:
             data_store_name (str): Name of data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Raises:
             DBError: Unable to fetch data.
@@ -116,6 +117,7 @@ class MongoDB(DB):
         Args:
             data_store_name (str): Name of data store.
             data (json/bson): JSON / BSON document to save to the data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Raises:
             DBError: Unable to save data.
@@ -146,6 +148,7 @@ class MongoDB(DB):
         Args:
             data_store_name (str): Name of data store.
             data (json/bson): JSON / BSON string.
+            **kwargs: Arbitrary keyword arguments.
 
         Raises:
             DBError: Failed to delete data.

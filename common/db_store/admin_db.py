@@ -106,6 +106,7 @@ class MongoDBAdmin(DBAdmin):
         Args:
             data_store_name (str): Name of data store.
             index_key (str): Key/field on which index is created.
+            **kwargs: Arbitrary keyword arguments.
 
         Raises:
             DBError: Unable to create index.
@@ -121,6 +122,7 @@ class MongoDBAdmin(DBAdmin):
 
         Args:
             data_store_name (str): Name of data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Returns:
             list: List of indexes.
@@ -137,6 +139,7 @@ class MongoDBAdmin(DBAdmin):
         Args:
             data_store_name (str): Name of data store.
             index_name (str): Index name.
+            **kwargs: Arbitrary keyword arguments.
 
         Raises:
             DBError: Unable to drop index.
@@ -158,7 +161,7 @@ class MongoDBAdmin(DBAdmin):
         Args:
             data_store (str): Type of data store.
             data_store_name (str): Name of data store.
-            kwargs (_type_): keyword arguments.
+            **kwargs: Arbitrary keyword arguments.
         """
         if data_store_type == DATASTORE.TIMESERIES.value:
             timeField = kwargs.get('timeField')
@@ -191,6 +194,7 @@ class MongoDBAdmin(DBAdmin):
         Args:
             data_store_name (str): Name of data store.
             data_store_type (str): Type of data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Raises:
             DBError: Invalid data store.

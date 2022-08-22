@@ -54,6 +54,9 @@ class AlertStore(DocumentDataStore):
     def get_data(self, **kwargs):
         """Fetch data from store.
 
+        Keyword Args:
+            queryparams (json/bson): JSON / BSON string.
+
         Returns:
             list: List of records.
         """
@@ -64,6 +67,7 @@ class AlertStore(DocumentDataStore):
 
         Args:
             data (json/bson): JSON / BSON document to save to the data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Returns:
             JSON: {status: "", matched_count: "", insert_id: ""}
@@ -75,6 +79,7 @@ class AlertStore(DocumentDataStore):
 
         Args:
             data (json/bson): JSON / BSON string.
+            **kwargs: Arbitrary keyword arguments.
 
         Returns:
             deleted count: 1 (Success) or 0 (Failure)
@@ -95,7 +100,7 @@ class UserMgmtStore(DocumentDataStore):
     def get_data(self, **kwargs):
         """Fetch data from store.
 
-        Kwargs:
+        Keyword Args:
             queryparams (json/bson): JSON / BSON string.
 
         Returns:
@@ -108,6 +113,7 @@ class UserMgmtStore(DocumentDataStore):
 
         Args:
             data (json/bson): JSON / BSON document to save to the data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Returns:
             JSON: {status: "", matched_count: "", insert_id: ""}
@@ -119,6 +125,7 @@ class UserMgmtStore(DocumentDataStore):
 
         Args:
             data (json/bson): JSON / BSON string.
+            **kwargs: Arbitrary keyword arguments.
 
         Returns:
             deleted count: 1 (Success) or 0 (Failure)
