@@ -109,7 +109,7 @@
             color="csmdisabled"
             depressed
             dark
-            >Cancel</v-btn
+            >Reset</v-btn
           >
         </v-col>
       </v-row>
