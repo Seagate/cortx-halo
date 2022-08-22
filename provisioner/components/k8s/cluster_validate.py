@@ -17,22 +17,30 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+import sys
+import ansible_runner
 import os
+
+inventory_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
+playbook_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/validate_playbook/cluster_validate_playbook.yml"
+
+class Runner:
+
+    @staticmethod
+    def run (playbook, ini):
+        rc = ansible_runner.run(playbook = playbook_path, inventory = inventory_path)
+        return rc
 
 
 def validate():
     try:
-        if os.system("kubectl --version | grep 1.24.3") != 0:
-            return False
-        return True
+        os.chdir("/root/halo-rajnish/cortx-halo/provisioner/components/k8s")
+        return(Runner.run(playbook_path, inventory_path))
     except Exception as e:
         print(f'{e}')
 
 
-def main():
-    validate()
-
 
 if __name__ == "__main__":
-    main()
-    
+    validate()
+

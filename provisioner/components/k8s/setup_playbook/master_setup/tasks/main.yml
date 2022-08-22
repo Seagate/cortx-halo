@@ -1,0 +1,41 @@
+---
+# tasks file for master_setup
+  - name: checking if kubelet is running or not
+    service:
+      name: kubelet
+      state: started
+    register: kubelet_running
+
+  - name: executing kubeadm init command
+    command: 'kubeadm init'
+    loop: "{{ groups['master-node'] }}"
+    ignore_errors: true 
+
+  - name: creating .kube folder
+    file:
+      path: /root/.kube
+      state: directory
+    register: kube_dir_created
+  
+  - name: creating kube config file
+    block:   
+    - name: copy config file to .kube folder
+      shell: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
+
+
+    - name: changing permission of file
+      shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
+
+    - name: saving the token 
+      shell: "kubeadm token create --print-join-command > /join_command.sh"
+
+    - name: fetch the token command
+      fetch:
+       src: /join_command.sh 
+       dest: ../files/join_command.sh
+
+    - name: installing calico
+      shell: kubectl apply -f /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/calico-etcd.yaml
+    when: kube_dir_created.changed
+
+

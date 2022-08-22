@@ -1,0 +1,4 @@
+- hosts: master-node
+  become: true
+  roles:
+    - role: validate_cluster

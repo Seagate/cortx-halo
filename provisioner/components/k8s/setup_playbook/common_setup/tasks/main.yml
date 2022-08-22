@@ -1,0 +1,56 @@
+
+# tasks file for common_setup
+
+  - name: configure bridging
+    copy: 
+      dest: /etc/modules-load.d/k8s.conf
+      content: br_netfilter
+
+  - name: Update iptables config for bridging
+    copy:
+      dest: /etc/sysctl.d/k8s.conf
+      src: k8s.conf
+
+  - name: running sysctl
+    command: "sysctl --system"
+    changed_when: false 
+
+  - name: start docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+    register: docker_service_started
+
+  - name: Changing permissions for docker
+    file:
+      path: /var/run/docker.sock
+      mode: 666
+
+  - name: Adding docker user
+    command: usermod -aG docker root
+    when: docker_service_started.changed
+
+  - name: changing cgroupfs driver of docker
+    copy:
+      dest: /etc/docker/daemon.json
+      src: docker_daemon.json
+    notify: restart docker engine
+
+  - name: Adding --cgroup-driver=cgroupfs to conf file
+    copy:
+      dest: "/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf"
+      src: 10-kubeadm.conf
+
+  - name: Removing if a config file exist
+    file:
+      state: absent
+      path: /etc/containerd/config.toml
+    notify: restart containerd service
+
+  - name: start and enable kubelet
+    service:
+      name: kubelet
+      state: started
+      enabled: true
+

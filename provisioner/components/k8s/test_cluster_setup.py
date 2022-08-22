@@ -17,22 +17,14 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-import os
+from cluster_setup import setup
+from cluster_validate import validate
 
 
-def validate():
-    try:
-        if os.system("kubectl --version | grep 1.24.3") != 0:
-            return False
-        return True
-    except Exception as e:
-        print(f'{e}')
+def test_setup():
+    setup()
+    x = validate()
+    assert x!=0, "Cluster setup failed"
 
 
-def main():
-    validate()
 
-
-if __name__ == "__main__":
-    main()
-    

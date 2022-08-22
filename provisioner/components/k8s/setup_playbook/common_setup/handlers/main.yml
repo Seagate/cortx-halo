@@ -1,0 +1,13 @@
+---
+# handlers file for common_setup
+  - name: restart docker engine
+    service:
+      name: docker
+      state: restarted 
+      enabled: true 
+
+  - name: restart containerd service
+    service:
+      name: containerd
+      state: restarted
+      enabled: true
