@@ -38,19 +38,19 @@ export const dashboardCardData = {
     },
     {
       title: 0,
-      description: "S3Account",
+      description: "S3 Account",
       imgUrl: "storage-profile.svg",
       navPath: "",
     },
     {
       title: 0,
-      description: "IAMUser",
+      description: "IAM User",
       imgUrl: "storage-profile.svg",
       navPath: "",
     },
     {
       title: 0,
-      description: "dummyText",
+      description: "Tenants",
       imgUrl: "storage-profile.svg",
       navPath: "",
     },

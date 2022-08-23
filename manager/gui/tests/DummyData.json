@@ -12,9 +12,9 @@
     "buckets": 5,
     "objects": 22,
     "underReplicated": 12,
-    "S3Account": 22,
-    "IAMUser": 22,
-    "dummyText": 22
+    "S3 Account": 37,
+    "IAM User": 20,
+    "Tenants": 7
     }
   },
   "/dashboard/performance": {
