@@ -36,6 +36,10 @@ class DocumentDataStore(ABC):
     def store_data(self, data, **kwargs):
         pass
 
+    @abstractmethod
+    def delete_data(self, data, **kwargs):
+        pass
+
 
 class AlertStore(DocumentDataStore):
 
@@ -50,6 +54,9 @@ class AlertStore(DocumentDataStore):
     def get_data(self, **kwargs):
         """Fetch data from store.
 
+        Keyword Args:
+            **kwargs: queryparams (json/bson): JSON / BSON string.
+
         Returns:
             list: List of records.
         """
@@ -60,8 +67,67 @@ class AlertStore(DocumentDataStore):
 
         Args:
             data (json/bson): JSON / BSON document to save to the data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Returns:
             JSON: {status: "", matched_count: "", insert_id: ""}
         """
         return self._dsb.save_data(self._data_store_name, data, **kwargs)
+
+    def delete_data(self, data, **kwargs):
+        """Delete data from store.
+
+        Args:
+            data (json/bson): JSON / BSON string.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            deleted count: 1 (Success) or 0 (Failure)
+        """
+        return self._dsb.delete_data(self._data_store_name, data, **kwargs)
+
+
+class UserMgmtStore(DocumentDataStore):
+
+    def __init__(self, server_endpoint, db_name, data_store_name) -> None:
+        super().__init__(server_endpoint, db_name)
+        self._data_store_name = data_store_name
+        # TODO: Read the db type from config file.
+        self._dsb = DBManager.get_db_instance(
+            db_type=DBTypes.MONGODB.value,
+            db_endpoint=self._server_endpoint, db_name=self._db_name)
+
+    def get_data(self, **kwargs):
+        """Fetch data from store.
+
+        Keyword Args:
+            **kwargs: queryparams (json/bson): JSON / BSON string.
+
+        Returns:
+            list: List of records.
+        """
+        return self._dsb.get_data(self._data_store_name, **kwargs)
+
+    def store_data(self, data, **kwargs):
+        """Save data to store.
+
+        Args:
+            data (json/bson): JSON / BSON document to save to the data store.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            JSON: {status: "", matched_count: "", insert_id: ""}
+        """
+        return self._dsb.save_data(self._data_store_name, data, **kwargs)
+
+    def delete_data(self, data, **kwargs):
+        """Delete data from store.
+
+        Args:
+            data (json/bson): JSON / BSON string.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            deleted count: 1 (Success) or 0 (Failure)
+        """
+        return self._dsb.delete_data(self._data_store_name, data, **kwargs)
