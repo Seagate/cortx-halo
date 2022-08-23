@@ -18,7 +18,6 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import ansible_runner
-import os
 
 inventory_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
 playbook_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/setup_playbook/cluster_setup_playbook.yml"
@@ -33,7 +32,6 @@ class Runner:
 
 def setup():
     try:
-        os.chdir("/root/halo-rajnish/cortx-halo/provisioner/components/k8s")
         return(Runner.run(playbook_path, inventory_path))
     except Exception as e:
         print(f'{e}')

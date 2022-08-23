@@ -18,7 +18,6 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import ansible_runner
-import os
 
 inventory_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
 playbook_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/validate_playbook/cluster_validate_playbook.yml"
@@ -33,11 +32,9 @@ class Runner:
 
 def validate():
     try:
-        os.chdir("/root/halo-rajnish/cortx-halo/provisioner/components/k8s")
         return(Runner.run(playbook_path, inventory_path))
     except Exception as e:
         print(f'{e}')
-
 
 
 if __name__ == "__main__":
