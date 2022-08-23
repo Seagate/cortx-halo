@@ -1,12 +1,16 @@
+# Network configuration inputs 
 interfaces:
-    eth1:
+    # Static network IP configutation
+    <INTERFACE_DEVICE_NAME>:
         interface_type: Ethernet
         bootproto: none
-        interface: eth1
-        ip_addr: 192.168.53.96
-        subnet: 255.255.224.0
-        gateway: 192.168.64.1
-    eth2:
+        interface: <INTERFACE_DEVICE_NAME>
+        ip_addr: <IPV4_ADDRESS>
+        subnet: <NETMASK>
+        gateway: <GATEWAY_ADDRESS>
+    # Dynamic network IP configutation
+    <INTERFACE_DEVICE_NAME>:
         interface_type: Ethernet
         bootproto: dhcp
-        interface: eth2
+        interface: <INTERFACE_DEVICE_NAME>
+

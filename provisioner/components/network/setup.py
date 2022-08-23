@@ -23,10 +23,10 @@ import os
 import jinja2
 import yaml
 
-def setup():
+def setup(cfgfile = "config.yaml"):
     try:
         # Load ifcfg input
-        with open("config.yaml", "r") as f:
+        with open(cfgfile, "r") as f:
             ifcfg = yaml.load(f, Loader=yaml.SafeLoader)
         # Load static and dynamic ifcfg template files
         with open("static_ifcfg.j2", "r") as f:
@@ -55,6 +55,10 @@ def setup():
             os.system("nmcli device reapply %s" %(ifcfg['interfaces'][intf]['interface']))
     except Exception as e:
         print(e)
+
+
+def test_setup():
+    setup("test_config.yaml")
 
 
 if __name__ == "__main__":
