@@ -101,7 +101,7 @@ class UserMgmtStore(DocumentDataStore):
         """Fetch data from store.
 
         Keyword Args:
-            queryparams (json/bson): JSON / BSON string.
+            **kwargs: queryparams (json/bson): JSON / BSON string.
 
         Returns:
             list: List of records.
