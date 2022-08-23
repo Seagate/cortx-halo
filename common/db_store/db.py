@@ -90,7 +90,7 @@ class MongoDB(DB):
 
         Args:
             data_store_name (str): Name of data store.
-            **kwargs: Arbitrary keyword arguments.
+            **kwargs: queryparams (json/bson): JSON / BSON string.
 
         Raises:
             DBError: Unable to fetch data.
