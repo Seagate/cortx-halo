@@ -122,10 +122,10 @@ import SgtTooltipIcon from "@/lib/components/SgtTooltipIcon/SgtTooltipIcon.vue";
 import SgtToggle from "@/lib/components/SgtToggle/SgtToggle.vue";
 
 @Component({
-  name: "LrTenantSecurity",
+  name: "TenantSecurity",
   components: { SgtTooltipIcon, SgtToggle},
 })
-export default class LrTenantSecurity extends Vue {
+export default class TenantSecurity extends Vue {
   
   toggleStates = {
     enableTls: true,

@@ -15,22 +15,17 @@
 * please email opensource@seagate.com.
 -->
 <template>
-  <v-btn
-    elevation="1"
-    color="primary"
-    @click="$router.push({ name: 'tenant' })"
-  >Go To Tenant</v-btn>
+   <router-view />
 </template>
 <script lang="ts">
 
-import { Component, Vue, Prop, Watch } from "vue-property-decorator";
-
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
-  name: "LrObjectStoreConfigHome",
+  name: "ObjectStoreConfig",
   components: {},
 })
-export default class LrObjectStoreConfigHome extends Vue {
+export default class ObjectStoreConfig extends Vue {
 
 }
 </script>

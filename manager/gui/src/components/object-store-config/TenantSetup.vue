@@ -121,10 +121,10 @@ import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
  
 
 @Component({
-  name: "LrTenantSetup",
+  name: "TenantSetup",
   components: { SgtDropdown },
 })
-export default class LrTenantSetup extends Vue {
+export default class TenantSetup extends Vue {
   userName: string = "Tenant1";
   noOfServers: number = 4;
   drivesPerServer: number = 4;
@@ -167,7 +167,7 @@ export default class LrTenantSetup extends Vue {
   padding: 20px 0 0 20px;
 }
 .mdi-post-size:before{
-  content: "Gi";
+  content: "Gi"; // The unit will be received from the server
   font-family: $font-family, sans-serif;
   font-size: 20px;
 

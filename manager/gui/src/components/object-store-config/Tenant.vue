@@ -30,13 +30,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import SgtTabs from "../../lib/components/SgtTabs/SgtTabs.vue";
 import { TabsInfo } from "../../lib/components/SgtTabs/SgtTabs.model";
-import LrTenantSetup from "./LrTenantSetup.vue"
-import LrTenantSecurity from "./LrTenantSecurity.vue"
+import TenantSetup from "./TenantSetup.vue"
+import TenantSecurity from "./TenantSecurity.vue"
 @Component({
-  name: "LrTenant",
-  components: { SgtTabs,LrTenantSetup,LrTenantSecurity},
+  name: "Tenant",
+  components: { SgtTabs,TenantSetup,TenantSecurity},
 })
-export default class LrTenant extends Vue {
+export default class Tenant extends Vue {
   public tabsInfo: TabsInfo = [
     {
       id: 1,
@@ -56,15 +56,15 @@ export default class LrTenant extends Vue {
     }
   ];
 
-  activeTab: string = "LrTenantSetup";
+  activeTab: string = "TenantSetup";
 
   public onTabChange(value: number) {
     switch (value) {
       case 1:
-        this.activeTab = "LrTenantSetup";
+        this.activeTab = "TenantSetup";
         break;
       case 2:
-        this.activeTab = "LrTenantSecurity";
+        this.activeTab = "TenantSecurity";
         break;
       case 3:
         this.activeTab = ""; // Placeholder for Audit Log Tab Component.
