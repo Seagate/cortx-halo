@@ -17,10 +17,14 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+import pytest
 import os
 from setup import test_setup
 import yaml
 import hashlib
+
+
+pytestmark = pytest.mark.unit
 
 
 # Make sure that the test_config.yaml network specifications are applicable to test machine
