@@ -67,10 +67,10 @@ export default class LrTenant extends Vue {
         this.activeTab = "LrTenantSecurity";
         break;
       case 3:
-        this.activeTab = "";
+        this.activeTab = ""; // Placeholder for Audit Log Tab Component.
         break;
       case 4:
-        this.activeTab = "";
+        this.activeTab = ""; // Placeholder for Monitoring Tab Component.
         break;
     }
   }
