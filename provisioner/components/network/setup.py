@@ -31,7 +31,7 @@ def setup(cfgfile = NWCONSTS.CONFIG_YAML):
         # Load static and dynamic ifcfg template files
         searchpath = os.path.dirname(__file__) + NWCONSTS.JINJA_TMPL_PATH
         templateLoader = jinja2.FileSystemLoader(searchpath)
-        templateEnv = jinja2.Environment(loader=templateLoader)
+        templateEnv = jinja2.Environment(loader=templateLoader, autoescape=True)
         static_ifcfg_template = templateEnv.get_template(NWCONSTS.STATIC_IFCFG_JINJA_TMPL)
         dynamic_ifcfg_template = templateEnv.get_template(NWCONSTS.DYNAMIC_IFCFG_JINJA_TMPL)
         # Iterate over interfaces to be configured in input config file
