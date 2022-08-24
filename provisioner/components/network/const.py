@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates
 
 # This program is free software: you can redistribute it and/or modify it
@@ -15,19 +17,16 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-# Network configuration inputs 
-interfaces:
-    # Static network IP configutation
-    <INTERFACE_DEVICE_NAME>:
-        interface_type: Ethernet
-        bootproto: none
-        interface: <INTERFACE_DEVICE_NAME>
-        ip_addr: <IPV4_ADDRESS>
-        subnet: <NETMASK>
-        gateway: <GATEWAY_ADDRESS>
-    # Dynamic network IP configutation
-    <INTERFACE_DEVICE_NAME>:
-        interface_type: Ethernet
-        bootproto: dhcp
-        interface: <INTERFACE_DEVICE_NAME>
+
+class NWCONSTS(object):
+    CONFIG_YAML = 'config.yaml'
+    INTERFACES_KEY = 'interfaces'
+    INTERFACE_KEY = 'interface'
+    BOOTPROTO_KEY = 'bootproto'
+    IFCFG_PATH = '/etc/sysconfig/network-scripts'
+    IFCFG_PFX = 'ifcfg-'
+    JINJA_TMPL_PATH = '/jinja2'
+    STATIC_IFCFG_JINJA_TMPL = 'static_ifcfg.j2'
+    DYNAMIC_IFCFG_JINJA_TMPL = 'dynamic_ifcfg.j2'
+    DHCP = 'dhcp'
 

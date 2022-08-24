@@ -17,48 +17,45 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-#!/usr/bin/env python3
-
+from const import NWCONSTS
 import os
 import jinja2
 import yaml
 
-def setup(cfgfile = "config.yaml"):
+
+def setup(cfgfile = NWCONSTS.CONFIG_YAML):
     try:
         # Load ifcfg input
         with open(cfgfile, "r") as f:
             ifcfg = yaml.load(f, Loader=yaml.SafeLoader)
         # Load static and dynamic ifcfg template files
-        with open("static_ifcfg.j2", "r") as f:
-            static_ifcfg_template = jinja2.Template(f.read())
-        with open("dynamic_ifcfg.j2", "r") as f:
-            dynamic_ifcfg_template = jinja2.Template(f.read())
-
-        for intf in ifcfg['interfaces'].keys():
+        searchpath = os.path.dirname(__file__) + NWCONSTS.JINJA_TMPL_PATH
+        templateLoader = jinja2.FileSystemLoader(searchpath)
+        templateEnv = jinja2.Environment(loader=templateLoader)
+        static_ifcfg_template = templateEnv.get_template(NWCONSTS.STATIC_IFCFG_JINJA_TMPL)
+        dynamic_ifcfg_template = templateEnv.get_template(NWCONSTS.DYNAMIC_IFCFG_JINJA_TMPL)
+        # Iterate over interfaces to be configured in input config file
+        for intf in ifcfg[NWCONSTS.INTERFACES_KEY].keys():
             # Activate the device connection via Network Manager
-            os.system("nmcli device connect %s" %(ifcfg['interfaces'][intf]['interface']))
+            os.system("nmcli device connect %s" %(ifcfg[NWCONSTS.INTERFACES_KEY][intf][NWCONSTS.INTERFACE_KEY]))
             # For every interface configuration input create required ifcfg file
-            if ifcfg['interfaces'][intf]['bootproto'] == 'dhcp':
+            if ifcfg[NWCONSTS.INTERFACES_KEY][intf][NWCONSTS.BOOTPROTO_KEY] == NWCONSTS.DHCP:
                 ifcfg_template = dynamic_ifcfg_template
             else:
                 ifcfg_template = static_ifcfg_template
             # Render the template
-            ifcfg_data = ifcfg_template.render(ifcfg['interfaces'][intf])
+            ifcfg_data = ifcfg_template.render(ifcfg[NWCONSTS.INTERFACES_KEY][intf])
             # Save the configuration to output file
-            ifcfg_file = "ifcfg-" + ifcfg['interfaces'][intf]['interface']
-            ifcfg_file_final = '/etc/sysconfig/network-scripts/' + ifcfg_file
+            ifcfg_file = NWCONSTS.IFCFG_PFX + ifcfg[NWCONSTS.INTERFACES_KEY][intf][NWCONSTS.INTERFACE_KEY]
+            ifcfg_file_final = NWCONSTS.IFCFG_PATH + ifcfg_file
             with open(ifcfg_file_final, "w") as f:
                 f.write(ifcfg_data)
             print("Created {} File! -->".format(ifcfg_file_final))
             print(ifcfg_data)
             # Reapply the ifcfg-<interface> file created via Network Manager
-            os.system("nmcli device reapply %s" %(ifcfg['interfaces'][intf]['interface']))
+            os.system("nmcli device reapply %s" %(ifcfg[NWCONSTS.INTERFACES_KEY][intf][NWCONSTS.INTERFACE_KEY]))
     except Exception as e:
         print(e)
-
-
-def test_setup():
-    setup("test_config.yaml")
 
 
 if __name__ == "__main__":
