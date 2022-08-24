@@ -33,6 +33,10 @@ import LrClusterConfiguration from "../components/configuration/LrClusterConfigu
 import LrSystemHealthConfiguration from "../components/configuration/LrSystemHealthConfiguration.vue";
 import LrMaintenanceUpdateSoftware from "../components/maintenance/LrMaintenanceUpdateSoftware.vue";
 import LrSupport from "../components/configuration/LrSupport.vue";
+import ObjectStoreConfig from "../components/object-store-config/ObjectStoreConfig.vue";
+import Tenant from "../components/object-store-config/Tenant.vue";
+import ObjectStoreConfigHome from "../components/object-store-config/ObjectStoreConfigHome.vue";
+
 
 Vue.use(VueRouter);
 
@@ -130,6 +134,22 @@ const routes: Array<RouteConfig> = [
       },
     ],
   },
+  {
+    path: "/object-store",
+    component: ObjectStoreConfig,
+    children: [
+      {
+        path: "",
+        name: "object-store",
+        component: ObjectStoreConfigHome,
+      },
+      {
+        path: "tenant",
+        name: "tenant",
+        component: Tenant,
+      }
+    ],
+  }
 ];
 
 const router = new VueRouter({

@@ -45,6 +45,10 @@ class DB(ABC):
     def save_data(self, data_store_name, data, **kwargs):
         pass
 
+    @abstractmethod
+    def delete_data(self, data_store_name, data, **kwargs):
+        pass
+
 
 class STATUSES(Enum):
     SUCCESS = "success"
@@ -86,6 +90,7 @@ class MongoDB(DB):
 
         Args:
             data_store_name (str): Name of data store.
+            **kwargs: queryparams (json/bson): JSON / BSON string.
 
         Raises:
             DBError: Unable to fetch data.
@@ -112,6 +117,7 @@ class MongoDB(DB):
         Args:
             data_store_name (str): Name of data store.
             data (json/bson): JSON / BSON document to save to the data store.
+            **kwargs: Arbitrary keyword arguments.
 
         Raises:
             DBError: Unable to save data.
@@ -135,6 +141,27 @@ class MongoDB(DB):
         except Exception as e:
             # Log.error(f"Unable to fetch data from data store. Error {e}")
             raise DBError(f"Unable to save data to data store. Error {e}")
+
+    def delete_data(self, data_store_name: str, data, **kwargs):
+        """Delete data from the data store.
+
+        Args:
+            data_store_name (str): Name of data store.
+            data (json/bson): JSON / BSON string.
+            **kwargs: Arbitrary keyword arguments.
+
+        Raises:
+            DBError: Failed to delete data.
+
+        Returns:
+            deleted count: 1 (Success) or 0 (Failure)
+        """
+        try:
+            result = self._db[data_store_name].delete_one(data)
+            return result.deleted_count
+        except Exception as e:
+            # Log.error(f"Failed to Delete data from data store. Error {e}")
+            raise DBError(f"Failed to Delete data from data store. Error {e}")
 
     def close(self):
         """End all server sessions created by current client \
