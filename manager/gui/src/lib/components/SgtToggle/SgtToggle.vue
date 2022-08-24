@@ -16,7 +16,7 @@
 -->
 <template>
   <div class="toggle-wrapper" :class="{ disabled: disabled }">
-    <span class="label" v-if="label">{{ label }}</span>
+    <span class="mr-2" v-if="labelPre" :class="{'not-active': (value && areToggleLabel)}">{{ labelPre }}</span>
     <v-tooltip right :disabled="!tooltip">
       <template v-slot:activator="{ on, attrs }">
         <div
@@ -33,6 +33,7 @@
       </template>
       <span>{{ tooltip }}</span>
     </v-tooltip>
+    <span class="ml-2" v-if="labelPost" :class="{'not-active': (!value && areToggleLabel)}">{{ labelPost }}</span>
   </div>
 </template>
 
@@ -43,7 +44,9 @@ import { Component, Vue, Prop, Model } from "vue-property-decorator";
 })
 export default class SgtToggle extends Vue {
   @Prop({ required: false }) private disabled: boolean;
-  @Prop({ required: false }) private label: string;
+  @Prop({ required: false }) private labelPre: string;
+  @Prop({ required: false }) private labelPost: string;
+  @Prop({ required: false }) private areToggleLabel: boolean;
   @Prop({ required: false, default: "" }) private tooltip: string;
   @Model("change", { type: Boolean }) readonly value!: boolean;
 }
@@ -57,9 +60,6 @@ export default class SgtToggle extends Vue {
 .toggle-wrapper.disabled {
   opacity: 0.5;
   pointer-events: none;
-}
-.toggle-wrapper .label {
-  margin-right: 5px;
 }
 .toggle-container {
   height: 16px;
@@ -104,5 +104,8 @@ div.toggle-container.active .toggle-bubble {
 }
 .active .off-bubble {
   display: none;
+}
+.not-active{
+  color: #C4C4C4;
 }
 </style>
