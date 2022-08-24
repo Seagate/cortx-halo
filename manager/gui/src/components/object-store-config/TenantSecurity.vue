@@ -46,8 +46,8 @@
         <v-col cols="2">
         </v-col>
       </v-row>
-      <v-row class="field-row pl-4">
-        <v-col cols="3" class="field-label">
+      <v-row class="field-row">
+        <v-col cols="3" class="field-label pl-8">
           Enable AutoCert
         </v-col>
         <v-col cols="2" class="toggle-col">
@@ -60,8 +60,8 @@
           ></SgtToggle>
         </v-col>
       </v-row>
-      <v-row class="field-row pl-4">
-        <v-col cols="3" class="field-label">
+      <v-row class="field-row">
+        <v-col cols="3" class="field-label pl-8">
           Custom Certificates 
         </v-col>
         <v-col cols="2" class="toggle-col">
@@ -145,10 +145,5 @@ export default class TenantSecurity extends Vue {
 }
 .toggle-col{
   font-weight: bold;
-}
-.pl-4{
-  .toggle-col{
-    margin-left: -11px;
-  }
 }
 </style>

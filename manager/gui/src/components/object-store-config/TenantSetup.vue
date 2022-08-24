@@ -169,7 +169,7 @@ export default class TenantSetup extends Vue {
 .mdi-post-size:before{
   content: "Gi"; // The unit will be received from the server
   font-family: $font-family, sans-serif;
-  font-size: 20px;
+  font-size: 16px;
 
 }
 </style>

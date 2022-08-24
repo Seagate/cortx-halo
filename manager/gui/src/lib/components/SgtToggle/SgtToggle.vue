@@ -16,7 +16,7 @@
 -->
 <template>
   <div class="toggle-wrapper" :class="{ disabled: disabled }">
-    <span class="labelPre" v-if="labelPre" :class="{'not-active': (value && areToggleLabel)}">{{ labelPre }}</span>
+    <span class="mr-2" v-if="labelPre" :class="{'not-active': (value && areToggleLabel)}">{{ labelPre }}</span>
     <v-tooltip right :disabled="!tooltip">
       <template v-slot:activator="{ on, attrs }">
         <div
@@ -33,7 +33,7 @@
       </template>
       <span>{{ tooltip }}</span>
     </v-tooltip>
-    <span class="labelPost" v-if="labelPost" :class="{'not-active': (!value && areToggleLabel)}">{{ labelPost }}</span>
+    <span class="ml-2" v-if="labelPost" :class="{'not-active': (!value && areToggleLabel)}">{{ labelPost }}</span>
   </div>
 </template>
 
@@ -60,14 +60,6 @@ export default class SgtToggle extends Vue {
 .toggle-wrapper.disabled {
   opacity: 0.5;
   pointer-events: none;
-}
-.toggle-wrapper{
-  .labelPre {
-    margin-right: 5px;
-  } 
-  .labelPost{
-    margin-left: 5px;
-  }
 }
 .toggle-container {
   height: 16px;
