@@ -2,4 +2,11 @@
 # Each line is a file pattern followed by one or more owners.
 
 # These owners will be the default owners for everything in the repo.
-*       @ajaysrivas @shaileshsvc @NeeravChoudhari
+*       @ajaysrivas @shaileshsvc
+
+# These owners will be the code owners for the following subdirectories in the repo.
+/bvt/               @Jyoti-cs
+/manager/gui/       @SatyaKoli @yash-dk
+/manager/backend/   @akash2144 @mukhtar-inamdar
+/monitor/           @sampadap03
+/provisioner/       @Rajnish-TheGreat

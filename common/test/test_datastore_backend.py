@@ -19,8 +19,7 @@
 
 import pytest
 from datetime import datetime
-from common.db_store.db import MongoDB
-from common.db_store.admin_db import MongoDBAdmin
+from common.db_store.db_manager import DBManager
 
 
 pytestmark = pytest.mark.unit
@@ -31,21 +30,19 @@ db = None
 @pytest.fixture
 def setup_admin_db():
     global admin_db
-    admin_db = MongoDBAdmin(
+    admin_db = DBManager.get_admin_db_instance(
+       admin_db_type='mongodb_admin',
        db_endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
        db_name="test")
-    yield
-    admin_db.close_connection()
 
 
 @pytest.fixture
 def setup_db():
     global db
-    db = MongoDB(
+    db = DBManager.get_db_instance(
+       db_type='mongodb',
        db_endpoint="mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017",
        db_name="test")
-    yield
-    db.close()
 
 
 def test_create_time_series_data_store(setup_admin_db):
