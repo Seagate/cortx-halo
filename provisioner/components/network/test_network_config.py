@@ -18,7 +18,6 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import pytest
-import os
 from setup import test_setup
 import yaml
 import hashlib
@@ -35,16 +34,16 @@ def test_network_config():
     with open("test.cfg", "r") as f:
         test_cfg = yaml.load(f, Loader=yaml.SafeLoader)
     for output_fn in test_cfg['expected_output_files']:
-        date = ''
+        data = ''
         with open(output_fn) as file_to_check:
             data = file_to_check.read()
-            expected_md5 = hashlib.md5(str(data).encode('utf-8')).hexdigest()
+            expected_sha256 = hashlib.sha256(str(data).encode('utf-8')).hexdigest()
         actual_output_fn = '/etc/sysconfig/network-scripts/' + output_fn
-        date = ''
+        data = ''
         with open(actual_output_fn) as file_to_check:
             data = file_to_check.read()
-            actual_md5 = hashlib.md5(str(data).encode('utf-8')).hexdigest()
-        if (expected_md5 != actual_md5):
+            actual_sha256 = hashlib.sha256(str(data).encode('utf-8')).hexdigest()
+        if (expected_sha256 != actual_sha256):
             assert False, "Network configuration failed"
             break
 
