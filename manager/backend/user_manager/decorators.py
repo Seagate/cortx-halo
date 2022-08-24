@@ -19,11 +19,11 @@
 
 import jwt
 from functools import wraps
-from manager.backend.src.mgmt_token_manager import MgmtTokenManager
-from manager.backend.src.session import Session
-from manager.backend.src.error import (MgmtInvalidTokenError,
-                                       MgmtExpiredTokenError,
-                                       MgmtMissingToken)
+from manager.backend.user_manager.mgmt_token_manager import MgmtTokenManager
+from manager.backend.user_manager.session import Session
+from manager.backend.user_manager.error import (MgmtInvalidTokenError,
+                                                MgmtExpiredTokenError,
+                                                MgmtMissingToken)
 
 
 # Decorator for validating access token.

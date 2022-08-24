@@ -43,10 +43,10 @@ def test_encode_decode_jwt_token():
     try:
         jwt_manager.decode_access_token(access_token, jwt_secret)
     except Exception as e:
-        assert False, 'Failed to decode access token.'
+        assert False, f'Failed to decode access token.Error {e}'
 
     # Decode refresh token
     try:
         jwt_manager.verify_refresh_token(refresh_token, jwt_secret)
     except Exception as e:
-        assert False, 'Failed to decode refresh token.'
+        assert False, f'Failed to decode refresh token.Error {e}'

@@ -21,15 +21,12 @@
 
 
 class MgmtInvalidTokenError(Exception):
-    """Invalid Token Exception"""
-    pass
+    """Invalid Token Exception."""
 
 
 class MgmtExpiredTokenError(Exception):
-    """Token timeout Exception"""
-    pass
+    """Token timeout Exception."""
 
 
 class MgmtMissingToken(Exception):
-    """Missing Token Error"""
-    pass
+    """Missing Token Exception."""

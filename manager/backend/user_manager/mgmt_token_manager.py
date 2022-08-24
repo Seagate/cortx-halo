@@ -27,7 +27,6 @@ from manager.backend.user_manager.error import (MgmtExpiredTokenError,
 
 class JWTConst(Enum):
     """Constants defined for JWT."""
-    JWT_SECRET = 'secret'
     JWT_ALGORITHM = 'HS256'
     JWT_EXP_DELTA_SECONDS = 90
     JWT_EXP_DELTA_DAYS = 1
@@ -37,7 +36,6 @@ class MgmtTokenManager:
 
     def __init__(self) -> None:
         """Init Method."""
-        pass
 
     def _encode_token(self, payload, token_type, secret):
         """Encrypt token.
