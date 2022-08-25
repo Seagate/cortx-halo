@@ -19,8 +19,8 @@
 
 import ansible_runner
 
-inventory_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
-playbook_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/validate_playbook/cluster_validate_playbook.yml"
+inventory_path = "/opt/halo/install_depot/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
+playbook_path = "/opt/halo/install_depot/cortx-halo/provisioner/components/k8s/validate_playbook/cluster_validate_playbook.yml"
 
 class Runner:
 
