@@ -18,9 +18,10 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import ansible_runner
+import logging
 
-inventory_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
-playbook_path = "/root/halo-rajnish/cortx-halo/provisioner/components/k8s/setup_playbook/cluster_setup_playbook.yml"
+inventory_path = "/opt/halo/install_depot/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
+playbook_path = "/opt/halo/install_depot/cortx-halo/provisioner/components/k8s/setup_playbook/cluster_setup_playbook.yml"
 
 class Runner:
 
@@ -34,7 +35,7 @@ def setup():
     try:
         return(Runner.run(playbook_path, inventory_path))
     except Exception as e:
-        print(f'{e}')
+        logging.exception(f'{e}')
 
 
 if __name__ == "__main__":
