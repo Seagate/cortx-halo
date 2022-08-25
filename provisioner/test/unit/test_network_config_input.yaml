@@ -1,0 +1,12 @@
+interfaces:
+    eth4:
+        interface_type: Ethernet
+        bootproto: none
+        interface: eth4
+        ip_addr: 192.168.53.96
+        subnet: 255.255.224.0
+        gateway: 192.168.64.1
+    eth2:
+        interface_type: Ethernet
+        bootproto: dhcp
+        interface: eth2
