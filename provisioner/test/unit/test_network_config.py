@@ -18,8 +18,7 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import pytest
-#from provisioner.components.network.setup import test_setup
-from provisioner.components.network.setup import setup
+from provisioner.components.network.config import config
 import yaml
 import hashlib
 
@@ -27,12 +26,12 @@ import hashlib
 pytestmark = pytest.mark.unit
 
 
-# Make sure that the test_config.yaml network specifications are applicable to test machine
-# If any changes are made to network device names in test_config.yaml create expected output files
-# Update the test.cfg for expected output files and actual output files paths
+# Make sure that the test_network_config_output.yaml network specifications are applicable to test machine
+# If any changes are made to network device names in test_network_config_output.yaml create expected output files
+# Update the test_network_config_output.yaml for expected output files and actual output files paths
 def test_network_config():
-    setup(cfgfile='test_config.yaml')
-    with open("test.cfg", "r") as f:
+    config(cfgfile='test_network_config_input.yaml')
+    with open("test_network_config_output.yaml", "r") as f:
         test_cfg = yaml.load(f, Loader=yaml.SafeLoader)
     for output_fn in test_cfg['expected_output_files']:
         data = ''

@@ -17,13 +17,13 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from const import NWCONSTS
+from provisioner.components.network.const import NWCONSTS
 import os
 import jinja2
 import yaml
 
 
-def setup(cfgfile = NWCONSTS.CONFIG_YAML):
+def config(cfgfile = NWCONSTS.CONFIG_YAML):
     try:
         # Load ifcfg input
         with open(cfgfile, "r") as f:
@@ -59,5 +59,5 @@ def setup(cfgfile = NWCONSTS.CONFIG_YAML):
 
 
 if __name__ == "__main__":
-    setup()
+    config()
 
