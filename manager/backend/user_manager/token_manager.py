@@ -19,17 +19,20 @@
 
 import jwt
 import uuid
+from functools import wraps
 from datetime import datetime, timedelta
 from enum import Enum
+from manager.backend.user_manager.session import Session
 from manager.backend.user_manager.error import (MgmtExpiredTokenError,
                                                 MgmtInvalidTokenError)
 
 
 class JWTConst(Enum):
     """Constants defined for JWT."""
-    JWT_ALGORITHM = 'HS256'
-    JWT_EXP_DELTA_SECONDS = 90
-    JWT_EXP_DELTA_DAYS = 1
+    ALGORITHM = 'HS256'
+    EXP_DELTA_SECONDS = 90
+    EXP_DELTA_DAYS = 1
+    TOKEN_KEY = 'Authorization'
 
 
 class MgmtTokenManager:
@@ -53,14 +56,14 @@ class MgmtTokenManager:
         if type == "access_token":
             to_encode.update({
                 "exp": datetime.utcnow() +
-                timedelta(seconds=JWTConst.JWT_EXP_DELTA_SECONDS.value)})
+                timedelta(seconds=JWTConst.EXP_DELTA_SECONDS.value)})
         else:
             to_encode.update({
                 "exp": datetime.utcnow() +
-                timedelta(days=JWTConst.JWT_EXP_DELTA_DAYS.value)})
+                timedelta(days=JWTConst.EXP_DELTA_DAYS.value)})
 
         return jwt.encode(to_encode, secret,
-                          algorithm=JWTConst.JWT_ALGORITHM.value)
+                          algorithm=JWTConst.ALGORITHM.value)
 
     def create_tokens(self, payload, secret):
         """Create access and refresh token.
@@ -97,7 +100,7 @@ class MgmtTokenManager:
         """
         try:
             payload = jwt.decode(token, secret,
-                                 algorithms=JWTConst.JWT_ALGORITHM.value)
+                                 algorithms=JWTConst.ALGORITHM.value)
             if payload['token_type'] != "access_token":
                 raise MgmtInvalidTokenError('Invalid access token')
             return payload
@@ -122,7 +125,7 @@ class MgmtTokenManager:
         """
         try:
             payload = jwt.decode(token, secret,
-                                 algorithms=JWTConst.JWT_ALGORITHM.value)
+                                 algorithms=JWTConst.ALGORITHM.value)
             if payload['token_type'] != "refresh_token":
                 raise MgmtInvalidTokenError('Invalid refresh token')
             return payload
@@ -147,10 +150,55 @@ class MgmtTokenManager:
             return True, payload
         return False, None
 
-    def create_token_key(self):
+    @staticmethod
+    def create_token_key():
         """Create secret key for token.
 
         Returns:
             str: Unique key.
         """
         return str(uuid.uuid4().hex)
+
+
+# Decorator for validating access token.
+def validate_token(secret):
+    """Decorator to validate access token.
+
+    Args:
+        secret (str): Decrypted key.
+    """
+    def verify_token(func):
+        @wraps(func)
+        def wrapped(request, *args, **kwargs):
+            token = None
+            # Bearer token is passed in the request header
+            if JWTConst.TOKEN_KEY.value in request.headers:
+                bearer_token = request.headers[JWTConst.TOKEN_KEY.value]
+                token = bearer_token.split()[-1]
+
+            if not token:
+                raise MgmtInvalidTokenError('Missing access token')
+
+            jwt_handler = MgmtTokenManager()
+
+            try:
+                data = jwt_handler.decode_access_token(token, secret)
+
+                # Create new token with updated timestamp.
+                updated_token = jwt_handler.create_tokens(data, secret)
+                # Create session object and add it to request.
+                session = Session(
+                    user_id=data['user_id'], user_type=data['user_type'],
+                    permissions=data['permissions'],
+                    access_token=updated_token['access_token'],
+                    refresh_token=updated_token['refresh_token'],
+                    expiry_time=data['exp'])
+                request.session = session
+            except jwt.ExpiredSignatureError:
+                raise MgmtExpiredTokenError('Signature has expired')
+            except jwt.InvalidTokenError:
+                raise MgmtInvalidTokenError('Invalid access token')
+
+            return func(request, *args, **kwargs)
+        return wrapped
+    return verify_token

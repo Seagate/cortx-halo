@@ -19,8 +19,7 @@
 
 import pytest
 import uuid
-from datetime import datetime, timedelta
-from manager.backend.user_manager.mgmt_token_manager import MgmtTokenManager
+from manager.backend.user_manager.token_manager import MgmtTokenManager
 
 pytestmark = pytest.mark.unit
 
@@ -30,11 +29,10 @@ def test_encode_decode_jwt_token():
     jwt_manager = MgmtTokenManager()
     payload = {
         'user_id': str(uuid.uuid4().hex),
-        'user_role': 'manager',
-        'permission': ['get alert', 'list alert'],
-        'exp': datetime.utcnow() + timedelta(seconds=90)
+        'user_type': 'manager',
+        'permissions': ['get alert', 'list alert']
     }
-    jwt_secret = jwt_manager.create_token_key()
+    jwt_secret = MgmtTokenManager.create_token_key()
     tokens = jwt_manager.create_tokens(payload, jwt_secret)
     access_token = tokens['access_token']
     refresh_token = tokens['refresh_token']

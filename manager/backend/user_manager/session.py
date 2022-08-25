@@ -17,13 +17,62 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+import json
+
+
 class Session:
-    """Session data."""
 
-    def __init__(self, user_id, user_role, permissions, token=None) -> None:
-        self.user_id = user_id,
-        self.user_type = user_role,
-        self.permissions = permissions,
-        self.token = token
+    def __init__(self, user_id, user_type,
+                 permissions, expiry_time=None,
+                 access_token=None, refresh_token=None) -> None:
+        """Instantiation Method for Session class.
 
-# Note - Will be replaced when rest framework is in place
+        Args:
+            user_id (str): User id.
+            user_type (str): Type or Role of user.
+            permissions (list): Permission list.
+            expiry_time (int): Expiry time of token.
+            access_token (str): Encrypted access token.
+            refresh_token (str): Encrypted refresh token.
+        """
+        self._user_id = user_id
+        self._user_type = user_type
+        self._permissions = permissions
+        self._expiry_time = expiry_time
+        self._access_token = access_token
+        self._refresh_token = refresh_token
+
+    @property
+    def user_id(self):
+        return self._user_id
+
+    @property
+    def user_type(self):
+        return self._user_type
+
+    @property
+    def permissions(self):
+        return self._permissions
+
+    @property
+    def access_token(self):
+        return self._access_token
+
+    @property
+    def refresh_token(self):
+        return self._refresh_token
+
+    @property
+    def expiry_time(self):
+        return self._expiry_time
+
+    def __str__(self):
+        """Return human-readable string representation of this class."""
+        return json.dumps({
+            'user_id': self._user_id,
+            'user_type': self._user_type,
+            'permissions': self.permissions,
+            'access_token': self.access_token,
+            'refresh_token': self._refresh_token,
+            'expiry_time': self.expiry_time
+        })
