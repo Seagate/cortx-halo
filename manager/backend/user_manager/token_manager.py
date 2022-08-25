@@ -32,7 +32,7 @@ class JWTConst(Enum):
     ALGORITHM = 'HS256'
     EXP_DELTA_SECONDS = 90
     EXP_DELTA_DAYS = 1
-    TOKEN_KEY = 'Authorization'
+    AUTH_KEY = 'Authorization'
 
 
 class MgmtTokenManager:
@@ -188,8 +188,8 @@ def validate_token(secret):
         def wrapped(request, *args, **kwargs):
             token = None
             # Bearer token is passed in the request header
-            if JWTConst.TOKEN_KEY.value in request.headers:
-                bearer_token = request.headers[JWTConst.TOKEN_KEY.value]
+            if JWTConst.AUTH_KEY.value in request.headers:
+                bearer_token = request.headers[JWTConst.AUTH_KEY.value]
                 token = bearer_token.split()[-1]
 
             if not token:
