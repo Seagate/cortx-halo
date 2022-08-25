@@ -26,5 +26,3 @@ def test_setup():
     x = validate()
     assert x!=0, "Cluster setup failed"
 
-
-
