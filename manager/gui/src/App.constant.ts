@@ -51,5 +51,12 @@ export const AppConst = {
       iconActive: "icons/maintenance-white.svg",
       requiredAccess: "sysconfig",
     },
+    {
+      title: "object store",
+      path: "/object-store",
+      iconDefault: "icons/object-store-grey.svg",
+      iconActive: "icons/object-store-white.svg",
+      requiredAccess: "admin",
+    }
   ],
 };
