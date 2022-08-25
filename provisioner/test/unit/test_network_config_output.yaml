@@ -1,0 +1,3 @@
+expected_output_files:
+    - ifcfg-eth4
+    - ifcfg-eth2
