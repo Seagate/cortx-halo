@@ -17,12 +17,25 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from cluster_setup import setup
-from cluster_validate import validate
+from provisioner.components.ansible.setup import setup
+from provisioner.components.ansible.setup import createFile
+from provisioner.components.ansible.teardown import teardown
+from provisioner.components.ansible.validate import validate
+import os
+
+
+def test_folderCreation():
+    createFile()
+    x = os.system("ls /opt/halo/install_depot/ansible")
+    assert x==0, "File not created"
 
 
 def test_setup():
     setup()
     x = validate()
-    assert x!=0, "Cluster setup failed"
+    assert x!=0, "Software not installed"
 
+
+def test_teardown():
+    x = teardown()
+    assert x!=0, "Teardown Failed"
