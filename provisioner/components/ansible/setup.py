@@ -18,30 +18,17 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
-
-filename = "/opt/halo/install_depot/ansible.tar.gz"
-extract_path = "/opt/halo/install_depot/ansible"
-
-def createFile():
-    try:
-        if os.system("ls %s" %(extract_path)) != 0:
-            os.system("mkdir %s" %(extract_path))
-            print("Directory Created %s" %extract_path)
-    except Exception as e:
-        print(f'{e}')
+import logging
 
 
 def setup():
     try:
-        os.chdir("%s" %(extract_path))
-        os.system("tar xvf %s -C %s" %(filename, extract_path))
-        os.system("yum localinstall -y *.rpm")
+        os.system("yum install -y ansible")
     except Exception as e:
-        print(f'{e}')
+        logging.exception(f'{e}')
 
 
 def main():
-    createFile()
     setup()
 
 

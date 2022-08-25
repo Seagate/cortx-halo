@@ -18,6 +18,8 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
+import logging
+
 
 def validate():
     try:
@@ -25,7 +27,8 @@ def validate():
             return False
         return True
     except Exception as e:
-        print(f'{e}')
+        logging.exception(f'{e}')
+        return False
 
 
 def main():

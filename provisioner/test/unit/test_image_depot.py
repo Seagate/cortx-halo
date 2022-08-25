@@ -17,23 +17,28 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+import pytest
+from provisioner.components.imagerepo.setup_image_depot import loadImages
+from provisioner.components.imagerepo.setup_image_depot import createDir
 import os
-import logging
-
-def validate():
-    try:
-        if os.system("nodecli --version | grep 0.0.0") != 0:
-            return False
-        return True
-    except Exception as e:
-        logging.exception(f'{e}')
-        return False
 
 
-def main():
-    validate()
+images = ['calico/kube-controllers', 'calico/cni', 'calico/node', 'k8s.gcr.io/kube-apiserver', 'k8s.gcr.io/kube-proxy', 'k8s.gcr.io/kube-controller-manager', 'k8s.gcr.io/kube-scheduler', 'k8s.gcr.io/etcd', 'k8s.gcr.io/coredns/coredns']
+imagePath = "/opt/halo/install_depot/images"
 
 
-if __name__ == "__main__":
-    main()
-    
+def test_folderCreation():
+    createDir()
+    rc1 = os.system("ls %s" %(imagePath))
+    assert rc1==0, "/opt/halo/install_depot/images directory not created"
+
+
+def check_images():
+    loadImages()
+    for img in images:
+        yield img
+
+
+@pytest.mark.parametrize('img', check_images())
+def test_images(img):
+    assert os.system("docker images | grep %s" %(img))== 0, "%s is missing" %(img)

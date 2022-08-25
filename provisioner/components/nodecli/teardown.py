@@ -18,6 +18,8 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
+import logging
+
 
 def teardown():
     try:
@@ -25,7 +27,7 @@ def teardown():
             return False
         return True
     except Exception as e:
-        print(f'{e}') #TODO: Replace print with log
+        logging.exception(f'{e}')
         return False
 
 

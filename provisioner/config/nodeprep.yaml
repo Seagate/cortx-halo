@@ -15,6 +15,11 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+Imagerepo:
+    resource_type: SOFTWARE
+    resource_id: Imagerepo
+    install_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/imagerepo/setup_image_depot.py
+    validate_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/imagerepo/validate.py
 Ansible:
     resource_type: SOFTWARE
     resource_id: Ansible
@@ -38,9 +43,8 @@ Monitor:
     teardown_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/monitor/teardown.py
 Nodecli:
     resource_type: SOFTWARE
-    resource_id: K8s_cri
+    resource_id: Nodecli
     install_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/nodecli/setup.py
     config_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/nodecli/config.py
     validate_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/nodecli/validate.py
     teardown_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/nodecli/teardown.py
-
