@@ -20,6 +20,7 @@
 import pytest
 import uuid
 from manager.backend.user_manager.token_manager import MgmtTokenManager
+from manager.backend.user_manager.session import Session
 
 pytestmark = pytest.mark.unit
 
@@ -27,19 +28,24 @@ pytestmark = pytest.mark.unit
 def test_encode_decode_jwt_token():
     """Test By encoding & decoding JWT."""
     jwt_manager = MgmtTokenManager()
-    payload = {
-        'user_id': str(uuid.uuid4().hex),
-        'user_type': 'manager',
-        'permissions': ['get alert', 'list alert']
-    }
+
+    user_id = 'xyz',
+    user_type = 'monitor'
+    permissions = {
+               'alerts': ['list', 'update', 'delete'],
+               'stats': ['list', 'delete', 'update'],
+               'users': ['create', 'delete', 'update', 'list']
+               }
+
     jwt_secret = MgmtTokenManager.create_token_key()
-    tokens = jwt_manager.create_tokens(payload, jwt_secret)
+    session = Session(user_id, user_type, permissions=permissions)
+    tokens = jwt_manager.create_tokens(session, jwt_secret)
     access_token = tokens['access_token']
     refresh_token = tokens['refresh_token']
 
     # Decode access token
     try:
-        jwt_manager.decode_access_token(access_token, jwt_secret)
+        jwt_manager._decode_access_token(access_token, jwt_secret)
     except Exception as e:
         assert False, f'Failed to decode access token.Error {e}'
 

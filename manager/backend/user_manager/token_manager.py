@@ -61,12 +61,11 @@ class MgmtTokenManager:
             to_encode.update({
                 "exp": datetime.utcnow() +
                 timedelta(days=JWTConst.EXP_DELTA_DAYS.value)})
-
         return jwt.encode(to_encode, secret,
                           algorithm=JWTConst.ALGORITHM.value)
 
-    def create_tokens(self, payload, secret):
-        """Create access and refresh token.
+    def _get_tokens(self, payload, secret):
+        """Get access and refresh token.
 
         Args:
             payload (dict): Information to be included in token.
@@ -84,7 +83,24 @@ class MgmtTokenManager:
             )
         return tokens
 
-    def decode_access_token(self, token, secret):
+    def create_tokens(self, session: Session, secret):
+        """Create Access and Refresh token.
+
+        Args:
+            session (Session): Session object.
+            secret (key): Secret key for token.
+
+        Returns:
+            dict: Access and refresh token.
+        """
+        payload = {
+            'user_id': session.user_id,
+            'user_type': session.user_type,
+            'permissions': session.permissions
+        }
+        return self._get_tokens(payload, secret)
+
+    def _decode_access_token(self, token, secret):
         """Decrypt access token.
 
         Args:
@@ -182,10 +198,14 @@ def validate_token(secret):
             jwt_handler = MgmtTokenManager()
 
             try:
-                data = jwt_handler.decode_access_token(token, secret)
-
+                data = jwt_handler._decode_access_token(token, secret)
                 # Create new token with updated timestamp.
-                updated_token = jwt_handler.create_tokens(data, secret)
+                payload = {
+                    'user_id': data['user_id'],
+                    'user_type': data['user_type'],
+                    'permissions': data['permissions']
+                }
+                updated_token = jwt_handler._get_tokens(payload, secret)
                 # Create session object and add it to request.
                 session = Session(
                     user_id=data['user_id'], user_type=data['user_type'],

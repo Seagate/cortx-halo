@@ -30,7 +30,7 @@ class Session:
         Args:
             user_id (str): User id.
             user_type (str): Type or Role of user.
-            permissions (list): Permission list.
+            permissions (dict): Permission dict.
             expiry_time (int): Expiry time of token.
             access_token (str): Encrypted access token.
             refresh_token (str): Encrypted refresh token.

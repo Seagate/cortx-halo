@@ -26,7 +26,3 @@ class MgmtInvalidTokenError(Exception):
 
 class MgmtExpiredTokenError(Exception):
     """Token timeout Exception."""
-
-
-class MgmtMissingToken(Exception):
-    """Missing Token Exception."""
