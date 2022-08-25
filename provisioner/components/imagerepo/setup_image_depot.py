@@ -20,19 +20,19 @@
 import os
 import logging
 
-imagePath = "/opt/halo/install_depot/images"
+imagepath = "/opt/halo/install_depot/images"
 
 def createDir():
     try:
-        if os.system("ls %s" %(imagePath)) != 0:
-            os.system("mkdir %s" %(imagePath))
-            logging.getLogger("Directory Created %s" %imagePath)
+        if os.system("ls %s" %(imagepath)) != 0:
+            os.system("mkdir %s" %(imagepath))
+            logging.getLogger("Directory Created %s" %imagepath)
     except Exception as e:
         logging.exception(f'{e}')
 
 def loadImages():
     try:
-        img = os.popen("ls %s/*.tar" %(imagePath)).read()
+        img = os.popen("ls %s/*.tar" %(imagepath)).read()
         imgList = img.split("\n")
         for i in imgList[:-1]:
             os.system("docker load < %s" %(i))
