@@ -18,25 +18,17 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 from provisioner.components.k8s.setup import setup
-from provisioner.components.k8s.setup import createFile
 from provisioner.components.k8s.teardown import teardown
 from provisioner.components.k8s.validate import validate
-import os
-
-
-def test_folderCreation():
-    createFile()
-    x = os.system("ls /opt/halo/install_depot/k8s")
-    assert x==0, "File not created"
 
 
 def test_setup():
     setup()
     x = validate()
-    assert x!=0, "Software not installed"
+    assert x!=0, "K8s software not installed"
 
 
 def test_teardown():
     x = teardown()
-    assert x!=0, "Teardown Failed"
+    assert x!=0, "K8s software Teardown Failed"
 

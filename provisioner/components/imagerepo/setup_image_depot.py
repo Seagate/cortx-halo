@@ -20,20 +20,29 @@
 import os
 import logging
 
-def validate():
+imagePath = "/opt/halo/install_depot/images"
+
+def createDir():
     try:
-        if os.system("nodecli --version | grep 0.0.0") != 0:
-            return False
-        return True
+        if os.system("ls %s" %(imagePath)) != 0:
+            os.system("mkdir %s" %(imagePath))
+            logging.getLogger("Directory Created %s" %imagePath)
     except Exception as e:
         logging.exception(f'{e}')
-        return False
+
+def loadImages():
+    try:
+        img = os.popen("ls %s/*.tar" %(imagePath)).read()
+        imgList = img.split("\n")
+        for i in imgList[:-1]:
+            os.system("docker load < %s" %(i))
+    except Exception as e:
+        logging.exception(f'{e}')
 
 
 def main():
-    validate()
+    loadImages()
 
 
 if __name__ == "__main__":
     main()
-    

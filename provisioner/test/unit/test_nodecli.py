@@ -18,25 +18,17 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 from provisioner.components.nodecli.setup import setup
-from provisioner.components.nodecli.setup import createFile
 from provisioner.components.nodecli.teardown import teardown
 from provisioner.components.nodecli.validate import validate
-import os
-
-
-def test_folderCreation():
-    createFile()
-    x = os.system("ls /opt/halo/install_depot/nodecli")
-    assert x==0, "File not created"
 
 
 def test_setup():
     setup()
     x = validate()
-    assert x!=0, "Software not installed"
+    assert x!=0, "Nodecli not installed"
 
 
 def test_teardown():
     x = teardown()
-    assert x!=0, "Teardown Failed"
+    assert x!=0, "Nodecli Failed"
     
