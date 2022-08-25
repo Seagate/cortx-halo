@@ -23,7 +23,7 @@ import logging
 
 def teardown():
     try:
-        if os.system("yum remove -y kubectl kubeadm kubelet") != 0: 
+        if os.system("yum remove -y kubectl kubeadm kubelet") != 0:
             return False
         return True
     except Exception as e:
