@@ -25,7 +25,7 @@ class NWCONSTS(object):
     BOOTPROTO_KEY = 'bootproto'
     IFCFG_PATH = '/etc/sysconfig/network-scripts'
     IFCFG_PFX = 'ifcfg-'
-    JINJA_TMPL_PATH = '/jinja2'
+    JINJA_TMPL_PATH = 'jinja2'
     STATIC_IFCFG_JINJA_TMPL = 'static_ifcfg.j2'
     DYNAMIC_IFCFG_JINJA_TMPL = 'dynamic_ifcfg.j2'
     DHCP = 'dhcp'
