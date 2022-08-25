@@ -16,19 +16,34 @@
 -->
 <template>
   <div class="graphical-view-container">
+    <v-row>
+      <v-col cols="3">
+        <SgtAdvanceSearch
+            ref="advanceSearch"
+            :config="searchConfig"
+          />
+      </v-col>
+      <v-col cols="2">
+        <SgtDropdown
+          placeholder="EXPORT AS"
+          :dropdownOptions="exportOptions"
+          v-model="selectedExport"
+        />
+        
+      </v-col>
+      <v-col cols="1">
+        <v-btn
+          color="csmprimary"
+          class="white--text export-btn"
+          @click="handleExport"
+          :disabled="!selectedExport"
+          >Export</v-btn
+        >
+      </v-col>
+    </v-row>
     <div class="export-feature" v-if="showExport">
-      <SgtDropdown
-        placeholder="EXPORT AS"
-        :dropdownOptions="exportOptions"
-        v-model="selectedExport"
-      />
-      <v-btn
-        color="csmprimary"
-        class="white--text export-btn"
-        @click="handleExport"
-        :disabled="!selectedExport"
-        >Export</v-btn
-      >
+      
+      
     </div>
 
     <div id="health_tree_container" :style="healthTreeContainerDim"></div>
@@ -47,9 +62,11 @@ import {
 } from "../../utils/SVGExport";
 import { Dimensions } from "@/utils/LrUtilFunctions";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
+import SgtAdvanceSearch from "@/lib/components/SgtAdvanceSearch/SgtAdvanceSearch.vue"; 
+
 @Component({
   name: "LrHealthGraphical",
-  components: { SgtDropdown },
+  components: { SgtDropdown, SgtAdvanceSearch },
 })
 export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   public healthTreeContainerDim: any = {
@@ -72,6 +89,18 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   };
   public resource_health: any;
   public outerG: any;
+  public searchConfig = {
+    placeholder: "Search",
+    advanceForm: [
+      {
+        type: "textbox",
+        name: "name",
+        label: "Name",
+        placeholder: "Enter Name",
+        value: "",
+      },
+    ]
+  }
 
   public exportOptions = ["PDF", "PNG", "JPEG", "SVG"];
   public selectedExport = "";
