@@ -18,7 +18,6 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import pytest
-import uuid
 from manager.backend.user_manager.token_manager import MgmtTokenManager
 from manager.backend.user_manager.session import Session
 
