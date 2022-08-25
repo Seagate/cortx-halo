@@ -23,13 +23,15 @@ from provisioner.components.imagerepo.setup_image_depot import createDir
 import os
 
 
-images = ['calico/kube-controllers', 'calico/cni', 'calico/node', 'k8s.gcr.io/kube-apiserver', 'k8s.gcr.io/kube-proxy', 'k8s.gcr.io/kube-controller-manager', 'k8s.gcr.io/kube-scheduler', 'k8s.gcr.io/etcd', 'k8s.gcr.io/coredns/coredns']
-imagePath = "/opt/halo/install_depot/images"
+images = ['calico/kube-controllers', 'calico/cni', 'calico/node', 'k8s.gcr.io/kube-apiserver', 
+        'k8s.gcr.io/kube-proxy', 'k8s.gcr.io/kube-controller-manager', 'k8s.gcr.io/kube-scheduler', 
+        'k8s.gcr.io/etcd', 'k8s.gcr.io/coredns/coredns']
+imagepath = "/opt/halo/install_depot/images"
 
 
 def test_folderCreation():
     createDir()
-    rc1 = os.system("ls %s" %(imagePath))
+    rc1 = os.system("ls %s" %(imagepath))
     assert rc1==0, "/opt/halo/install_depot/images directory not created"
 
 
