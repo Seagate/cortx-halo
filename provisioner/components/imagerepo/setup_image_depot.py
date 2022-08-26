@@ -33,8 +33,8 @@ def loadImages():
     try:
         image_file = os.popen("ls %s*.tar" %(PATH.IMAGE_TAR_FILE_PATH)).read()
         img_list = image_file.split("\n")
-        for i in img_list[:-1]:
-            os.system("docker load < %s" %(i))
+        for img in img_list[:-1]:
+            os.system("docker load < %s" %(img))
     except Exception as e:
         print(f'{e}') #TODO: Replace print with log
 
