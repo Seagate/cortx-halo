@@ -33,7 +33,7 @@ class JWTConst(Enum):
     ALGORITHM = 'HS256'
     EXP_DELTA_SECONDS = 90
     EXP_DELTA_DAYS = 1
-    AUTH_KEY = const.TOKEN_HEADER
+    AUTH_KEY = const.AUTH_HEADER
 
 
 class MgmtTokenManager:

@@ -17,13 +17,12 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from contextlib import contextmanager
-from typing import Any, Optional
+
 from cortx.utils.errors import BaseError
 from cortx.utils.log import Log
 from manager import const
 
-MGMT_OPERATION_SUCESSFUL = 0x0000
+MGMT_OPERATION_SUCCESSFUL = 0x0000
 MGMT_ERR_INVALID_VALUE = 0x1001
 MGMT_ERR_INTERRUPTED = 0x1002
 MGMT_INVALID_REQUEST = 0x1003
@@ -131,7 +130,7 @@ class MgmtInvalidTokenError(MgmtError):
     _err = MGMT_ERR_INVALID_VALUE
     _desc = "Invalid Token."
 
-    def __init__(self, desc=None, message_id=const.INVALID_TOKEN_ERROR, message_args=None):
+    def __init__(self, desc=None, message_id=const.INVALID_AUTH_ERROR, message_args=None):
         """
         Instantiation Method for MgmtInvalidTokenError class
         """
@@ -147,7 +146,7 @@ class MgmtExpiredTokenError(MgmtError):
     _err = MGMT_ERR_INVALID_VALUE
     _desc = "Expired Token."
 
-    def __init__(self, desc=None, message_id=const.EXPIRED_TOKEN_ERROR, message_args=None):
+    def __init__(self, desc=None, message_id=const.EXPIRED_AUTH_ERROR, message_args=None):
         """
         Instantiation Method for MgmtExpiredTokenError class
         """
@@ -319,5 +318,3 @@ class MgmtRequestCancelled(MgmtError):
         super(MgmtRequestCancelled, self).__init__(
             MGMT_REQUEST_CANCELLED, desc,
             message_id, message_args)
-
-

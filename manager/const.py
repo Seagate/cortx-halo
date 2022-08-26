@@ -61,9 +61,9 @@ MGMT_TMP_FILE_CACHE_DIR = MGMT_TEMP_PATH + "/file_cache/transfer"
 # REST FILE HEADER KEY
 FILE_HEADER = 'Content-Disposition'
 
-# REST TOKEN HEADER KEY AND TOKEN TYPE
-TOKEN_HEADER = 'Authorization'
-TOKEN_TYPE   = 'Bearer'
+# REST AUTH/TOKEN HEADER KEY AND AUTH/TOKEN TYPE
+AUTH_HEADER = 'Authorization'
+AUTH_TYPE   = 'Bearer'
 
 # REST/HTTP STATUS CODES
 STATUS_SUCCESS  = 200
@@ -84,10 +84,10 @@ UNKNOWN_ERROR           = 'UnknownError'
 RESOURCE_EXISTS         = 'ResourceExist'
 INTERNAL_ERROR          = 'InternalError'
 NOT_FOUND_ERROR         = 'NotFoundError'
-INVALID_TOKEN_ERROR     = 'InvalidToken'
-EXPIRED_TOKEN_ERROR     = 'ExpiredToken'
+INVALID_AUTH_ERROR      = 'InvalidToken'
+EXPIRED_AUTH_ERROR      = 'ExpiredToken'
 PERMISSION_DENIED_ERROR = 'PermissionDenied'
-UNAUTHORISED            = 'Unauthorized'
+UNAUTHORIZED            = 'Unauthorized'
 RESOURCE_NOT_AVAILABLE  = 'ResourceNotAvailable'
 TYPE_ERROR              = 'TypeError'
 NOT_IMPLEMENTED         = 'NotImplemented'

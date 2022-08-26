@@ -32,7 +32,7 @@ class FileType(Enum):
     Enum for indicating group of files
     """
     SUPPORT_BUNDLE = 1
-    ETC_CSM = 2
+    ETC_MGMT = 2
     AUDIT_LOG = 3
 
 
@@ -54,7 +54,7 @@ class DownloadFileManager:
     def __init__(self):
         self.directory_map = {
             FileType.SUPPORT_BUNDLE: const.DEFAULT_SUPPORT_BUNDLE_ROOT,
-            FileType.ETC_CSM: const.MGMT_ETC_DIR,
+            FileType.ETC_MGMT: const.MGMT_ETC_DIR,
             FileType.AUDIT_LOG: const.MGMT_AUDIT_LOG,
         }
 

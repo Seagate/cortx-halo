@@ -63,7 +63,7 @@ MGMT_BE_REST_HTTP_PORT          = 7080
 MGMT_BE_REST_HTTPS_PORT         = 7443
 MGMT_BE_REST_DEFAULT_PORT  = MGMT_BE_REST_HTTP_PORT
 
-MGMT_BE_SERVER_NAME      = 'mgmt_be_server'
+MGMT_BE_SERVER_NAME      = 'mgmt_rest_server'
 MGMT_BE_SERVER_LOG_PATH  = const.MGMT_PATH + '/logs/'
 MGMT_BE_SERVER_LOG_LEVEL = 'INFO'
 
@@ -180,7 +180,7 @@ class MgmtBeRestServer(ABC):
             resp[const.KEY_ERR_RESPONSE_MESSAGE] = f'{str(err)}'
 
         try:
-            # CSM error response should have error_code message and message_id
+            # MGMT error response should have error_code message and message_id
             # Here we only check the Error response format
             # For incorrect format, only log the error
             schema = ErrorResponseSchema()
@@ -375,7 +375,7 @@ class MgmtBeRestServer(ABC):
             if not is_public:
                 return await MgmtBeRestServer._call_non_public_handler(request, handler)
 
-        except MgmtInvalidTokenError or MgmtExpiredTokenError as e:
+        except (MgmtInvalidTokenError, MgmtExpiredTokenError) as e:
             MgmtBeRestServer._raise_unauthorized_error(e.error())
         return await handler(request)
 
@@ -430,7 +430,28 @@ class MgmtBeRestServer(ABC):
         return resp
 
     @staticmethod
-    def fetch_bearer_token(request):
+    async def _remove_secret_values(request):
+        """
+        Remove keys and values for secret, password, and passwd from request object.
+
+        Args:
+            request (aiohttp.request): client request object
+        """
+        request_body = dict(request.rel_url.query) if request.rel_url.query else {}
+        if not request_body and request.content_length and request.content_length > 0:
+            try:
+                request_body = await request.json()
+            except Exception:
+                request_body = {}
+            if request_body:
+                for key in list(request_body.keys()):
+                    lower_key = key.lower()
+                    if (lower_key.find("password") > -1 or lower_key.find("passwd") > -1 or
+                        lower_key.find("secret") > -1):
+                        del(request_body[key])
+
+    @staticmethod
+    def _fetch_bearer_token(request):
         """
         fetch updated token from session object.
 
@@ -439,7 +460,7 @@ class MgmtBeRestServer(ABC):
         So first we will be checking if token is exist and the fetch it.
 
         Args:
-            request (web.Request): client request object
+            request (aiohttp.request): client request object
 
         Returns:
             str: update token
@@ -447,9 +468,53 @@ class MgmtBeRestServer(ABC):
         updated_token = getattr(request.session, 'access_token', None)
         if updated_token:
             setattr(request.session, 'access_token', None)
-            return f'{const.TOKEN_TYPE} {updated_token}'
+            return f'{const.AUTH_TYPE} {updated_token}'
 
         return None
+
+    @staticmethod
+    async def _prepare_response(request, response):
+        """
+        Prepare response object to return to the client.
+
+        Args:
+            request (aiohttp.request): request object
+            response (response): The response object
+        Returns:
+            web.Response: The Json response object to be return to the client
+        """
+
+        # fetch updated token in response header
+        bearer_token = MgmtBeRestServer._fetch_bearer_token(request)
+
+        if isinstance(response, DownloadFileEntity):
+            file_response = web.FileResponse(response.path_to_file)
+            file_response.headers[const.FILE_HEADER] = f'attachment; filename="{response.filename}"'
+            if bearer_token:
+                file_response.headers[const.AUTH_HEADER] = bearer_token
+            return file_response
+
+        if isinstance(response, web.StreamResponse) or isinstance(response, web.Response):
+            if bearer_token:
+                response.headers[const.AUTH_HEADER] = bearer_token
+            return response
+
+        return MgmtBeRestServer.json_response(response, status=const.STATUS_SUCCESS,
+        response_headers={const.AUTH_HEADER: f'{const.AUTH_TYPE} {bearer_token}'} if bearer_token else None)
+
+    @staticmethod
+    async def _get_response_token_headers(request):
+        """
+        Create response headers to be return
+
+        Args:
+            request (aiohttp.request): request object
+
+        Returns:
+            dict: {'Authorization': 'Bearer <token>'}
+        """
+        bearer_token = MgmtBeRestServer._fetch_bearer_token(request)
+        return {const.AUTH_HEADER: f'{const.AUTH_TYPE} {bearer_token}'} if bearer_token else None
 
     @staticmethod
     @web.middleware
@@ -468,43 +533,17 @@ class MgmtBeRestServer(ABC):
             str: return JSON response object
         """
         if MgmtBeRestServer.__is_shutting_down:
-            return MgmtBeRestServer.json_response("CSM agent is shutting down", status=503)
-        resp_headers = None
-        try:
-            request_id = int(time.time())
+            return MgmtBeRestServer.json_response("MGMT REST Server is shutting down", status=503)
 
-            request_body = dict(request.rel_url.query) if request.rel_url.query else {}
-            if not request_body and request.content_length and request.content_length > 0:
-                try:
-                    request_body = await request.json()
-                except Exception:
-                    request_body = {}
-                if request_body:
-                    for key in list(request_body.keys()):
-                        lower_key = key.lower()
-                        if (lower_key.find("password") > -1 or lower_key.find("passwd") > -1 or
-                            lower_key.find("secret") > -1):
-                            del(request_body[key])
+        request_id = int(time.time())
+        try:
+
+            # remove keys and values for secret, password, and passwd from request object.
+            await MgmtBeRestServer._remove_secret_values(request)
 
             response = await handler(request)
 
-            # fetch updated token in response header
-            bearer_token = MgmtBeRestServer.fetch_bearer_token(request)
-
-            if isinstance(response, DownloadFileEntity):
-                file_response = web.FileResponse(response.path_to_file)
-                file_response.headers[const.FILE_HEADER] = f'attachment; filename="{response.filename}"'
-                if bearer_token:
-                    file_response.headers[const.TOKEN_HEADER] = bearer_token
-                return file_response
-
-            if isinstance(response, web.StreamResponse) or isinstance(response, web.Response):
-                if bearer_token:
-                    response.headers[const.TOKEN_HEADER] = bearer_token
-                return response
-
-            return MgmtBeRestServer.json_response(response, status=const.STATUS_SUCCESS,
-            response_headers={const.TOKEN_HEADER: f'{const.TOKEN_TYPE} {bearer_token}'} if bearer_token else None)
+            return await MgmtBeRestServer._prepare_response(request, response)
 
         except (ConcurrentCancelledError, AsyncioCancelledError):
             Log.warn(f"Client cancelled call for {request.method} {request.path}")
@@ -512,76 +551,77 @@ class MgmtBeRestServer(ABC):
                 MgmtBeRestServer.error_response(
                     MgmtRequestCancelled(desc="Call cancelled by client"),
                     request=request, request_id=request_id),
-                status=499, response_headers=resp_headers)
+                status=499, response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtHttpException as e:
             raise e
         except web.HTTPException as e:
             Log.error(f'HTTP Exception {e.status}: {e.reason}')
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id),
-                status=e.status, response_headers=resp_headers)
+                status=e.status, response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except DataAccessError as e:
             Log.error(f"Failed to access the database: {e}")
             response = MgmtBeRestServer.error_response(e, request=request, request_id=request_id)
-            return MgmtBeRestServer.json_response(response, status=503, response_headers=resp_headers)
+            return MgmtBeRestServer.json_response(response, status=503,
+            response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except InvalidRequest as e:
             Log.debug(f"Invalid Request: {e} \n {traceback.format_exc()}")
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=400,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtNotFoundError as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=404,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtPermissionDenied as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=403,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except ResourceExist as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id),
-                status=const.STATUS_CONFLICT)
+                status=const.STATUS_CONFLICT, response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtInternalError as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=500,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtNotImplemented as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=501,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtGatewayTimeout as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=504,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtServiceConflict as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=409,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtUnauthorizedError as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=401,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except MgmtError as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=400,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except KeyError as e:
             Log.debug(f"Key Error: {e} \n {traceback.format_exc()}")
             message = f"Missing Key for {e}"
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(KeyError(message), request=request,
                                           request_id=request_id),
-                status=422, response_headers=resp_headers)
+                status=422, response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except (ServerDisconnectedError, ClientConnectorError, ClientOSError,
                 ConcurrentTimeoutError) as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=503,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
         except Exception as e:
             Log.critical(f"Unhandled Exception Caught: {e} \n {traceback.format_exc()}")
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=500,
-                response_headers=resp_headers)
+                response_headers=MgmtBeRestServer._get_response_token_headers(request))
 
     @staticmethod
     async def _shut_down(loop, site, server=None):
@@ -642,7 +682,7 @@ class MgmtBeRestServer(ABC):
         }
         for k, v in handlers.items():
             loop.add_signal_handler(k, lambda v=v: asyncio.ensure_future(v())),
-        print(f'======== CSM agent is running on {site.name} ========')
+        print(f'======== MGMT REST Server is running on {site.name} ========')
         print('(Press CTRL+C to quit)', flush=True)
         try:
             loop.run_forever()
@@ -689,7 +729,6 @@ class MgmtBeRestServer(ABC):
             app (web.app): web app object
         """
         Log.debug('REST API startup')
-        pass
 
     @staticmethod
     async def _on_shutdown(app):
@@ -818,6 +857,7 @@ class MgmtBeRestServer(ABC):
         except Exception:
             Log.debug('REST API websock broadcast error')
 
+
 if __name__ == '__main__':
     try:
         Log.init(MGMT_BE_SERVER_NAME,
@@ -829,5 +869,6 @@ if __name__ == '__main__':
         MgmtBeRestServer.init()
         MgmtBeRestServer.run()
     except Exception as e:
+        Log.error(e)
         Log.error(traceback.format_exc())
         os._exit(1)

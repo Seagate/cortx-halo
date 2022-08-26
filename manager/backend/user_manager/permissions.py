@@ -20,8 +20,12 @@
 class PermissionSet:
     """Permission Set stored in a compact way as a dictionary."""
 
-    def __init__(self, items: dict = {}):
-        self._items = {
+    def __init__(self, items: dict = None):
+
+        if dict == None:
+            dict = {}
+
+        self._items = dict{
             resource: set(actions)
                 for resource, actions in items.items()
                     if len(actions) > 0

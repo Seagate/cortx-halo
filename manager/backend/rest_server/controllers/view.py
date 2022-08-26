@@ -23,16 +23,16 @@ import asyncio
 from aiohttp import web
 
 from cortx.utils.log import Log
-from manager import const
+
 from manager.backend.errors import InvalidRequest, MgmtInternalError
 from manager.backend.rest_server.file_transfer import FileRef, FileCache
 from manager.backend.user_manager.permissions import PermissionSet
 
 
 class MgmtAccess:
-    ATTR_PUBLIC = '_csm_auth_public_'
-    ATTR_HYBRID = '_csm_auth_hybrid_'
-    ATTR_ROLES = '_csm_auth_roles_'
+    ATTR_PUBLIC = '_mgmt_auth_public_'
+    ATTR_HYBRID = '_mgmt_auth_hybrid_'
+    ATTR_ROLES = '_mgmt_auth_roles_'
 
     @classmethod
     def public(cls, handler):
@@ -176,7 +176,7 @@ class MgmtView(web.View):
             # permissions = view_permissions | method_permissions
             roles = method_roles
         else:
-            permissions = view_roles
+            roles = view_roles
         return roles
 
     @classmethod
