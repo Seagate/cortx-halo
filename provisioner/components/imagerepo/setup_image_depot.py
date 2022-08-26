@@ -18,26 +18,25 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
-import logging
+from provisioner.const import PATH
 
-imagepath = "/opt/halo/install_depot/images"
 
 def createDir():
     try:
-        if os.system("ls %s" %(imagepath)) != 0:
-            os.system("mkdir %s" %(imagepath))
-            logging.getLogger("Directory Created %s" %imagepath)
+        if os.system("ls %s" %(PATH.IMAGE_TAR_FILE_PATH)) != 0:
+            os.system("mkdir %s" %(PATH.IMAGE_TAR_FILE_PATH))
+            print("Directory Created %s" %PATH.IMAGE_TAR_FILE_PATH) #TODO: Replace print with log
     except Exception as e:
-        logging.exception(f'{e}')
+        print(f'{e}') #TODO: Replace print with log
 
 def loadImages():
     try:
-        img = os.popen("ls %s/*.tar" %(imagepath)).read()
+        img = os.popen("ls %s*.tar" %(PATH.IMAGE_TAR_FILE_PATH)).read()
         imgList = img.split("\n")
         for i in imgList[:-1]:
             os.system("docker load < %s" %(i))
     except Exception as e:
-        logging.exception(f'{e}')
+        print(f'{e}') #TODO: Replace print with log
 
 
 def main():

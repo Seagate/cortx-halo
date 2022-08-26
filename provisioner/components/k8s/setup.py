@@ -18,13 +18,13 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
-import logging
+
 
 def setup():
     try:
         os.system("yum install -y kubectl kubeadm kubelet")
     except Exception as e:
-        logging.exception(f'{e}')
+        print(f'{e}') #TODO: Replace print with log
 
 
 def main():
