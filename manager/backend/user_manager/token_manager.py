@@ -40,20 +40,20 @@ class MgmtTokenManager:
     def __init__(self) -> None:
         """Init Method."""
 
-    def _encode_token(self, payload, token_type, secret):
+    def _encode_token(self, payload, type, secret):
         """Encrypt token.
 
         Args:
             payload (dict): Information to be included in token.
-            token_type (str): Type of token. Ex. access or refresh token.
+            type (str): Type of token. Ex. access or refresh token.
             secret (key): Secret key for token.
 
         Returns:
             str: Token.
         """
         to_encode = payload.copy()
-        to_encode['token_type'] = token_type
-        if token_type == "access_token":
+        to_encode['token_type'] = type
+        if type == "access_token":
             to_encode.update({
                 "exp": datetime.utcnow() +
                 timedelta(seconds=JWTConst.EXP_DELTA_SECONDS.value)})
