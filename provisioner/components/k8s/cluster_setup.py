@@ -18,17 +18,7 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import ansible_runner
-import logging
 from provisioner.const import PATH
-
-
-logging.basicConfig(filename=PATH.LOG_FILE,
-                    filemode='a',
-                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                    datefmt='%H:%M:%S',
-                    level=logging.DEBUG)
-
-logger=logging.getLogger()
 
 
 class Runner:
@@ -43,7 +33,7 @@ def setup():
     try:
         return(Runner.run(PATH.CLUSTER_SETUP_PLAYBOOK_PATH, PATH.ANSIBLE_INVENTORY_PATH))
     except Exception as e:
-        logger.exception(f'{e}')
+        print(f'{e}')
 
 
 if __name__ == "__main__":
