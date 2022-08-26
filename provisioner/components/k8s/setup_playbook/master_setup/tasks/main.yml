@@ -35,7 +35,7 @@
        dest: ../files/join_command.sh
 
     - name: installing calico
-      shell: kubectl apply -f /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/calico-etcd.yaml
+      shell: kubectl apply -f /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/k8s/calico-etcd.yaml
     when: kube_dir_created.changed
 
 

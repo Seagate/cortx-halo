@@ -18,24 +18,31 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import ansible_runner
-import logging
+from provisioner.const import PATH
 
-inventory_path = "/opt/halo/install_depot/cortx-halo/provisioner/components/k8s/setup_playbook/inventory.yaml"
-playbook_path = "/opt/halo/install_depot/cortx-halo/provisioner/components/k8s/validate_playbook/cluster_validate_playbook.yml"
+
+logging.basicConfig(filename=PATH.LOG_FILE,
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
+
+logger=logging.getLogger()
+
 
 class Runner:
 
     @staticmethod
     def run (playbook, ini):
-        rc = ansible_runner.run(playbook = playbook_path, inventory = inventory_path)
+        rc = ansible_runner.run(playbook = playbook, inventory = ini)
         return rc
 
 
 def validate():
     try:
-        return(Runner.run(playbook_path, inventory_path))
+        return(Runner.run(PATH.CLUSTER_VALIDATE_PLAYBOOK_PATH, PATH.ANSIBLE_INVENTORY_PATH))
     except Exception as e:
-        logging.exception(f'{e}')
+        logger.exception(f'{e}')
 
 
 if __name__ == "__main__":
