@@ -25,7 +25,8 @@ def validate():
             return False
         return True
     except Exception as e:
-        print(f'{e}')
+        print(f'{e}') #TODO: Replace print with log
+        return False
 
 
 def main():

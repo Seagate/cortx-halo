@@ -23,7 +23,7 @@ class PermissionSet:
     def __init__(self, items: dict = None):
 
         if dict == None:
-            dict = {}
+            items = {}
 
         self._items = dict{
             resource: set(actions)
