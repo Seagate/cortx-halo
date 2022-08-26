@@ -23,6 +23,8 @@ class FileType(Enum):
     XLSX = 1
     CSV = 2
     INI = 3
+    YAML = 4
+    JSON = 5
 
 class ResourceType(Enum):
     SERVER_NIC = 1
