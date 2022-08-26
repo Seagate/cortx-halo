@@ -18,6 +18,7 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import ansible_runner
+import logging
 from provisioner.const import PATH
 
 
