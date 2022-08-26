@@ -18,7 +18,6 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
-import logging
 
 
 def validate():
