@@ -35,8 +35,7 @@ Network:
     validate_cmd: /opt/seagate/halo/install_depot/network/validate.py
 Kubernetes:
     resource_type: CLUSTER
-    resource_id: k8s
-    config_cmd: /opt/seagate/halo/install_depot/k8s/config.py
-    unconfig_cmd: /opt/seagate/halo/install_depot/k8s/unconfig.py
-    validate_cmd: /opt/seagate/halo/install_depot/k8s/validate.py
-
+    resource_id: kubernetes
+    config_cmd: /opt/seagate/halo/install_depot/k8s/cluster_setup.py
+    unconfig_cmd: /opt/seagate/halo/install_depot/k8s/cluster_destroy.py
+    validate_cmd: /opt/seagate/halo/install_depot/k8s/cluster_validate.py

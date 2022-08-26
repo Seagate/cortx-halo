@@ -18,22 +18,30 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
+from provisioner.const import PATH
 
 
-def validate():
+def createDir():
     try:
-        if os.system("nodecli --version | grep 0.0.0") != 0:
-            return False
-        return True
+        if os.system("ls %s" %(PATH.IMAGE_TAR_FILE_PATH)) != 0:
+            os.system("mkdir %s" %(PATH.IMAGE_TAR_FILE_PATH))
+            print("Directory Created %s" %PATH.IMAGE_TAR_FILE_PATH) #TODO: Replace print with log
     except Exception as e:
         print(f'{e}') #TODO: Replace print with log
-        return False
+
+def loadImages():
+    try:
+        image_file = os.popen("ls %s*.tar" %(PATH.IMAGE_TAR_FILE_PATH)).read()
+        img_list = image_file.split("\n")
+        for img in img_list[:-1]:
+            os.system("docker load < %s" %(img))
+    except Exception as e:
+        print(f'{e}') #TODO: Replace print with log
 
 
 def main():
-    validate()
+    loadImages()
 
 
 if __name__ == "__main__":
     main()
-    
