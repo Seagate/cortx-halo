@@ -1,0 +1,13 @@
+---
+# tasks file for final_setup
+
+  - name: Assigning roles to worker nodes
+    ignore_errors: True
+    shell: kubectl label node "{{ item }}" node-role.kubernetes.io/worker=worker
+    loop: "groups['worker-node']"
+
+  - name: Untaint master node
+    ignore_errors: True
+    shell: |
+      kubectl taint nodes --all node-role.kubernetes.io/master-
+      kubectl taint nodes --all node-role.kubernetes.io/control-plane- 

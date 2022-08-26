@@ -17,10 +17,10 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from setup import setup
-from setup import createFile
-from teardown import teardown
-from validate import validate
+from provisioner.components.k8s.setup import setup
+from provisioner.components.k8s.setup import createFile
+from provisioner.components.k8s.teardown import teardown
+from provisioner.components.k8s.validate import validate
 import os
 
 
