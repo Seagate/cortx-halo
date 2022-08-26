@@ -33,7 +33,7 @@ def validate():
     try:
         return(Runner.run(PATH.CLUSTER_VALIDATE_PLAYBOOK_PATH, PATH.ANSIBLE_INVENTORY_PATH))
     except Exception as e:
-        print(f'{e}')
+        print(f'{e}') #TODO: Replace print with log
 
 
 if __name__ == "__main__":
