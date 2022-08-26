@@ -31,9 +31,9 @@ def createDir():
 
 def loadImages():
     try:
-        img = os.popen("ls %s*.tar" %(PATH.IMAGE_TAR_FILE_PATH)).read()
-        imgList = img.split("\n")
-        for i in imgList[:-1]:
+        image_file = os.popen("ls %s*.tar" %(PATH.IMAGE_TAR_FILE_PATH)).read()
+        img_list = image_file.split("\n")
+        for i in img_list[:-1]:
             os.system("docker load < %s" %(i))
     except Exception as e:
         print(f'{e}') #TODO: Replace print with log
