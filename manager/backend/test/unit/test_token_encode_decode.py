@@ -28,6 +28,7 @@ def test_encode_decode_jwt_token():
     """Test By encoding & decoding JWT."""
     jwt_manager = MgmtTokenManager()
 
+    user_name = 'ABC',
     user_id = 'xyz',
     user_type = 'monitor'
     permissions = {
@@ -36,8 +37,8 @@ def test_encode_decode_jwt_token():
                'users': ['create', 'delete', 'update', 'list']
                }
 
-    jwt_secret = MgmtTokenManager.create_token_key()
-    session = Session(user_id, user_type, permissions=permissions)
+    jwt_secret = MgmtTokenManager.create_token_secret()
+    session = Session(user_name, user_id, user_type, permissions=permissions)
     tokens = jwt_manager.create_tokens(session, jwt_secret)
     access_token = tokens['access_token']
     refresh_token = tokens['refresh_token']

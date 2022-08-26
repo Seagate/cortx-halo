@@ -53,7 +53,7 @@ class MgmtTokenManager:
         """
         to_encode = payload.copy()
         to_encode['token_type'] = token_type
-        if type == "access_token":
+        if token_type == "access_token":
             to_encode.update({
                 "exp": datetime.utcnow() +
                 timedelta(seconds=JWTConst.EXP_DELTA_SECONDS.value)})
@@ -94,6 +94,7 @@ class MgmtTokenManager:
             dict: Access and refresh token.
         """
         payload = {
+            'user_name': session.user_name,
             'user_id': session.user_id,
             'user_type': session.user_type,
             'permissions': session.permissions
@@ -167,7 +168,7 @@ class MgmtTokenManager:
         return False, None
 
     @staticmethod
-    def create_token_key():
+    def create_token_secret():
         """Create secret key for token.
 
         Returns:
@@ -201,6 +202,7 @@ def validate_token(secret):
                 data = jwt_handler._decode_access_token(token, secret)
                 # Create new token with updated timestamp.
                 payload = {
+                    'user_name': data['user_name'],
                     'user_id': data['user_id'],
                     'user_type': data['user_type'],
                     'permissions': data['permissions']
@@ -208,11 +210,11 @@ def validate_token(secret):
                 updated_token = jwt_handler._get_tokens(payload, secret)
                 # Create session object and add it to request.
                 session = Session(
+                    user_name=data['user_name'],
                     user_id=data['user_id'], user_type=data['user_type'],
                     permissions=data['permissions'],
                     access_token=updated_token['access_token'],
-                    refresh_token=updated_token['refresh_token'],
-                    expiry_time=data['exp'])
+                    refresh_token=updated_token['refresh_token'])
                 request.session = session
             except jwt.ExpiredSignatureError:
                 raise MgmtExpiredTokenError('Signature has expired')
