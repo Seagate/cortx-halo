@@ -39,7 +39,7 @@ from marshmallow import ValidationError, fields
 from cortx.utils.errors import DataAccessError
 from cortx.utils.log import Log
 
-from manager import const
+from manager.backend import const
 from manager.backend.errors import (MgmtError, MgmtNotFoundError, MgmtPermissionDenied,
                                     MgmtInvalidTokenError, MgmtExpiredTokenError,
                                     MgmtInternalError, InvalidRequest, ResourceExist,
@@ -48,7 +48,7 @@ from manager.backend.errors import (MgmtError, MgmtNotFoundError, MgmtPermission
                                     MGMT_HTTP_ERROR)
 from manager.backend.rest_server.file_transfer import DownloadFileEntity
 from manager.backend.rest_server.controllers.view import MgmtView, MgmtAccess, MgmtHttpException
-from manager.backend.rest_server.controllers.routes import MgmtRoutes, SwaggerRoutes
+from manager.backend.rest_server.controllers.routes import MgmtRoutes
 from manager.backend.rest_server.controllers.validators import ValidateSchema
 from manager.backend.user_manager.token_manager import MgmtTokenManager, validate_token
 
@@ -122,8 +122,6 @@ class MgmtBeRestServer(ABC):
         if enable_websocket:
             MgmtRoutes.add_websocket_routes(
                 MgmtBeRestServer._app.router, MgmtBeRestServer.process_websocket)
-
-        SwaggerRoutes.add_swagger_ui_routes(MgmtBeRestServer._app.router)
 
         MgmtBeRestServer._app.on_response_prepare.append(MgmtBeRestServer._hide_headers)
         MgmtBeRestServer._app.on_startup.append(MgmtBeRestServer._on_startup)
@@ -260,9 +258,6 @@ class MgmtBeRestServer(ABC):
         Returns:
             bool: True if public
         """
-        path = request.url.path
-        if path.startswith(const.SWAGGER_UI_URL) or path.startswith(const.SWAGGER_UI_STATICS_URL):
-            return True
         handler = await MgmtBeRestServer._resolve_handler(request)
         return MgmtView.is_public(handler, request.method)
 
@@ -426,6 +421,7 @@ class MgmtBeRestServer(ABC):
             dict: response body object
         """
         resp = await handler(request)
+        # TODO : Search equivalent in latest version 'secure' module.
         SecureHeaders(csp=True, server=True).aiohttp(resp)
         return resp
 
@@ -467,7 +463,6 @@ class MgmtBeRestServer(ABC):
         """
         updated_token = getattr(request.session, 'access_token', None)
         if updated_token:
-            setattr(request.session, 'access_token', None)
             return f'{const.AUTH_TYPE} {updated_token}'
 
         return None
@@ -551,77 +546,39 @@ class MgmtBeRestServer(ABC):
                 MgmtBeRestServer.error_response(
                     MgmtRequestCancelled(desc="Call cancelled by client"),
                     request=request, request_id=request_id),
-                status=499, response_headers=MgmtBeRestServer._get_response_token_headers(request))
+                status=499, response_headers = await MgmtBeRestServer._get_response_token_headers(request))
         except MgmtHttpException as e:
             raise e
         except web.HTTPException as e:
             Log.error(f'HTTP Exception {e.status}: {e.reason}')
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id),
-                status=e.status, response_headers=MgmtBeRestServer._get_response_token_headers(request))
+                status=e.status, response_headers = await MgmtBeRestServer._get_response_token_headers(request))
         except DataAccessError as e:
             Log.error(f"Failed to access the database: {e}")
             response = MgmtBeRestServer.error_response(e, request=request, request_id=request_id)
             return MgmtBeRestServer.json_response(response, status=503,
-            response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except InvalidRequest as e:
-            Log.debug(f"Invalid Request: {e} \n {traceback.format_exc()}")
+            response_headers = await MgmtBeRestServer._get_response_token_headers(request))
+        except (InvalidRequest, MgmtNotFoundError, MgmtPermissionDenied, ResourceExist, MgmtInternalError,
+                MgmtNotImplemented, MgmtGatewayTimeout, MgmtServiceConflict, MgmtUnauthorizedError, MgmtError) as e:
             return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=400,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtNotFoundError as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=404,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtPermissionDenied as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=403,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except ResourceExist as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id),
-                status=const.STATUS_CONFLICT, response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtInternalError as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=500,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtNotImplemented as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=501,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtGatewayTimeout as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=504,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtServiceConflict as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=409,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtUnauthorizedError as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=401,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except MgmtError as e:
-            return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=400,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
+                MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=e.status,
+                response_headers = await MgmtBeRestServer._get_response_token_headers(request))
         except KeyError as e:
             Log.debug(f"Key Error: {e} \n {traceback.format_exc()}")
             message = f"Missing Key for {e}"
             return MgmtBeRestServer.json_response(
-                MgmtBeRestServer.error_response(KeyError(message), request=request,
-                                          request_id=request_id),
-                status=422, response_headers=MgmtBeRestServer._get_response_token_headers(request))
-        except (ServerDisconnectedError, ClientConnectorError, ClientOSError,
-                ConcurrentTimeoutError) as e:
+                MgmtBeRestServer.error_response(KeyError(message), request=request, request_id=request_id),
+                status=422, response_headers = await MgmtBeRestServer._get_response_token_headers(request))
+        except (ServerDisconnectedError, ClientConnectorError, ClientOSError, ConcurrentTimeoutError) as e:
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=503,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
+                response_headers = await MgmtBeRestServer._get_response_token_headers(request))
         except Exception as e:
             Log.critical(f"Unhandled Exception Caught: {e} \n {traceback.format_exc()}")
             return MgmtBeRestServer.json_response(
                 MgmtBeRestServer.error_response(e, request=request, request_id=request_id), status=500,
-                response_headers=MgmtBeRestServer._get_response_token_headers(request))
+                response_headers = await MgmtBeRestServer._get_response_token_headers(request))
 
     @staticmethod
     async def _shut_down(loop, site, server=None):
@@ -822,7 +779,7 @@ class MgmtBeRestServer(ABC):
         return ws
 
     @staticmethod
-    async def add_wedsock_bg(app):
+    async def add_websock_bg(app):
         """
         Add websocket background task which will be keep sending alter to websocket.
 

@@ -44,14 +44,6 @@ MESSAGE_ID = "message_id"
 UNKNOWN_ERROR = 'UnknownError'
 HTTP_ERROR = 'HttpError'
 
-# Swagger UI
-SWAGGER_UI_DIST = MGMT_PATH + '/templates/swagger-ui'
-SWAGGER_UI_INDEX_HTML = SWAGGER_UI_DIST + '/index.html'
-SWAGGER_JSON = SWAGGER_UI_DIST+ '/swagger.json'
-SWAGGER_UI_URL = '/api/doc'
-SWAGGER_JSON_URL = '/api/doc/swagger.json'
-SWAGGER_UI_STATICS_URL = '/api/static'
-
 # file operation constants
 DEFAULT_SUPPORT_BUNDLE_ROOT = BASE_DIR + '/bundle'
 MGMT_TEMP_PATH = MGMT_PATH + "/temp"

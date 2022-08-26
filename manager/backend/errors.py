@@ -20,7 +20,7 @@
 
 from cortx.utils.errors import BaseError
 from cortx.utils.log import Log
-from manager import const
+from manager.backend import const
 
 MGMT_OPERATION_SUCCESSFUL = 0x0000
 MGMT_ERR_INVALID_VALUE = 0x1001
@@ -45,6 +45,8 @@ S3_SERVICE_ERROR = 0x3000
 
 class MgmtError(BaseError):
     """ Parent class for the cli error classes """
+
+    status=400
 
     def __init__(self, rc=0, desc=None, message_id=None, message_args=None):
         """
@@ -97,6 +99,7 @@ class InvalidRequest(MgmtError):
 
     _err = MGMT_INVALID_REQUEST
     _desc = "Invalid request."
+    status=400
 
     def __init__(self, _desc=None, message_id=const.INVALID_REQUEST, message_args=None):
         """
@@ -113,6 +116,7 @@ class ResourceExist(MgmtError):
 
     _err = MGMT_RESOURCE_EXIST
     _desc = "Resource already exist."
+    status=const.STATUS_CONFLICT
 
     def __init__(self, _desc=None, message_id=const.RESOURCE_EXISTS, message_args=None):
         """
@@ -160,6 +164,7 @@ class MgmtInternalError(MgmtError):
     """
 
     _desc = "Manager Internal Error."
+    status=500
 
     def __init__(self, desc=None, message_id=const.INTERNAL_ERROR, message_args=None):
         """
@@ -175,6 +180,7 @@ class MgmtNotFoundError(MgmtError):
     """
 
     _desc = "An entity was not found."
+    status=404
 
     def __init__(self, desc=None, message_id=const.NOT_FOUND_ERROR, message_args=None):
         """
@@ -190,6 +196,7 @@ class MgmtPermissionDenied(MgmtError):
     """
 
     _desc = "Access to the requested resource is forbidden."
+    status=403
 
     def __init__(self, desc=None, message_id=const.PERMISSION_DENIED_ERROR, message_args=None):
         """
@@ -233,6 +240,7 @@ class MgmtNotImplemented(MgmtError):
     """This error represents HTTP 501 Not Implemented Error"""
 
     _desc = "Not Implemented."
+    status=501
 
     def __init__(self, desc=None, message_id=const.NOT_IMPLEMENTED, message_args=None):
         """
@@ -248,6 +256,7 @@ class MgmtServiceConflict(MgmtError):
     """Service in conflict stat or operation can cause that state"""
 
     _desc = "Service conflict state."
+    status=409
 
     def __init__(self, desc=None, message_id=const.SERVICE_CONFLICT, message_args=None):
         """
@@ -266,6 +275,7 @@ class MgmtGatewayTimeout(MgmtError):
     """
 
     _desc = "Unable to get timely response."
+    status=504
 
     def __init__(self, desc=None, message_id=const.GATEWAY_TIMEOUT, message_args=None):
         """
@@ -281,6 +291,7 @@ class MgmtUnauthorizedError(MgmtError):
     """This error represents HTTP 401 Unauthorized Error"""
 
     _desc = "Invalid authentication credentials for the target resource."
+    status=401
 
     def __init__(self, desc=None, message_id=const.UNAUTHORIZED_ERROR, message_args=None):
         """

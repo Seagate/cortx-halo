@@ -17,8 +17,6 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from aiohttp import web
-from manager import const
 from manager.backend.rest_server.controllers.view import MgmtView
 
 class MgmtRoutes():
@@ -36,21 +34,3 @@ class MgmtRoutes():
     @staticmethod
     def add_websocket_routes(router, ws_handler):
         router.add_get("/ws", ws_handler)
-
-class SwaggerRoutes:
-
-    @staticmethod
-    def _serve_swagger_ui(request):
-       with open(const.SWAGGER_UI_INDEX_HTML, 'r') as f:
-        return web.Response(text=f.read(), content_type='text/html')
-
-    @staticmethod
-    def _serve_swagger_json(request):
-      with open(const.SWAGGER_JSON, 'r') as f:
-        return web.Response(text=f.read(), content_type='application/json')
-
-    @staticmethod
-    def add_swagger_ui_routes(router):
-      router.add_get(const.SWAGGER_UI_URL, SwaggerRoutes._serve_swagger_ui)
-      router.add_get(const.SWAGGER_JSON_URL, SwaggerRoutes._serve_swagger_json)
-      router.add_static(const.SWAGGER_UI_STATICS_URL, const.SWAGGER_UI_DIST)

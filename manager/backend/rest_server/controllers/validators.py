@@ -19,7 +19,7 @@
 
 import re
 from marshmallow.validate import Validator, ValidationError
-from manager import const
+from manager.backend import const
 from manager.backend.rest_server.file_transfer import FileRef
 from marshmallow import Schema, validates_schema
 
@@ -43,7 +43,7 @@ class IamUserNameValidator(Validator):
 
 
 class UserNameValidator(Validator):
-    """Validator Class for Username Fields in CSM."""
+    """Validator Class for Username Fields in MGMT."""
 
     def __call__(self, value):
         if not re.search(r"^[a-zA-Z0-9_-]{4,56}$", value):
@@ -53,7 +53,7 @@ class UserNameValidator(Validator):
 
 
 class AccessKeyValidator(Validator):
-    """Validator Class for access_key field in CSM."""
+    """Validator Class for access_key field in MGMT."""
 
     def __call__(self, value):
         if not re.search(r"^[a-zA-Z0-9_]{16,128}$", value):
@@ -63,7 +63,7 @@ class AccessKeyValidator(Validator):
 
 
 class CommentsValidator(Validator):
-    """Validation Class for Comments and Strings in CSM."""
+    """Validation Class for Comments and Strings in MGMT."""
 
     def __call__(self, value):
         if len(value) > const.STRING_MAX_VALUE:
@@ -72,7 +72,7 @@ class CommentsValidator(Validator):
 
 
 class PortValidator(Validator):
-    """Validation Class for Ports Entered in CSM."""
+    """Validation Class for Ports Entered in MGMT."""
 
     def __call__(self, value):
         if not const.PORT_MIN_VALUE < int(value) or not const.PORT_MAX_VALUE > int(value):
@@ -92,7 +92,7 @@ class PathPrefixValidator(Validator):
 
 
 class PasswordValidator(Validator):
-    """Password Validator Class for CSM Passwords Fields."""
+    """Password Validator Class for MGMT Passwords Fields."""
 
     def __call__(self, password):
         error = []

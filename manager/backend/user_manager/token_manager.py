@@ -22,7 +22,7 @@ import uuid
 from functools import wraps
 from datetime import datetime, timedelta
 from enum import Enum
-from manager import const
+from manager.backend import const
 from manager.backend.user_manager.session import Session
 from manager.backend.errors import (MgmtExpiredTokenError,
                                     MgmtInvalidTokenError)

@@ -25,7 +25,7 @@ class PermissionSet:
         if dict == None:
             items = {}
 
-        self._items = dict{
+        self._items = {
             resource: set(actions)
                 for resource, actions in items.items()
                     if len(actions) > 0

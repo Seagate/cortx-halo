@@ -23,7 +23,7 @@ from enum import Enum
 from shutil import copyfile
 from contextlib import ContextDecorator
 from cortx.utils.log import Log
-from manager import const
+from manager.backend import const
 from manager.backend.errors import MgmtInternalError
 
 
