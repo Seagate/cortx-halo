@@ -18,6 +18,65 @@
 export const lrHealthConst = {
   searchConfig: {
     placeholder: "Search",
+    advanceForm: [
+      {
+        type: "dropdown",
+        name: "resource",
+        label: "Resource",
+        placeholder: "Select the Resource",
+        options: [
+          {
+            label: "Cluster",
+            value: "cluster"
+          },
+          {
+            label: "Site",
+            value: "site"
+          },
+          {
+            label: "Rack",
+            value: "rack"
+          },
+          {
+            label: "Node",
+            value: "node"
+          }
+        ],
+        value: {
+          label: "Cluster",
+          value: "cluster"
+        },
+        editable: true
+      },
+      {
+        type: "textbox",
+        name: "resource-id",
+        label: "Resource ID",
+        placeholder: "Enter Resource ID",
+        editable: true
+      },
+      {
+        type: "dropdown",
+        name: "resource-status",
+        label: "Status",
+        placeholder: "Select the status",
+        options: [
+          {
+            label: "Online",
+            value: "online"
+          },
+          {
+            label: "Offline",
+            value: "offline"
+          }
+        ],
+        value:{
+          label: "Online",
+          value: "online"
+        },
+        editable: true
+      }
+    ]
   },
   healthTable: {
     isMultiSelect: true,

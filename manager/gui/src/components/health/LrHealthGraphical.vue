@@ -16,36 +16,18 @@
 -->
 <template>
   <div class="graphical-view-container">
-    <v-row>
-      <v-col cols="3">
-        <SgtAdvanceSearch
-            ref="advanceSearch"
-            :config="searchConfig"
-          />
-      </v-col>
-      <v-col cols="2">
-        <SgtDropdown
-          placeholder="EXPORT AS"
-          :dropdownOptions="exportOptions"
-          v-model="selectedExport"
-        />
-        
-      </v-col>
-      <v-col cols="1">
-        <v-btn
-          color="csmprimary"
-          class="white--text export-btn"
-          @click="handleExport"
-          :disabled="!selectedExport"
-          >Export</v-btn
-        >
-      </v-col>
-    </v-row>
     <div class="export-feature" v-if="showExport">
-      
-      
+      <SgtAdvanceSearch
+        ref="advanceSearch"
+        :config="healthSearchConst"
+      />
+      <SgtDropdown
+        placeholder="Export As"
+        :dropdownOptions="exportOptions"
+        v-model="selectedExport"
+      />
     </div>
-
+    
     <div id="health_tree_container" :style="healthTreeContainerDim"></div>
   </div>
 </template>
@@ -63,6 +45,7 @@ import {
 import { Dimensions } from "@/utils/LrUtilFunctions";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
 import SgtAdvanceSearch from "@/lib/components/SgtAdvanceSearch/SgtAdvanceSearch.vue"; 
+import { lrHealthConst } from "./LrHealthTabular.constant";
 
 @Component({
   name: "LrHealthGraphical",
@@ -89,21 +72,10 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   };
   public resource_health: any;
   public outerG: any;
-  public searchConfig = {
-    placeholder: "Search",
-    advanceForm: [
-      {
-        type: "textbox",
-        name: "name",
-        label: "Name",
-        placeholder: "Enter Name",
-        value: "",
-      },
-    ]
-  }
 
   public exportOptions = ["PDF", "PNG", "JPEG", "SVG"];
   public selectedExport = "";
+  public healthSearchConst: any = lrHealthConst.searchConfig;
 
   public async mounted() {
     this.calculateDimensions();
@@ -352,7 +324,7 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   .export-feature {
     display: flex;
     gap: 1em;
-    max-width: 400px;
+    max-width: 575px;
   }
 }
 .g_popup:focus {
