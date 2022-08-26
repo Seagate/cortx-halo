@@ -19,7 +19,6 @@
 
 import os
 
-
 def teardown():
     try:
         if os.system("yum remove -y ansible") != 0:
