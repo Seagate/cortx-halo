@@ -31,11 +31,11 @@ import threading
 import requests
 from urllib3.exceptions import InsecureRequestWarning
 
-from manager.inframon.comps import StorageComponents
-from manager.inframon.tools.tool import Tool
-#from manager.inframon.config import InfraMonConfig
-from manager.inframon.tools.const import Consts, AlertConsts, ResponseConsts, ErrorMessages
-from manager.inframon.utils import NoDirectCreator
+from inframon.comps import StorageComponents
+from inframon.tools.tool import Tool
+#from inframon.config import InfraMonConfig
+from inframon.tools.const import Consts, AlertConsts, ResponseConsts, ErrorMessages
+from inframon.utils import NoDirectCreator
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -190,8 +190,7 @@ class EnclosureAPIConnection(metaclass=NoDirectCreator):
     def __connect__(self):
         """Connects to enclosure by trying to different controllers.
            When succeeds, it stores controller information and session key.
-        """
-        """
+
         Enable this code later.
         conf_manager = InfraMonConfig.instance()
         user = conf_manager.get_config(EnclosureAPIConsts.USER)

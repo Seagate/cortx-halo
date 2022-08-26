@@ -21,8 +21,8 @@
 """ Only ResponseBuilder can be tested. For other classes, hardware is required.
 """
 
-from manager.inframon.tools.enclosure_api import ResponseBuilderFactory, AlertResponseBuilder
-from manager.inframon.comps import StorageComponents
+from inframon.tools.enclosure_api import ResponseBuilderFactory, AlertResponseBuilder
+from inframon.comps import StorageComponents
 
 
 resolved_alerts_input = [
