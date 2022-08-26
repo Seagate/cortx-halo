@@ -18,33 +18,33 @@
 Imagerepo:
     resource_type: SOFTWARE
     resource_id: Imagerepo
-    install_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/imagerepo/setup_image_depot.py
-    validate_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/imagerepo/validate.py
+    install_cmd: /opt/seagate/halo/install_depot/imagerepo/setup_image_depot.py
+    validate_cmd: /opt/seagate/halo/install_depot/imagerepo/validate.py
 Ansible:
     resource_type: SOFTWARE
     resource_id: Ansible
-    install_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/ansible/setup.py
-    config_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/ansible/config.py
-    validate_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/ansible/validate.py
-    teardown_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/ansible/teardown.py
+    install_cmd: /opt/seagate/halo/install_depot/ansible/setup.py
+    config_cmd: /opt/seagate/halo/install_depot/ansible/config.py
+    validate_cmd: /opt/seagate/halo/install_depot/ansible/validate.py
+    teardown_cmd: /opt/seagate/halo/install_depot/ansible/teardown.py
 K8s_cri:
     resource_type: SOFTWARE
     resource_id: K8s_cri
-    install_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/k8s/setup.py
-    config_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/k8s/config.py
-    validate_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/k8s/validate.py
-    teardown_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/k8s/teardown.py
+    install_cmd: /opt/seagate/halo/install_depot/k8s/setup.py
+    config_cmd: /opt/seagate/halo/install_depot/k8s/config.py
+    validate_cmd: /opt/seagate/halo/install_depot/k8s/validate.py
+    teardown_cmd: /opt/seagate/halo/install_depot/k8s/teardown.py
 Monitor:
     resource_type: SOFTWARE
     resource_id: Monitor
-    install_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/monitor/setup.py
-    config_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/monitor/config.py
-    validate_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/monitor/validate.py
-    teardown_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/monitor/teardown.py
+    install_cmd: /opt/seagate/halo/install_depot/monitor/setup.py
+    config_cmd: /opt/seagate/halo/install_depot/monitor/config.py
+    validate_cmd: /opt/seagate/halo/install_depot/monitor/validate.py
+    teardown_cmd: /opt/seagate/halo/install_depot/monitor/teardown.py
 Nodecli:
     resource_type: SOFTWARE
     resource_id: Nodecli
-    install_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/nodecli/setup.py
-    config_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/nodecli/config.py
-    validate_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/nodecli/validate.py
-    teardown_cmd: /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/nodecli/teardown.py
+    install_cmd: /opt/seagate/halo/install_depot/nodecli/setup.py
+    config_cmd: /opt/seagate/halo/install_depot/nodecli/config.py
+    validate_cmd: /opt/seagate/halo/install_depot/nodecli/validate.py
+    teardown_cmd: /opt/seagate/halo/install_depot/nodecli/teardown.py

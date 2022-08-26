@@ -19,7 +19,6 @@
 
 import os
 
-
 def validate():
     try:
         if os.system("ansible --version | grep 2.9.27") != 0:
