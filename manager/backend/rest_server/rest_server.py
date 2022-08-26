@@ -25,7 +25,6 @@ import traceback
 import signal
 import ssl
 import time
-import uuid
 from abc import ABC
 from weakref import WeakSet
 
@@ -51,6 +50,7 @@ from manager.backend.rest_server.file_transfer import DownloadFileEntity
 from manager.backend.rest_server.controllers.view import MgmtView, MgmtAccess, MgmtHttpException
 from manager.backend.rest_server.controllers.routes import MgmtRoutes, SwaggerRoutes
 from manager.backend.rest_server.controllers.validators import ValidateSchema
+from manager.backend.user_manager.token_manager import MgmtTokenManager, validate_token
 
 # ref: https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting
 MGMT_BE_REST_DEFAULT_RATE_LIMIT = 5000
@@ -67,9 +67,6 @@ MGMT_BE_SERVER_NAME      = 'mgmt_be_server'
 MGMT_BE_SERVER_LOG_PATH  = const.MGMT_PATH + '/logs/'
 MGMT_BE_SERVER_LOG_LEVEL = 'INFO'
 
-KEY_TOKEN_SEC             = 'token_sec'
-
-
 
 class ErrorResponseSchema(ValidateSchema):
     """
@@ -83,10 +80,14 @@ class ErrorResponseSchema(ValidateSchema):
 class MgmtBeRestServer(ABC):
     """REST Interface to communicate with Management Backend."""
 
+    enable_websocket = False
     __is_shutting_down = False
     __current_requests = 0
     __total_blocked = 0
     __rate_limit = 0
+
+    # TODO : (CH-369) Add this in config data Store
+    __token_sec = MgmtTokenManager.create_token_secret()
 
     @staticmethod
     def init(rate_limit=MGMT_BE_REST_DEFAULT_RATE_LIMIT, enable_websocket=False):
@@ -98,6 +99,7 @@ class MgmtBeRestServer(ABC):
             enable_websocket (bool, optional): True if websocket bg task to be used. Defaults to False.
         """
 
+        MgmtBeRestServer.enable_websocket = enable_websocket
         if enable_websocket:
             MgmtBeRestServer._queue = asyncio.Queue()
             MgmtBeRestServer._background_tasks = []
@@ -126,9 +128,6 @@ class MgmtBeRestServer(ABC):
         MgmtBeRestServer._app.on_response_prepare.append(MgmtBeRestServer._hide_headers)
         MgmtBeRestServer._app.on_startup.append(MgmtBeRestServer._on_startup)
         MgmtBeRestServer._app.on_shutdown.append(MgmtBeRestServer._on_shutdown)
-
-        # Set the encode token private key
-        MgmtBeRestServer._app[KEY_TOKEN_SEC] = str(uuid.uuid4())
 
     @staticmethod
     def is_debug(request) -> bool:
@@ -333,7 +332,7 @@ class MgmtBeRestServer(ABC):
         return res
 
     @staticmethod
-    # Add @validate_token(MgmtBeRestServer._app[KEY_TOKEN_SEC])
+    @validate_token(secret=__token_sec)
     async def _call_non_public_handler(request, handler):
         """
         wrapper to validate token
@@ -361,7 +360,7 @@ class MgmtBeRestServer(ABC):
         Returns:
             dict: response object
         """
-        session = None
+        request.session = None
         is_public = await MgmtBeRestServer._is_public(request)
         is_hybrid = await MgmtBeRestServer._is_hybrid(request)
         if is_hybrid:
@@ -431,7 +430,7 @@ class MgmtBeRestServer(ABC):
         return resp
 
     @staticmethod
-    async def fetch_bearer_token(request):
+    def fetch_bearer_token(request):
         """
         fetch updated token from session object.
 
@@ -447,6 +446,7 @@ class MgmtBeRestServer(ABC):
         """
         updated_token = getattr(request.session, 'access_token', None)
         if updated_token:
+            setattr(request.session, 'access_token', None)
             return f'{const.TOKEN_TYPE} {updated_token}'
 
         return None
@@ -472,6 +472,7 @@ class MgmtBeRestServer(ABC):
         resp_headers = None
         try:
             request_id = int(time.time())
+
             request_body = dict(request.rel_url.query) if request.rel_url.query else {}
             if not request_body and request.content_length and request.content_length > 0:
                 try:
@@ -482,14 +483,13 @@ class MgmtBeRestServer(ABC):
                     for key in list(request_body.keys()):
                         lower_key = key.lower()
                         if (lower_key.find("password") > -1 or lower_key.find("passwd") > -1 or
-                                lower_key.find("secret") > -1):
+                            lower_key.find("secret") > -1):
                             del(request_body[key])
 
             response = await handler(request)
 
             # fetch updated token in response header
             bearer_token = MgmtBeRestServer.fetch_bearer_token(request)
-
 
             if isinstance(response, DownloadFileEntity):
                 file_response = web.FileResponse(response.path_to_file)
@@ -694,8 +694,9 @@ class MgmtBeRestServer(ABC):
     @staticmethod
     async def _on_shutdown(app):
         Log.debug('REST API shutdown')
-        for task in MgmtBeRestServer._background_tasks:
-            task.cancel()
+        if MgmtBeRestServer.enable_websocket:
+            for task in MgmtBeRestServer._background_tasks:
+                task.cancel()
 
     @classmethod
     async def _ssl_cert_check_bg(cls):

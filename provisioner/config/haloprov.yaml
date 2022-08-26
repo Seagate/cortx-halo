@@ -36,7 +36,6 @@ MellanoxNIC:
 Kubernetes:
     resource_type: CLUSTER
     resource_id: kubernetes
-    install_cmd: /opt/install_depot/kubernetes/cluster_setup
-    uninstall_cmd: /opt/install_depot/kubernetes/cluster_teardown
-    validate_cmd: /opt/install_depot/kubernetes/cluster_validate
-
+    config_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/cluster_setup.py
+    unconfig_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/cluster_destroy.py
+    validate_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/cluster_validate.py

@@ -22,7 +22,7 @@ import os
 
 def validate():
     try:
-        if os.system("kubctl --version | grep 1.24.3") != 0:
+        if os.system("kubelet --version | grep 1.24.4") != 0:
             return False
         return True
     except Exception as e:
