@@ -1,0 +1,21 @@
+- hosts: all
+  become: true
+  roles:
+    - role: common_setup
+
+
+- hosts: master-node
+  become: true
+  roles:
+    - role: master_setup
+
+
+- hosts: worker-node
+  become: true
+  roles:
+    - role: worker_setup
+
+- hosts: master-node
+  become: true
+  roles:
+    - role: final_setup
