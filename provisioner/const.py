@@ -45,4 +45,4 @@ class PATH(object):
     ANSIBLE_INVENTORY_PATH = K8S_PATH + 'inventory.yaml'
     CLUSTER_SETUP_PLAYBOOK_PATH =  K8S_PATH + 'setup_playbook/cluster_setup_playbook.yml'
     CLUSTER_VALIDATE_PLAYBOOK_PATH = K8S_PATH + 'validate_playbook/cluster_validate_playbook.yml'
-    LOG_FILE = PROVISIONER_PATH + 'provisioner.log'
+    LOG_FILE = PROVISIONER_PATH + 'logs/provisioner.log'
