@@ -17,10 +17,10 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from setup import setup
-from setup import createFile
-from teardown import teardown
-from validate import validate
+from provisioner.components.ansible.setup import setup
+from provisioner.components.ansible.setup import createFile
+from provisioner.components.ansible.teardown import teardown
+from provisioner.components.ansible.validate import validate
 import os
 
 

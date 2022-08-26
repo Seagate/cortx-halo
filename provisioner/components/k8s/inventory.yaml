@@ -1,0 +1,10 @@
+---
+all:
+  hosts:
+  children:
+    master-node:
+      hosts:
+        ssc-vm-g2-rhev4-3414.colo.seagate.com:
+    worker-node:
+      hosts:
+        ssc-vm-g2-rhev4-3412.colo.seagate.com:

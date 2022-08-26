@@ -35,3 +35,14 @@ class SOFTWARE(Enum):
     NODECLI = 2
     K8S_CRI = 3
 
+class PATH(object):
+    HALO_BASE_PATH = '/opt/seagate/halo/install_depot/'
+    PROVISIONER_PATH = HALO_BASE_PATH + 'cortx-halo/provisioner/'
+    ANSIBLE_PATH = PROVISIONER_PATH + 'components/ansible/'
+    K8S_PATH = PROVISIONER_PATH + 'components/k8s/'
+    MONITOR_PATH = PROVISIONER_PATH + 'components/monitor/'
+    NODECLI_PATH = PROVISIONER_PATH + 'components/nodecli/'
+    ANSIBLE_INVENTORY_PATH = K8S_PATH + 'inventory.yaml'
+    CLUSTER_SETUP_PLAYBOOK_PATH =  K8S_PATH + 'setup_playbook/cluster_setup_playbook.yml'
+    CLUSTER_VALIDATE_PLAYBOOK_PATH = K8S_PATH + 'validate_playbook/cluster_validate_playbook.yml'
+    LOG_FILE = PROVISIONER_PATH + 'logs/provisioner.log'
