@@ -33,7 +33,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 from manager.inframon.comps import StorageComponents
 from manager.inframon.tools.tool import Tool
-from manager.inframon.config import InfraMonConfig
+#from manager.inframon.config import InfraMonConfig
 from manager.inframon.tools.const import Consts, AlertConsts, ResponseConsts, ErrorMessages
 from manager.inframon.utils import NoDirectCreator
 
@@ -132,14 +132,14 @@ class EnclosureAPI(Tool):
         except EnclosureAPIError as exp:
             raise EnclosureAPIError(ErrorMessages.ENC_RESP_ERROR) from exp
 
-    def acknowledge(self, comp_type, id):
+    def acknowledge(self, comp_type, alert_id):
         """Acknowledges an alert. An acknowledged alert can be filtered out for
            identifying any new alert being generated in the system.
         """
         if comp_type[Consts.SHOW] == AlertConsts.ALERTS:
             try:
                 uri, session_key = self._api_connection.get_session_key()
-                uri += Consts.URI_SET_ACK + str(id)
+                uri += Consts.URI_SET_ACK + str(alert_id)
                 headers = {Consts.SESSION_KEY: session_key, Consts.DATA_TYPE: Consts.JSON}
                 r = requests.get(uri, headers=headers, verify=False)
                 response = json.loads(r.content)
@@ -153,7 +153,6 @@ class EnclosureAPI(Tool):
     def describe(self, comp_type, **kwargs):
         """Generate verbose information for every component in the enclosure.
         """
-        pass
 
 
 class EnclosureAPIConnection(metaclass=NoDirectCreator):
@@ -192,13 +191,13 @@ class EnclosureAPIConnection(metaclass=NoDirectCreator):
         """Connects to enclosure by trying to different controllers.
            When succeeds, it stores controller information and session key.
         """
-        '''
+        """
         Enable this code later.
         conf_manager = InfraMonConfig.instance()
         user = conf_manager.get_config(EnclosureAPIConsts.USER)
         password = conf_manager.get_config(EnclosureAPIConsts.PASS)
         urls = conf_manager.get_config(EnclosureAPIConsts.URL)
-        '''
+        """
 
         user = Consts.USER
         password = Consts.PASS
@@ -267,7 +266,7 @@ class ResponseBuilderFactory:
 
     @staticmethod
     def build_class_map():
-        for name, an_entry in list(globals().items()):
+        for _, an_entry in list(globals().items()):
             if an_entry is not ResponseBuilder and isinstance(an_entry, type) and issubclass(an_entry, ResponseBuilder):
                 if hasattr(an_entry, ResponseBuilderFactory.key_attr):
                     ResponseBuilderFactory.class_map[getattr(an_entry, ResponseBuilderFactory.key_attr)] = an_entry
@@ -290,20 +289,20 @@ class AlertResponseBuilder(ResponseBuilder):
     comp_type = StorageComponents.ALERT[Consts.NAME]
 
     @staticmethod
-    def resolved_filter(timestamp, id, record):
+    def resolved_filter(timestamp, alert_id, record):
         """ There is no definite way to track the already read resolved alerts.
             Only timestamp can be used.
         """
         if record[AlertConsts.RESOLVED_TIME_NUM] < timestamp:
             return False
         # There may be duplicate alerts sent to comm channel if multiple alerts are resolved at same time.
-        elif record[AlertConsts.RESOLVED_TIME_NUM] == timestamp and record[AlertConsts.ID] == id:
+        elif record[AlertConsts.RESOLVED_TIME_NUM] == timestamp and record[AlertConsts.ID] == alert_id:
             return False
 
         return True
 
     @staticmethod
-    def unresolved_filter(timestamp, id, record):
+    def unresolved_filter(timestamp, alert_id, record):
         """Any unresolved alert, when read by EnclosureAPI tool.
            So, every unresolved alert which is not acknowledged is a new
            alert generated in the system.
@@ -312,7 +311,7 @@ class AlertResponseBuilder(ResponseBuilder):
             return False
         if record[AlertConsts.DETECTED_TIME_NUM] < timestamp:
             return False
-        elif record[AlertConsts.DETECTED_TIME_NUM] == timestamp and record[AlertConsts.ID] <= id:
+        elif record[AlertConsts.DETECTED_TIME_NUM] == timestamp and record[AlertConsts.ID] <= alert_id:
             return False
 
         return True
