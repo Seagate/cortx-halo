@@ -17,22 +17,24 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-import os
+import ansible_runner
+from provisioner.const import PATH
 
 
-def validate():
+class Runner:
+
+    @staticmethod
+    def run (playbook, ini):
+        rc = ansible_runner.run(playbook = playbook, inventory = ini)
+        return rc
+
+
+def setup():
     try:
-        if os.system("kubelet --version | grep 1.24.4") != 0:
-            return False
-        return True
+        return(Runner.run(PATH.CLUSTER_SETUP_PLAYBOOK_PATH, PATH.ANSIBLE_INVENTORY_PATH))
     except Exception as e:
-        print(f'{e}')
-
-
-def main():
-    validate()
+        print(f'{e}') #TODO: Replace print with log
 
 
 if __name__ == "__main__":
-    main()
-    
+    setup()

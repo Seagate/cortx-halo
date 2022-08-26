@@ -1,0 +1,7 @@
+---
+# tasks file for validate_cluster
+  - name: Validate Cluster
+    shell: "kubectl get nodes"
+    register: cluster_output
+
+  - debug: var=cluster_output.stdout

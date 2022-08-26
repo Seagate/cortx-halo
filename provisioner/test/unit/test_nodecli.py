@@ -17,22 +17,26 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+from provisioner.components.nodecli.setup import setup
+from provisioner.components.nodecli.setup import createFile
+from provisioner.components.nodecli.teardown import teardown
+from provisioner.components.nodecli.validate import validate
 import os
 
 
-def validate():
-    try:
-        if os.system("kubelet --version | grep 1.24.4") != 0:
-            return False
-        return True
-    except Exception as e:
-        print(f'{e}')
+def test_folderCreation():
+    createFile()
+    x = os.system("ls /opt/halo/install_depot/nodecli")
+    assert x==0, "File not created"
 
 
-def main():
-    validate()
+def test_setup():
+    setup()
+    x = validate()
+    assert x!=0, "Software not installed"
 
 
-if __name__ == "__main__":
-    main()
+def test_teardown():
+    x = teardown()
+    assert x!=0, "Teardown Failed"
     

@@ -1,0 +1,14 @@
+---
+# tasks file for worker_setup
+
+  - name: copy the join command file
+    copy:
+      src: "../files/join_command.sh/{{ groups['master-node'][0] }}/join_command.sh"
+      dest: /root/join_command1.sh
+      mode: "u+rwx"
+    register: join_command_copied
+
+  - name: running kubeadm join command
+    shell: "/root/join_command1.sh"
+    when: join_command_copied.changed 
+
