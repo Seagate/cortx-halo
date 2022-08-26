@@ -81,7 +81,7 @@ class SiteConfig:
 
 
 if __name__ == "__main__":
-    cfg = ResourcesConfig(FileType.INI, './config/haloprov.yaml')
+    cfg = ResourcesConfig(FileType.YAML, './config/haloprov.yaml')
     print(cfg.get_resources())
 
 

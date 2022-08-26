@@ -17,25 +17,26 @@
 
 InfraMonitor:
     resource_type: SOFTWARE
-    resource_id: halo_infra_monitor
-    config_cmd: /opt/install_depot/infra_monitor/infra_monitor_config
-    unconfig_cmd: /opt/install_depot/infra_monitor/infra_monitor_unconfig
-    validate_cmd: /opt/install_depot/infra_monitor/infra_monitor_validate
-LsiHBA:
+    resource_id: monitor
+    config_cmd: /opt/seagate/halo/install_depot/monitor/config.py
+    unconfig_cmd: /opt/seagate/halo/install_depot/monitor/unconfig.py
+    validate_cmd: /opt/seagate/halo/install_depot/monitor/validate.py
+HBA:
     resource_type: SERVER_HBA
-    resource_id: lsihba
-    config_cmd: /opt/install_depot/lsihba/server_hba_config
-    unconfig_cmd: /opt/install_depot/lsihba/server_hba_unconfig
-    validate_cmd: /opt/install_depot/lsihba/server_hba_validate
-MellanoxNIC:
+    resource_id: hba
+    config_cmd: /opt/seagate/halo/install_depot/hba/config.py
+    unconfig_cmd: /opt/seagate/halo/install_depot/hba/unconfig.py
+    validate_cmd: /opt/seagate/halo/install_depot/hba/validate.py
+Network:
     resource_type: SERVER_NIC
-    resource_id: mellanoxnic
-    config_cmd: /opt/install_depot/mellanoxnic/server_nic_config
-    unconfig_cmd: /opt/install_depot/mellanoxnic/server_nic_unconfig
-    validate_cmd: /opt/install_depot/mellanoxnic/server_nic_validate
+    resource_id: network
+    config_cmd: /opt/seagate/halo/install_depot/network/config.py
+    unconfig_cmd: /opt/seagate/halo/install_depot/network/unconfig.py
+    validate_cmd: /opt/seagate/halo/install_depot/network/validate.py
 Kubernetes:
     resource_type: CLUSTER
-    resource_id: kubernetes
-    config_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/cluster_setup.py
-    unconfig_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/cluster_destroy.py
-    validate_cmd: /opt/halo/install_depot/cortx-halo/provisioner/components/k8s/cluster_validate.py
+    resource_id: k8s
+    config_cmd: /opt/seagate/halo/install_depot/k8s/config.py
+    unconfig_cmd: /opt/seagate/halo/install_depot/k8s/unconfig.py
+    validate_cmd: /opt/seagate/halo/install_depot/k8s/validate.py
+
