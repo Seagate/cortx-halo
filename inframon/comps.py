@@ -61,4 +61,3 @@ class StorageComponents:
 
 class ServerComponents:
     """ Components for Server Machine """
-    pass
