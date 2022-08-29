@@ -58,7 +58,7 @@ class AlertStore(DocumentDataStore):
             **kwargs: queryparams (json/bson): JSON / BSON string.
 
         Returns:
-            list: List of records.
+            tuple: (List of records, Total count of documents)
         """
         return self._dsb.get_data(self._data_store_name, **kwargs)
 
@@ -104,7 +104,7 @@ class UserMgmtStore(DocumentDataStore):
             **kwargs: queryparams (json/bson): JSON / BSON string.
 
         Returns:
-            list: List of records.
+            tuple: (List of records, Total count of documents)
         """
         return self._dsb.get_data(self._data_store_name, **kwargs)
 
