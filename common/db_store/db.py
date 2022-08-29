@@ -90,26 +90,67 @@ class MongoDB(DB):
 
         Args:
             data_store_name (str): Name of data store.
-            **kwargs: queryparams (json/bson): JSON / BSON string.
+
+        Keyword Args:
+            **kwargs: Arbitrary keyword arguments.
+            queryparams (dict): dict following pymongo convention.
+            sort_query (List of tuples): (field_to_sort, sort_direction)
+                direction can be ASC/ASCENDING or DESC/DESCENDING.
+            count(bool): True / False. To get the total count of documents
+                irrespective of limit & skip field.
+            skip (int): To skip the first x records of the returned results.
+            limit (int): Limit for no. of documents returned by query.
+                Ex. To get the docs from 11 to 20 set skip=10 & limit=20.
 
         Raises:
             DBError: Unable to fetch data.
 
         Returns:
-            list: List of records.
+            tuple: (List of records, Total count of documents)
         """
         result_list = []
-        query_params = kwargs.get('queryparams')
+        total_count = None
+        query_filter = kwargs.get('queryparams')
+        sort_query = kwargs.get('sort_query')
+        limit = kwargs.get('limit') if kwargs.get('limit') else 0
+        skip = kwargs.get('skip') if kwargs.get('skip') else 0
+        count = kwargs.get('count')
 
         try:
-            results = self._db[data_store_name].find(query_params)
+            if sort_query is not None:
+                sort_fields = []
+                for sort_field, sort_dir in sort_query:
+                    if sort_dir.upper() in ('ASC', 'ASCENDING'):
+                        sort_fields.append((sort_field, pymongo.ASCENDING))
+                    elif sort_dir.upper() in ('DESC', 'DESCENDING'):
+                        sort_fields.append((sort_field, pymongo.DESCENDING))
+                    else:
+                        raise ValueError("Invalid direction for sort.\
+                            Use 'ASC'/'ASCENDING' or 'DESC'/'DESCENDING'.")
+            else:
+                sort_fields = None
+
+            # As per pymongo convention pass empty dict as filter
+            # if query_filter is None.
+            if query_filter is None:
+                query_filter = {}
+
+            results = self._db[data_store_name].find(
+                filter=query_filter,
+                sort=sort_fields,
+                skip=skip, limit=limit)
+
+            if count:
+                total_count = self._db[data_store_name].count_documents(
+                    query_filter)
+
             for result in results:
                 result_list.append(result)
         except Exception as e:
             # Log.error(f"Unable to fetch data from data store. Error {e}")
             raise DBError(f"Unable to fetch data from data store. Error {e}")
 
-        return result_list
+        return result_list, total_count
 
     def save_data(self, data_store_name: str, data, **kwargs):
         """Save data to the data store.

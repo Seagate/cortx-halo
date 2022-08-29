@@ -17,12 +17,20 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-# Note - Will be replaced when rest framework is in place.
+from manager.backend.rest_server.controllers.view import MgmtView
 
+class MgmtRoutes():
+    """
+    Common class for adding routes
+    """
 
-class MgmtInvalidTokenError(Exception):
-    """Invalid Token Exception."""
+    @staticmethod
+    def add_routes(app):
+        """
+        Add routes to Web application
+        """
+        app.add_routes(MgmtView._app_routes)
 
-
-class MgmtExpiredTokenError(Exception):
-    """Token timeout Exception."""
+    @staticmethod
+    def add_websocket_routes(router, ws_handler):
+        router.add_get("/ws", ws_handler)

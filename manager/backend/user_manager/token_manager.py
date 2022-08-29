@@ -22,9 +22,10 @@ import uuid
 from functools import wraps
 from datetime import datetime, timedelta
 from enum import Enum
+from manager.backend import const
 from manager.backend.user_manager.session import Session
-from manager.backend.user_manager.error import (MgmtExpiredTokenError,
-                                                MgmtInvalidTokenError)
+from manager.backend.errors import (MgmtExpiredTokenError,
+                                    MgmtInvalidTokenError)
 
 
 class JWTConst(Enum):
@@ -32,7 +33,7 @@ class JWTConst(Enum):
     ALGORITHM = 'HS256'
     EXP_DELTA_SECONDS = 90
     EXP_DELTA_DAYS = 1
-    AUTH_KEY = 'Authorization'
+    AUTH_KEY = const.AUTH_HEADER
 
 
 class MgmtTokenManager:
