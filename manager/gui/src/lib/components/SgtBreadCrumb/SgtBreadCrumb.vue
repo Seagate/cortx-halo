@@ -89,6 +89,8 @@ export default class SgtBreadCrumb extends Vue {
 
   .path {
     cursor: pointer;
+    font-weight: bold;
+    color: #B7B7B7;
     &:last-child {
       color: $primary;
       font-weight: bold;
