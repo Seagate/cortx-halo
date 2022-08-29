@@ -19,6 +19,7 @@
 
 import os
 
+
 def teardown():
     try:
         if os.system("yum remove -y nodecli") != 0:

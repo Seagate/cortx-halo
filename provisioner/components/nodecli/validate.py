@@ -19,13 +19,15 @@
 
 import os
 
+
 def validate():
     try:
         if os.system("nodecli --version | grep 0.0.0") != 0:
             return False
         return True
     except Exception as e:
-        print(f'{e}')
+        print(f'{e}') #TODO: Replace print with log
+        return False
 
 
 def main():
