@@ -52,7 +52,7 @@ class StorageComponents:
     """
 
     @staticmethod
-    def get_components_for_init():
+    def get_components_for_init() -> list:
         return [StorageComponents.ENCLOSURE, StorageComponents.CONTROLLER, StorageComponents.DISK,
                 StorageComponents.DISK_GROUP, StorageComponents.FAN_MODULE, StorageComponents.FAN,
                 StorageComponents.PORT, StorageComponents.NETWORK, StorageComponents.PSU,

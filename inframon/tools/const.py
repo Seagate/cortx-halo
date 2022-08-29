@@ -29,7 +29,7 @@ class Consts:
     URL = 'url'
     # Below two can be removed once ConfManager is available
     USER = 'manage'
-    PASS = 'Testit123'
+    PASS = 'Testit123!'
     SHOW = 'show'
     RESPONSE = 'response'
     NAME = 'name'

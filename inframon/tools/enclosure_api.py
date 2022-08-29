@@ -28,11 +28,13 @@ from abc import ABC, abstractmethod
 import hashlib
 import json
 import threading
+from typing import Any, List
+
 import requests
 from urllib3.exceptions import InsecureRequestWarning
 
 from inframon.comps import StorageComponents
-from inframon.tools.tool import Tool
+from inframon.tools.tool import Tool, ToolResponse
 #from inframon.config import InfraMonConfig
 from inframon.tools.const import Consts, AlertConsts, ResponseConsts, ErrorMessages
 from inframon.utils import NoDirectCreator
@@ -43,7 +45,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 class EnclosureAPI(Tool):
     """ Implements Tools abstract class and provide get_status and describe methods to component monitors. """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._api_connection = EnclosureAPIConnection.instance()
         self._location_map = {}
         self._sensor_type = {'_volt_': 'Voltage', '_temp_': 'Temperature', '_curr_': 'Current',
@@ -52,7 +54,7 @@ class EnclosureAPI(Tool):
         # TODO: Improve building location map. Should be created just one time in the system.
         self.__initialize_location_map__()
 
-    def __initialize_location_map__(self):
+    def __initialize_location_map__(self) -> None:
         """ Builds location map for every component by fetching information through /api/show endpoints.
             Since alerts do not have location information, the location map is built once when the object is
             created.
@@ -93,7 +95,7 @@ class EnclosureAPI(Tool):
                     else:
                         location[Consts.LOCATION_STR] = entry
 
-    def get_status_raw(self, comp_type, **kwargs):
+    def get_status_raw(self, comp_type, **kwargs) -> Any:
         """ Provides raw output of /api/show endpoints """
         try:
             uri, session_key = self._api_connection.get_session_key()
@@ -105,9 +107,9 @@ class EnclosureAPI(Tool):
 
             return response
         except EnclosureAPIError as exp:
-            raise EnclosureAPIError("Error in getting response from enclosure.") from exp
+            raise EnclosureAPIError(ErrorMessages.ENC_RESP_ERROR) from exp
 
-    def get_status(self, comp_type, **kwargs):
+    def get_status(self, comp_type, **kwargs) -> List[ToolResponse]:
         """ Gets the information from /api/show endpoints
             and converts the information to Json Response agreed with component monitor layer.
         """
@@ -117,22 +119,22 @@ class EnclosureAPI(Tool):
             result = ResponseBuilderFactory().get(comp_type[Consts.NAME]).build_response(response, **kwargs)
             to_delete = []
             for i, a_result in enumerate(result):
-                resource_id = a_result[ResponseConsts.RESOURCE][ResponseConsts.RESOURCE_ID]
+                resource_id = a_result.resource.resource_id
                 if resource_id in self._location_map:
-                    a_result[ResponseConsts.RESOURCE][ResponseConsts.LOCATION] = self._location_map[resource_id]
+                    a_result.resource.location = self._location_map[resource_id]
                 else:
                     # Remove these alerts for now. Add support later - supercap, system, snfs.
                     to_delete.append(i)
                     print(f"Error: Resource Id = {resource_id} not found.")
 
             for count, i in enumerate(to_delete):
-                del result[i-count]
+                result.pop(i-count)
 
             return result
         except EnclosureAPIError as exp:
             raise EnclosureAPIError(ErrorMessages.ENC_RESP_ERROR) from exp
 
-    def acknowledge(self, comp_type, alert_id):
+    def acknowledge(self, comp_type, alert_id) -> bool:
         """Acknowledges an alert. An acknowledged alert can be filtered out for
            identifying any new alert being generated in the system.
         """
@@ -145,6 +147,7 @@ class EnclosureAPI(Tool):
                 response = json.loads(r.content)
                 if response[AlertConsts.STATUS][0][AlertConsts.RESPONSE_TYPE_NUM] != 0: # 200 ?
                     raise AcknowledgeAlertError(f"{ErrorMessages.ALERT_ACK_ERROR} {id}")
+                return True
             except EnclosureAPIError as exp:
                 raise EnclosureAPIError(ErrorMessages.ENC_RESP_ERROR) from exp
         else:
@@ -161,10 +164,9 @@ class EnclosureAPIConnection(metaclass=NoDirectCreator):
     """
     __singleton_lock = threading.Lock()
     __singleton_instance = None
-    # TODO: make __init__ private
 
     @classmethod
-    def reset_instance(cls, session_key):
+    def reset_instance(cls, session_key) -> None:
         """Reset the connection, in case session key is expired
            and it needs to be generated again with same or other controller.
         """
@@ -183,11 +185,11 @@ class EnclosureAPIConnection(metaclass=NoDirectCreator):
 
         return cls.__singleton_instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._sessionKey = None
         self.__connect__()
 
-    def __connect__(self):
+    def __connect__(self) -> None:
         """Connects to enclosure by trying to different controllers.
            When succeeds, it stores controller information and session key.
 
@@ -224,7 +226,7 @@ class EnclosureAPIConnection(metaclass=NoDirectCreator):
             else:
                 break
 
-    def get_session_key(self):
+    def get_session_key(self) -> tuple:
         """Return controller uri and session key."""
         if not self._sessionKey:
             raise EnclosureAPIConnectionError(ErrorMessages.SESSION_ERROR)
@@ -236,7 +238,7 @@ class EnclosureAPIConnection(metaclass=NoDirectCreator):
 class EndpointBuilder:
     """Builds uri for /api/show endpoints."""
     @staticmethod
-    def build(comp_type, **kwargs):
+    def build(comp_type, **kwargs) -> str:
         endpoint = Consts.URI_SHOW + comp_type[Consts.SHOW]
         if Consts.ID in kwargs:
             endpoint += Consts.FW_SLASH + kwargs[Consts.ID]
@@ -252,7 +254,7 @@ class ResponseBuilder(ABC):
        response format understood by the upper modules.
     """
     @abstractmethod
-    def build_response(self, response, **kwargs):
+    def build_response(self, response, **kwargs) -> List[ToolResponse]:
         pass
 
 
@@ -264,14 +266,14 @@ class ResponseBuilderFactory:
     key_attr = 'comp_type'
 
     @staticmethod
-    def build_class_map():
+    def build_class_map() -> None:
         for _, an_entry in list(globals().items()):
             if an_entry is not ResponseBuilder and isinstance(an_entry, type) and issubclass(an_entry, ResponseBuilder):
                 if hasattr(an_entry, ResponseBuilderFactory.key_attr):
                     ResponseBuilderFactory.class_map[getattr(an_entry, ResponseBuilderFactory.key_attr)] = an_entry
 
     @staticmethod
-    def get(comp_type):
+    def get(comp_type) -> ResponseBuilder:
         if ResponseBuilderFactory.class_map is None:
             ResponseBuilderFactory.class_map = {}
             ResponseBuilderFactory.build_class_map()
@@ -288,7 +290,7 @@ class AlertResponseBuilder(ResponseBuilder):
     comp_type = StorageComponents.ALERT[Consts.NAME]
 
     @staticmethod
-    def resolved_filter(timestamp, alert_id, record):
+    def resolved_filter(timestamp, alert_id, record) -> bool:
         """ There is no definite way to track the already read resolved alerts.
             Only timestamp can be used.
         """
@@ -301,7 +303,7 @@ class AlertResponseBuilder(ResponseBuilder):
         return True
 
     @staticmethod
-    def unresolved_filter(timestamp, alert_id, record):
+    def unresolved_filter(timestamp, alert_id, record) -> bool:
         """Any unresolved alert, when read by EnclosureAPI tool.
            So, every unresolved alert which is not acknowledged is a new
            alert generated in the system.
@@ -315,7 +317,7 @@ class AlertResponseBuilder(ResponseBuilder):
 
         return True
 
-    def build_response(self, response, **kwargs):
+    def build_response(self, response, **kwargs) -> List[ToolResponse]:
         filter_func = None
         if Consts.STATUS in kwargs and Consts.CHECKPOINT in kwargs:
             # Assuming checkpoint will be passed for resolved and unresolved only.
@@ -326,24 +328,22 @@ class AlertResponseBuilder(ResponseBuilder):
         result = []
         for an_alert in response:
             if not filter_func or filter_func(kwargs[Consts.CHECKPOINT][Consts.TIMESTAMP], kwargs[Consts.CHECKPOINT][Consts.ID], an_alert):
-                element = {ResponseConsts.DATA: {}, ResponseConsts.RESOURCE: {}}
+                element = ToolResponse()
                 if an_alert[AlertConsts.RESOLVED_NUM] == 0:
-                    element[ResponseConsts.STATUS] = Consts.FAULT
-                    element[ResponseConsts.SEVERITY] = an_alert[AlertConsts.SEVERITY].upper()
-                    element[ResponseConsts.DATA][ResponseConsts.DETECTED_TIME] = an_alert[AlertConsts.DETECTED_TIME_NUM]
-                    element[ResponseConsts.DATA][ResponseConsts.HEALTH_REASON] = {}
-                    element[ResponseConsts.DATA][ResponseConsts.HEALTH_REASON][ResponseConsts.CODE] = an_alert[AlertConsts.REASON_NUM]
-                    element[ResponseConsts.DATA][ResponseConsts.HEALTH_REASON][ResponseConsts.MESSAGE] = an_alert[AlertConsts.REASON]
-                    element[ResponseConsts.DATA][ResponseConsts.HEALTH_RECOMMENDATION] = {}
-                    element[ResponseConsts.DATA][ResponseConsts.HEALTH_RECOMMENDATION][ResponseConsts.CODE] = an_alert[AlertConsts.RECOMMENDED_ACTION_NUM]
-                    element[ResponseConsts.DATA][ResponseConsts.HEALTH_RECOMMENDATION][ResponseConsts.MESSAGE] = an_alert[AlertConsts.RECOMMENDED_ACTION]
+                    element.status = Consts.FAULT
+                    element.data.specific_data[ResponseConsts.SEVERITY] = an_alert[AlertConsts.SEVERITY].upper()
+                    element.data.detected_time = an_alert[AlertConsts.DETECTED_TIME_NUM]
+                    element.data.health_reason.code = an_alert[AlertConsts.REASON_NUM]
+                    element.data.health_reason.message = an_alert[AlertConsts.REASON]
+                    element.data.health_recommendation.code = an_alert[AlertConsts.RECOMMENDED_ACTION_NUM]
+                    element.data.health_recommendation.message = an_alert[AlertConsts.RECOMMENDED_ACTION]
                 else:
-                    element[ResponseConsts.STATUS] = Consts.FAULT_RESOLVED
-                    element[ResponseConsts.DATA][ResponseConsts.DETECTED_TIME] = an_alert[AlertConsts.RESOLVED_TIME_NUM]
+                    element.status = Consts.FAULT_RESOLVED
+                    element.data.detected_time = an_alert[AlertConsts.RESOLVED_TIME_NUM]
 
-                element[ResponseConsts.ID] = an_alert[AlertConsts.ID]
-                element[ResponseConsts.RESOURCE][ResponseConsts.RESOURCE_ID] = an_alert[AlertConsts.COMPONENT]
-                element[ResponseConsts.DATA][ResponseConsts.HEALTH_STATUS] = an_alert[AlertConsts.HEALTH].upper()
+                element.data.specific_data[ResponseConsts.ID] = an_alert[AlertConsts.ID]
+                element.resource.resource_id = an_alert[AlertConsts.COMPONENT]
+                element.data.health_status = an_alert[AlertConsts.HEALTH].upper()
 
                 result.append(element)
 

@@ -61,16 +61,16 @@ resolved_alerts_input = [
      'recommended-action-numeric': 70}]
 
 resolved_alerts_output = [
-    {'data': {'detected_time': 1628099892, 'health_status': 'OK'}, 'resource': {'resource_id': 'mgmtport_b'},
-     'status': 'fault-resolved', 'id': 1},
-    {'data': {'detected_time': 1661239044, 'health_status': 'OK'}, 'resource': {'resource_id': 'hostport_A0'},
-     'status': 'fault-resolved', 'id': 7},
-    {'data': {'detected_time': 1640882916, 'health_status': 'OK'}, 'resource': {'resource_id': 'controller_b'},
-     'status': 'fault-resolved', 'id': 8}]
+    {'data': {'detected_time': 1628099892, 'health_status': 'OK', 'specific_data': {'id': 1}},
+     'resource': {'resource_id': 'mgmtport_b'}, 'status': 'fault-resolved'},
+    {'data': {'detected_time': 1661239044, 'health_status': 'OK', 'specific_data': {'id': 7}},
+     'resource': {'resource_id': 'hostport_A0'}, 'status': 'fault-resolved'},
+    {'data': {'detected_time': 1640882916, 'health_status': 'OK', 'specific_data': {'id': 8}},
+     'resource': {'resource_id': 'controller_b'}, 'status': 'fault-resolved'}]
 
 resolved_alerts_output_cp = [
-    {'data': {'detected_time': 1661239044, 'health_status': 'OK'}, 'resource': {'resource_id': 'hostport_A0'},
-     'status': 'fault-resolved', 'id': 7}]
+    {'data': {'detected_time': 1661239044, 'health_status': 'OK', 'specific_data': {'id': 7}},
+     'resource': {'resource_id': 'hostport_A0'}, 'status': 'fault-resolved'}]
 
 unresolved_alerts_input = [
     {'object-name': 'alerts', 'meta': '/meta/alerts', 'id': 6, 'component': 'disk_00.10',
@@ -109,28 +109,28 @@ unresolved_alerts_output = [
     {'data': {'detected_time': 1655126705, 'health_reason': {'code': 169,
         'message': 'The disk has become leftover due to a timeout caused by disk degradation.'}, 'health_recommendation': {'code': 28,
         'message': "- If the associated disk group is offline or quarantined, contact technical support. Otherwise, clear the disk's metadata to reuse the disk."},
-        'health_status': 'DEGRADED'}, 'resource': {'resource_id': 'disk_00.10'}, 'status': 'fault', 'severity': 'WARNING', 'id': 6},
+        'health_status': 'DEGRADED', 'specific_data': {'id': 6, 'severity': 'WARNING'}}, 'resource': {'resource_id': 'disk_00.10'}, 'status': 'fault'},
     {'data': {'detected_time': 1613054527, 'health_reason': {'code': 11,
         'message': 'There is no active connection to this host port.'}, 'health_recommendation': {'code': 66,
         'message': '- If this host port is intentionally unused, no action is required.\n- Otherwise, use an appropriate interface cable to connect this host port to a switch or host.\n- If a cable is connected, check the cable and the switch or host for problems.'},
-        'health_status': 'OK'}, 'resource': {'resource_id': 'hostport_A2'},
-        'status': 'fault', 'severity': 'INFORMATIONAL', 'id': 19},
+        'health_status': 'OK', 'specific_data': {'id': 19, 'severity': 'INFORMATIONAL'}}, 'resource': {'resource_id': 'hostport_A2'},
+        'status': 'fault'},
     {'data': {'detected_time': 1613054528, 'health_reason': {'code': 11,
         'message': 'There is no active connection to this host port.'}, 'health_recommendation': {'code': 66,
         'message': '- If this host port is intentionally unused, no action is required.\n- Otherwise, use an appropriate interface cable to connect this host port to a switch or host.\n- If a cable is connected, check the cable and the switch or host for problems.'},
-        'health_status': 'OK'}, 'resource': {'resource_id': 'hostport_A3'},
-        'status': 'fault', 'severity': 'INFORMATIONAL', 'id': 21}]
+        'health_status': 'OK', 'specific_data': {'id': 21, 'severity': 'INFORMATIONAL'}}, 'resource': {'resource_id': 'hostport_A3'},
+        'status': 'fault'}]
 
 unresolved_alerts_output_cp = [
     {'data': {'detected_time': 1655126705, 'health_reason': {'code': 169,
                                                              'message': 'The disk has become leftover due to a timeout caused by disk degradation.'}, 'health_recommendation': {'code': 28,
                                                                                                                                                                                 'message': "- If the associated disk group is offline or quarantined, contact technical support. Otherwise, clear the disk's metadata to reuse the disk."},
-              'health_status': 'DEGRADED'}, 'resource': {'resource_id': 'disk_00.10'}, 'status': 'fault', 'severity': 'WARNING', 'id': 6},
+              'health_status': 'DEGRADED', 'specific_data': {'id': 6, 'severity': 'WARNING'}}, 'resource': {'resource_id': 'disk_00.10'}, 'status': 'fault'},
     {'data': {'detected_time': 1613054528, 'health_reason': {'code': 11,
                                                              'message': 'There is no active connection to this host port.'}, 'health_recommendation': {'code': 66,
                                                                                                                                                        'message': '- If this host port is intentionally unused, no action is required.\n- Otherwise, use an appropriate interface cable to connect this host port to a switch or host.\n- If a cable is connected, check the cable and the switch or host for problems.'},
-              'health_status': 'OK'}, 'resource': {'resource_id': 'hostport_A3'},
-     'status': 'fault', 'severity': 'INFORMATIONAL', 'id': 21}]
+              'health_status': 'OK', 'specific_data': {'id': 21, 'severity': 'INFORMATIONAL'}}, 'resource': {'resource_id': 'hostport_A3'},
+     'status': 'fault'}]
 
 
 def test_alert_response_builder_object():
@@ -144,6 +144,7 @@ def test_alert_resolved():
 
     params = {'status': 'resolved'}
     result = ResponseBuilderFactory.get(StorageComponents.ALERT['name']).build_response(resolved_alerts_input, **params)
+    result = [a_result.to_dict() for a_result in result]
     assert result == resolved_alerts_output, "Error in building response for resolved alerts with no checkpoint"
 
 
@@ -152,6 +153,7 @@ def test_alert_resolved_checkpoint():
 
     params = {'status': 'resolved', 'checkpoint': {'timestamp': 1640882916, 'id': 8}}
     result = ResponseBuilderFactory.get(StorageComponents.ALERT['name']).build_response(resolved_alerts_input, **params)
+    result = [a_result.to_dict() for a_result in result]
     assert result == resolved_alerts_output_cp, "Error in building response for resolved alerts with checkpoint"
 
 
@@ -160,6 +162,7 @@ def test_alert_unresolved():
 
     params = {'status': 'unresolved'}
     result = ResponseBuilderFactory.get(StorageComponents.ALERT['name']).build_response(unresolved_alerts_input, **params)
+    result = [a_result.to_dict() for a_result in result]
     assert result == unresolved_alerts_output, "Error in building response for unresolved alerts with no checkpoint"
 
 
@@ -168,5 +171,6 @@ def test_alert_unresolved_checkpoint():
 
     params = {'status': 'unresolved', 'checkpoint': {'timestamp': 1613054527, 'id': 19}}
     result = ResponseBuilderFactory.get(StorageComponents.ALERT['name']).build_response(unresolved_alerts_input, **params)
+    result = [a_result.to_dict() for a_result in result]
     assert result == unresolved_alerts_output_cp, "Error in building response for unresolved alerts with checkpoint"
 
