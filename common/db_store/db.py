@@ -95,11 +95,12 @@ class MongoDB(DB):
             **kwargs: Arbitrary keyword arguments.
             queryparams (dict): dict following pymongo convention.
             sort_query (List of tuples): (field_to_sort, sort_direction)
-                direction can be ASC/ASCENDING or DSC/DESCENDING.
-            limit (int): Limit for no. of documents returned by query.
-            skip (int): To skip the first x records of the returned results.
+                direction can be ASC/ASCENDING or DESC/DESCENDING.
             count(bool): True / False. To get the total count of documents
                 irrespective of limit & skip field.
+            skip (int): To skip the first x records of the returned results.
+            limit (int): Limit for no. of documents returned by query.
+                Ex. To get the docs from 11 to 20 set skip=10 & limit=20.
 
         Raises:
             DBError: Unable to fetch data.
@@ -121,11 +122,11 @@ class MongoDB(DB):
                 for sort_field, sort_dir in sort_query:
                     if sort_dir.upper() in ('ASC', 'ASCENDING'):
                         sort_fields.append((sort_field, pymongo.ASCENDING))
-                    elif sort_dir.upper() in ('DSC', 'DESCENDING'):
+                    elif sort_dir.upper() in ('DESC', 'DESCENDING'):
                         sort_fields.append((sort_field, pymongo.DESCENDING))
                     else:
                         raise ValueError("Invalid direction for sort.\
-                            Use 'ASC'/'ASCENDING' or 'DSC'/'DESCENDING'.")
+                            Use 'ASC'/'ASCENDING' or 'DESC'/'DESCENDING'.")
             else:
                 sort_fields = None
 
