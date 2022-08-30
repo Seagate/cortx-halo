@@ -17,23 +17,25 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+import pytest
+from provisioner.components.imagerepo.setup_image_depot import loadImages
+from provisioner.components.imagerepo.setup_image_depot import createDir
+from provisioner.const import PATH, VARIABLE
 import os
 
 
-def validate():
-    try:
-        if os.system("nodecli --version | grep 0.0.0") != 0:
-            return False
-        return True
-    except Exception as e:
-        print(f'{e}') #TODO: Replace print with log
-        return False
+def test_folderCreation():
+    createDir()
+    rc1 = os.system("ls %s" %(PATH.IMAGE_TAR_FILE_PATH))
+    assert rc1==0, "%s directory not created" %(PATH.IMAGE_TAR_FILE_PATH)
 
 
-def main():
-    validate()
+def check_images():
+    loadImages()
+    for img in VARIABLE.IMAGES:
+        yield img
 
 
-if __name__ == "__main__":
-    main()
-    
+@pytest.mark.parametrize('img', check_images())
+def test_images(img):
+    assert os.system("docker images | grep %s" %(img))== 0, "%s is missing" %(img)
