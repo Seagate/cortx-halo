@@ -107,7 +107,7 @@ class ResponseConsts:
 
 class ErrorMessages:
     ENC_RESP_ERROR = 'Error in getting response from enclosure.'
-    ALERT_ACK_ERROR = 'Cannot acknowledge alert with id ='
+    ALERT_ACK_ERROR = 'Cannot acknowledge alert with id = {alert_id}'
     CONT_CON_ERROR = 'Could not connect to controllers.'
     SESSION_ERROR = 'Session key not found.'
-    RESP_BUILD_ERROR = 'No response builder found for type ='
+    RESP_BUILD_ERROR = 'No response builder found for type = {comp_type}'

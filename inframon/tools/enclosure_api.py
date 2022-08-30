@@ -145,8 +145,8 @@ class EnclosureAPI(Tool):
                 headers = {Consts.SESSION_KEY: session_key, Consts.DATA_TYPE: Consts.JSON}
                 r = requests.get(uri, headers=headers, verify=False)
                 response = json.loads(r.content)
-                if response[AlertConsts.STATUS][0][AlertConsts.RESPONSE_TYPE_NUM] != 0: # 200 ?
-                    raise AcknowledgeAlertError(f"{ErrorMessages.ALERT_ACK_ERROR} {id}")
+                if response[AlertConsts.STATUS][0][AlertConsts.RESPONSE_TYPE_NUM] != 0:
+                    raise AcknowledgeAlertError(ErrorMessages.ALERT_ACK_ERROR.format(alert_id = alert_id))
                 return True
             except EnclosureAPIError as exp:
                 raise EnclosureAPIError(ErrorMessages.ENC_RESP_ERROR) from exp
@@ -281,7 +281,7 @@ class ResponseBuilderFactory:
         if comp_type in ResponseBuilderFactory.class_map:
             return ResponseBuilderFactory.class_map[comp_type]()
 
-        raise ResponseBuilderError(f"{ErrorMessages.RESP_BUILD_ERROR} {comp_type}.")
+        raise ResponseBuilderError(ErrorMessages.RESP_BUILD_ERROR.format(comp_type = comp_type))
 
 
 class AlertResponseBuilder(ResponseBuilder):
