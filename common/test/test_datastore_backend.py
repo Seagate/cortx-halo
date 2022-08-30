@@ -70,14 +70,14 @@ def test_save_data(setup_db):
               "comp": "disk", "measures": {'cpu': '23', 'memory': '235'}}
     result = db.save_data("test_coll", data=record)
     assert result is not None, "Failed to save Data."
-    get_list_of_records = db.get_data("test_coll")
+    get_list_of_records, _ = db.get_data("test_coll")
     assert any(r['measures'] == record['measures']
                for r in get_list_of_records)
 
 
 def test_get_data(setup_db):
     """Test by listing data."""
-    get_list_of_records = db.get_data("test_coll")
+    get_list_of_records, _ = db.get_data("test_coll")
     assert get_list_of_records is not None, "Failed to fetch Data."
 
 
