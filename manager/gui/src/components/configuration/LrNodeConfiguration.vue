@@ -265,6 +265,16 @@ export default class LrNodeConfiguration extends Vue {
     }));
     this.selectedNode = this.nodeOptions[0].value;
     await this.setNetworkInfoAllNodes();
+    
+    const stickyElm = this.$el.querySelector('.node-selection-section')
+
+    const observer = new IntersectionObserver(([e]) => console.log("Hii"), {
+      rootMargin: '-10px 0px 0px 0px',
+      threshold: [1],
+    });
+
+
+    observer.observe(stickyElm)
   }
 
   async setNetworkInfoAllNodes(isReset = false) {
@@ -332,10 +342,15 @@ export default class LrNodeConfiguration extends Vue {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .node-configuration-container {
   .node-selection-section {
     padding: 3rem 3.5rem 1rem;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
   }
 }
 </style>
