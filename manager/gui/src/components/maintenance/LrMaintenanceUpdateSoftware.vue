@@ -16,7 +16,7 @@
 -->
 <template>
   <div class="maintenance-update-software-page">
-    <div class="top-section">
+    <div class="top-section pb-4">
       <div class="page-title">
         Update Software
         <SgtTooltipIcon
@@ -29,13 +29,17 @@
       </div>
     </div>
 
-    <div class="current-release-card">
-      <SgtInfoCard
-        imgUrl="current-software.svg"
-        title="Current Release"
-        description="LR 2.5"
-      />
-    </div>
+    <v-row>
+      <v-col cols="4">
+        <div class="current-release-card">
+          <SgtInfoCard
+          imgUrl="current-software.svg"
+          title="Current Release"
+          description="LR 2.5"
+          />
+        </div>
+      </v-col>
+    </v-row>
 
     <div class="available-releases-section">
       <SgtDataTable
@@ -79,6 +83,15 @@
               </div>
             </div>
           </div>
+        </template>
+        <template v-slot:progressColumn="{ data }">
+          <template>
+            <v-progress-linear class="prog-width" :value="data.progress" height="15">
+              <template v-slot="{ value }">
+                <strong>{{ Math.ceil(value) }}%</strong>
+              </template>
+            </v-progress-linear>
+          </template>
         </template>
       </SgtDataTable>
     </div>
