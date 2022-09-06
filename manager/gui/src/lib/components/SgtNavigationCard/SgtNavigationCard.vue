@@ -16,7 +16,7 @@
 * please email opensource@seagate.com.
 -->
 <template>
-  <v-row class="pa-8 nav-card-container">
+  <v-row class="pa-4 nav-card-container">
     <v-col
       v-for="card in cardList"
       :key="card.name"
@@ -26,10 +26,9 @@
       sm="6"
     >
       <v-card
-        class="pa-4 ma-2 sgt-card"
+        class="pa-4 sgt-card"
         tile
         :color="backgroundColor"
-        height="22rem"
         width="18rem"
         @click="$emit('click', card.name)"
       >
@@ -37,9 +36,7 @@
           <div class="icon-box">
             <img
               :src="require(`@/assets/icons/${card.icon}`)"
-              class="pa-3"
-              width="96"
-              height="96"
+              class="pa-3 icon-size"
             />
           </div>
         </div>
@@ -71,18 +68,22 @@ export default class SgtNavigationCard extends Vue {
   .sgt-card {
     border: 1px solid $primary !important;
     box-shadow: 1px 2px $primary !important;
+    min-height: 100%;
     &:hover {
       box-shadow: 2px 4px $primary !important;
       background-color: #f8fff8 !important;
     }
     .icon-container {
-      height: 50%;
       .icon-box {
-        height: 6rem;
-        width: 6rem;
+        height: 4rem;
+        width: 4rem;
         border: 1px solid $primary;
         border-radius: 5px;
         text-align: center;
+
+        .icon-size{
+          height: 4rem;
+        }
       }
     }
     .card-title {
