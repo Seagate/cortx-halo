@@ -20,19 +20,19 @@ export const lrMaintenanceCardsConst = {
     {
       name: "cluster_maintenance",
       title: "Cluster Maintenance",
-      description: "Lorem ipsum, or lipsum as it is sometimes known.",
+      description: "Start/Stop server, storage and services.",
       icon: "cluster-green.svg",
     },
     {
       name: "update_software",
       title: "Update Software",
-      description: "Lorem ipsum, or lipsum as it is sometimes known.",
+      description: "Upgrade OS, firmware and services.",
       icon: "update.svg",
     },
     {
       name: "support_bundle",
       title: "Support Bundle",
-      description: "Lorem ipsum, or lipsum as it is some known.",
+      description: "Generate and collect support information.",
       icon: "support-bundle.svg",
     },
   ],
@@ -142,8 +142,10 @@ export const lrMaintenanceSoftwareUpdateStatusConst = {
         value: "status",
       },
       {
-        text: "Progress (%)",
-        value: "progress",
+        text: "Progress",
+        value: "progressColumn",
+        type: "custom",
+        sortable: true,
       },
       {
         text: " ",
