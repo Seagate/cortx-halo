@@ -23,15 +23,14 @@
             {{ title }}
           </p>
         </v-col>
-        <v-col class="pl-0 margin-auto">
+        <v-col class="pl-0 margin-auto d-flex">
           <SgtAdvanceSearch
             v-if="searchConfig"
             ref="advanceSearch"
             :config="searchConfig"
             @filter-click="updateFilter($event)"
           />
-        </v-col>
-        <v-col cols="4" class="pr-0 margin-auto">
+
           <div v-if="isMultiSelect && selected.length > 0" class="multi-btn">
             <v-btn
               v-for="button in multiSelectButtons"
@@ -53,9 +52,32 @@
               @click="$emit(headerButton.name, selected)"
               >{{ headerButton.label }}</v-btn
             >
+
           </div>
         </v-col>
-      </v-row>
+        <v-col cols="3" class="pagination-wrap d-flex align-center justify-end" v-if="isPagination">
+
+          <div class="pt-1 pag-dropdown">
+            <SgtDropdown
+            :dropdownOptions="paginationConfig.pageSizeList"
+            v-model="tableDataConfig.pagination.pageSize"
+            @change="updatePageSize"
+            height="10px"
+            />
+          </div>
+          <div class="text-right pa-0 pl-4 flex-grow-0">
+            <v-pagination
+            v-model="page"
+            :length="paginationConfig.pageLength"
+            :total-visible="paginationConfig.totalVisible"
+            :color="paginationConfig.color"
+            :next-icon="paginationConfig.nextIcon"
+            :prev-icon="paginationConfig.prevIcon"
+            @input="handlePageInput"
+            ></v-pagination>
+          </div>
+        </v-col>
+        </v-row>
     </div>
     <SgtChips
       v-if="chips && chips.length > 0"
@@ -226,32 +248,7 @@
       </template>
 
       <template v-slot:footer="{}" v-if="records.length > 0">
-        <v-row
-          justify="end"
-          align="center"
-          class="footer-wrapper"
-          v-if="isPagination"
-        >
-          <v-col class="text-right pa-0 pr-4 flex-grow-0">
-            <v-pagination
-              v-model="page"
-              :length="paginationConfig.pageLength"
-              :total-visible="paginationConfig.totalVisible"
-              :color="paginationConfig.color"
-              :next-icon="paginationConfig.nextIcon"
-              :prev-icon="paginationConfig.prevIcon"
-              @input="handlePageInput"
-            ></v-pagination>
-          </v-col>
-          <div class="pt-1 pag-dropdown">
-            <SgtDropdown
-              :dropdownOptions="paginationConfig.pageSizeList"
-              v-model="tableDataConfig.pagination.pageSize"
-              @change="updatePageSize"
-              height="10px"
-            />
-          </div>
-        </v-row>
+
       </template>
     </v-data-table>
   </div>
@@ -432,8 +429,46 @@ export default class SgtDataTable extends Vue {
 .sgt-data-table {
   .search-container {
     min-height: 4rem;
+    
     .search-row {
       width: 100%;
+
+      .pagination-wrap {
+        .v-pagination {
+          border: 1px solid #eceeef;
+          .v-pagination__navigation,
+          .v-pagination__item,
+          .v-pagination__item--active {
+            margin: 0;
+            box-shadow: none !important;
+            color: #000 !important;
+            font-weight: bold !important;
+
+            li {
+              border: 1px solid #eceeef;
+            }
+
+            .v-icon {
+              transform: scale(0.65) !important;
+              color: $primary !important;
+              &::before,
+              &::after {
+                font-weight: bold;
+              }
+            }
+          }
+
+          .v-pagination__item--active {
+            color: #fff !important;
+          }
+
+          .v-pagination__navigation--disabled {
+            .v-icon {
+              color: #000 !important;
+            }
+          }
+        }
+      }
     }
 
     .table-title {
@@ -453,7 +488,7 @@ export default class SgtDataTable extends Vue {
   }
   .multi-btn {
     display: flex;
-    justify-content: flex-end;
+    
   }
   .action-button {
     text-align: right;
@@ -566,44 +601,7 @@ export default class SgtDataTable extends Vue {
         background-color: #fafafa !important;
       }
     }
-
-    .footer-wrapper {
-      margin: 20px 0;
-      .v-pagination {
-        border: 1px solid #eceeef;
-        .v-pagination__navigation,
-        .v-pagination__item,
-        .v-pagination__item--active {
-          margin: 0;
-          box-shadow: none !important;
-          color: #000 !important;
-          font-weight: bold !important;
-
-          li {
-            border: 1px solid #eceeef;
-          }
-
-          .v-icon {
-            transform: scale(0.65) !important;
-            color: $primary !important;
-            &::before,
-            &::after {
-              font-weight: bold;
-            }
-          }
-        }
-
-        .v-pagination__item--active {
-          color: #fff !important;
-        }
-
-        .v-pagination__navigation--disabled {
-          .v-icon {
-            color: #000 !important;
-          }
-        }
-      }
-    }
   }
+  
 }
 </style>
