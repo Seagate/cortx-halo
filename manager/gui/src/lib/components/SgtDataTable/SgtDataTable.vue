@@ -18,12 +18,11 @@
   <div class="sgt-data-table">
     <div class="search-container">
       <v-row class="search-row ma-0">
-        <v-col class="pl-0 margin-auto" v-if="title && !searchConfig">
-          <p class="table-title">
+        <v-col class="pl-0 margin-auto d-flex align-center">
+          <p class="table-title" v-if="title && !searchConfig">
             {{ title }}
           </p>
-        </v-col>
-        <v-col class="pl-0 margin-auto d-flex">
+          
           <SgtAdvanceSearch
             v-if="searchConfig"
             ref="advanceSearch"
@@ -473,7 +472,7 @@ export default class SgtDataTable extends Vue {
 
     .table-title {
       font-weight: bold;
-      margin: 15px 0 0;
+      margin: 0px 0 0;
     }
   }
   .header-checkbox {

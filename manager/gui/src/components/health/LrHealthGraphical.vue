@@ -16,23 +16,27 @@
 -->
 <template>
   <div class="graphical-view-container">
-    <div class="export-feature" v-if="showExport">
-      <SgtAdvanceSearch
+    <div class="export-feature">
+      <template v-if="showAdvanceSearch">
+        <SgtAdvanceSearch
         ref="advanceSearch"
         :config="healthSearchConst"
-      />
-      <SgtDropdown
-        placeholder="Export As"
-        :dropdownOptions="exportOptions"
-        v-model="selectedExport"
-      />
-      <v-btn
-          color="csmprimary"
+        />
+      </template>
+      <template v-if="showExport">
+        <SgtDropdown
+          placeholder="Export As"
+          :dropdownOptions="exportOptions"
+          v-model="selectedExport"
+        />
+        <v-btn
+        color="csmprimary"
           class="white--text export-btn"
           @click="handleExport"
           :disabled="!selectedExport"
           >Export</v-btn
-        >
+          >
+      </template>
     </div>
     
     <div id="health_tree_container" :style="healthTreeContainerDim"></div>
@@ -95,6 +99,10 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   }
 
   get showExport() {
+    return this.$route.path === "/health";
+  }
+  
+  get showAdvanceSearch(){
     return this.$route.path === "/health";
   }
 

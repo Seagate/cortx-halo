@@ -164,7 +164,7 @@ export default class LrDashboardAlertCard extends Vue {
 }
 .alert-cards-container {
   margin: 0 auto;
-  width: 204px;
+  width: 12.75em;
   .card-details {
     font-size: 1.2rem;
     min-height: 3.3rem;

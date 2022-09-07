@@ -70,7 +70,7 @@ export default class LrHeader extends Vue {
   }
 
   .lr-brand-logo {
-    height: 30px;
+    height: 1.9em;
     margin-left: 1em;
   }
 }

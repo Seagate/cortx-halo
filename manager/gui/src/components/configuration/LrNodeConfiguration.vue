@@ -267,24 +267,23 @@ export default class LrNodeConfiguration extends Vue {
     this.selectedNode = this.nodeOptions[0].value;
     await this.setNetworkInfoAllNodes();
     //
-    const stickyElm = this.$el.querySelector('.node-selection-section')
-    const intele = this.$el.querySelector('.intersect-test')
+    const stickyElm: HTMLElement | null = this.$el.querySelector('.node-selection-section')
+    const intele: HTMLElement | null = this.$el.querySelector('.intersect-test')
 
-    const observer = new IntersectionObserver(
-      function (entries) {
-      if (entries[0].intersectionRatio === 0) {
-        stickyElm.classList.add("sticky-node-name");
-        //newEl.classList.add("sticky-observer");
-      } else if (entries[0].intersectionRatio === 1) {
-        stickyElm.classList.remove("sticky-node-name");
-        //newEl.classList.remove("sticky-observer");
-      }
-    },
-    { threshold: [0, 1] }
-    );
-
-
-    observer.observe(intele)
+    if (stickyElm != null && intele != null){
+      const observer = new IntersectionObserver(
+        function (entries) {
+          if (entries[0].intersectionRatio === 0) {
+            stickyElm.classList.add("sticky-node-name");
+          } else if (entries[0].intersectionRatio === 1) {
+            stickyElm.classList.remove("sticky-node-name");
+          }
+        },
+        { threshold: [0, 1] }
+        );
+        observer.observe(intele)
+    }
+    
   }
 
   async setNetworkInfoAllNodes(isReset = false) {
