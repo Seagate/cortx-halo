@@ -90,7 +90,6 @@ class MongoDB(DB):
 
         Args:
             data_store_name (str): Name of data store.
-            **kwargs: queryparams (json/bson): JSON / BSON string.
 
         Keyword Args:
             **kwargs: Arbitrary keyword arguments.
