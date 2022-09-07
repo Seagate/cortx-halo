@@ -22,7 +22,8 @@
 import yaml
 import collections
 from const import FileType, ResourceType
-from error import CustomError
+from provisioner.error import CustomError
+from collections import OrderedDict
 
 
 class ResourcesConfig:
@@ -30,6 +31,7 @@ class ResourcesConfig:
         try:
             with open(self.config_file, 'r') as f:
                 try:
+                    cfgdata = OrderedDict()
                     cfgdata = yaml.safe_load(f)
                     return cfgdata
                 except Exception as e:
@@ -81,7 +83,7 @@ class SiteConfig:
 
 
 if __name__ == "__main__":
-    cfg = ResourcesConfig(FileType.INI, './config/haloprov.yaml')
+    cfg = ResourcesConfig(FileType.YAML, './config/haloprov.yaml')
     print(cfg.get_resources())
 
 

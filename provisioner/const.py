@@ -23,6 +23,8 @@ class FileType(Enum):
     XLSX = 1
     CSV = 2
     INI = 3
+    YAML = 4
+    JSON = 5
 
 class ResourceType(Enum):
     SERVER_NIC = 1
@@ -35,3 +37,20 @@ class SOFTWARE(Enum):
     NODECLI = 2
     K8S_CRI = 3
 
+class PATH(object):
+    HALO_BASE_PATH = '/opt/seagate/halo/install_depot/'
+    IMAGE_TAR_FILE_PATH = HALO_BASE_PATH + 'images/'
+    PROVISIONER_PATH = HALO_BASE_PATH + 'cortx-halo/provisioner/'
+    ANSIBLE_PATH = PROVISIONER_PATH + 'components/ansible/'
+    K8S_PATH = PROVISIONER_PATH + 'components/k8s/'
+    MONITOR_PATH = PROVISIONER_PATH + 'components/monitor/'
+    NODECLI_PATH = PROVISIONER_PATH + 'components/nodecli/'
+    ANSIBLE_INVENTORY_PATH = K8S_PATH + 'inventory.yaml'
+    CLUSTER_SETUP_PLAYBOOK_PATH =  K8S_PATH + 'setup_playbook/cluster_setup_playbook.yml'
+    CLUSTER_VALIDATE_PLAYBOOK_PATH = K8S_PATH + 'validate_playbook/cluster_validate_playbook.yml'
+    LOG_FILE = PROVISIONER_PATH + 'logs/provisioner.log'
+
+class VARIABLE(object):
+    IMAGES = ['calico/kube-controllers', 'calico/cni', 'calico/node', 'k8s.gcr.io/kube-apiserver',
+        'k8s.gcr.io/kube-proxy', 'k8s.gcr.io/kube-controller-manager', 'k8s.gcr.io/kube-scheduler',
+        'k8s.gcr.io/etcd', 'k8s.gcr.io/coredns/coredns']
