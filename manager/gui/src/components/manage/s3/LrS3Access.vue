@@ -24,6 +24,7 @@
       :itemKey="s3AccountConst.s3AccessTable.itemKey"
       :isPagination="false"
       :headerButton="s3AccountConst.s3AccessTable.headerButton"
+      title="Access keys for user accesskeytest1"
       @generate="generateNewKey"
       @delete="deleteKey"
     >
@@ -59,6 +60,12 @@
                   >Save this information, you will not see it again. Download as
                   CSV and close.
                 </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <b>Username :</b>
+                </v-col>
+                <v-col>{{ newAccessKey.user_name }}</v-col>
               </v-row>
               <v-row>
                 <v-col cols="3">
