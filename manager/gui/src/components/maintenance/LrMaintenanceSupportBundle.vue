@@ -84,6 +84,8 @@
             :dropdownOptions="['CSM', 'S3']"
             v-model="selectedComponent"
             @download="downloadBundle(data)"
+            @sendToServer="sendToServerBundle(data)"
+            @sendToSeagate="sendToSeagateBundle(data)"
           />
         </div>
         <div class="form-element">
@@ -227,6 +229,12 @@ export default class LrMaintenanceSupportBundle extends Vue {
   }
 
   downloadBundle(data: any) {
+    //API call to receive the support bundle
+  }
+  sendToServerBundle(data: any) {
+    //API call to receive the support bundle
+  }
+  sendToSeagateBundle(data: any) {
     //API call to receive the support bundle
   }
 }
