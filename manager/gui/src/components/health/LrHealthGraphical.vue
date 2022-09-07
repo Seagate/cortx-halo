@@ -26,6 +26,13 @@
         :dropdownOptions="exportOptions"
         v-model="selectedExport"
       />
+      <v-btn
+          color="csmprimary"
+          class="white--text export-btn"
+          @click="handleExport"
+          :disabled="!selectedExport"
+          >Export</v-btn
+        >
     </div>
     
     <div id="health_tree_container" :style="healthTreeContainerDim"></div>
@@ -324,7 +331,7 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   .export-feature {
     display: flex;
     gap: 1em;
-    max-width: 575px;
+    max-width: 44em;
   }
 }
 .g_popup:focus {
