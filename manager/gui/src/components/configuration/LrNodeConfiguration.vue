@@ -23,7 +23,8 @@
       </SgtTooltipIcon>
     </div>
     <v-divider></v-divider>
-
+    
+    <div class="intersect-test"></div>
     <div class="node-selection-section">
       <v-row class="field-row">
         <v-col cols="3" class="field-label"> Node </v-col>
@@ -265,16 +266,25 @@ export default class LrNodeConfiguration extends Vue {
     }));
     this.selectedNode = this.nodeOptions[0].value;
     await this.setNetworkInfoAllNodes();
-    
+    //
     const stickyElm = this.$el.querySelector('.node-selection-section')
+    const intele = this.$el.querySelector('.intersect-test')
 
-    const observer = new IntersectionObserver(([e]) => console.log("Hii"), {
-      rootMargin: '-10px 0px 0px 0px',
-      threshold: [1],
-    });
+    const observer = new IntersectionObserver(
+      function (entries) {
+      if (entries[0].intersectionRatio === 0) {
+        stickyElm.classList.add("sticky-node-name");
+        //newEl.classList.add("sticky-observer");
+      } else if (entries[0].intersectionRatio === 1) {
+        stickyElm.classList.remove("sticky-node-name");
+        //newEl.classList.remove("sticky-observer");
+      }
+    },
+    { threshold: [0, 1] }
+    );
 
 
-    observer.observe(stickyElm)
+    observer.observe(intele)
   }
 
   async setNetworkInfoAllNodes(isReset = false) {
@@ -349,8 +359,19 @@ export default class LrNodeConfiguration extends Vue {
     position: sticky;
     position: -webkit-sticky;
     top: 0;
-    z-index: 10;
+    z-index: 2;
     background: #fff;
   }
+}
+.intersect-test {
+  height: 1px;
+  width: 1px;
+  top:auto;
+  z-index: -1;
+}
+.sticky-node-name{
+  border-bottom: #000 solid 1px;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  
 }
 </style>
