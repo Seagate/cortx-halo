@@ -57,14 +57,14 @@ def test_save_data(setup_datastore):
     result = data_store.store_data(data=record)
     assert result is not None, "Failed to save Data."
 
-    get_list_of_records = data_store.get_data()
+    get_list_of_records, _ = data_store.get_data()
     assert any(r['username'] == record['username']
                for r in get_list_of_records)
 
 
 def test_get_data(setup_datastore):
     """Test by listing data."""
-    get_list_of_records = data_store.get_data()
+    get_list_of_records, _ = data_store.get_data(count=True)
     assert get_list_of_records is not None, "Failed to fetch Data."
 
 

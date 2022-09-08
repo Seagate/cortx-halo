@@ -17,12 +17,22 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-# Note - Will be replaced when rest framework is in place.
+
+""" This module stores all utility classes which can be pushed to
+    cortx-utils.
+"""
+
+from typing import Type, Any, TypeVar
 
 
-class MgmtInvalidTokenError(Exception):
-    """Invalid Token Exception."""
+T = TypeVar("T")
 
 
-class MgmtExpiredTokenError(Exception):
-    """Token timeout Exception."""
+class NoDirectCreator(type):
+    def __call__(cls, *args, **kwargs):
+        raise TypeError(
+            f"{cls.__module__}.{cls.__qualname__}: can't be instantiated directly. "
+        )
+
+    def _create_instance(cls: Type[T], *args: Any, **kwargs: Any) -> T:
+        return super().__call__(*args, **kwargs)
