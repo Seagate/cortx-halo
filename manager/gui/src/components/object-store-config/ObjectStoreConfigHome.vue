@@ -15,7 +15,13 @@
 * please email opensource@seagate.com.
 -->
 <template>
-  <div>
+   <div>
+    <div class="manage-user-page-container object-store-config-page">
+      <div class="page-title">
+          Object Store Configuration
+      </div>
+      <v-divider></v-divider>
+    </div>
     <SgtDataTable
       ref="tenantTable"
       :headers="tenantTableConfig.tenantTable.headers"
