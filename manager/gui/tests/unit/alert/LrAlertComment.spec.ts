@@ -4,16 +4,29 @@ import Vuetify from "vuetify";
 import Vue from "vue";
 
 Vue.use(Vuetify);
+
+function addElemWithDataAppToBody() {
+  // This is needed to render the v-dialog
+  // We need wrap it with data-app
+  const app = document.createElement('div');
+  app.setAttribute('data-app', 'true');
+  document.body.append(app);
+};
+
 describe("All alert - LrAlertComments.vue", () => {
+  
   const localVue = createLocalVue();
   let vuetify: any;
   let wrapper: any;
+
+  addElemWithDataAppToBody();
   beforeEach(() => {
     vuetify = new Vuetify();
     wrapper = mount(LrAlertComments, {
       localVue,
       vuetify,
       propsData: {
+        id: "naytvce2892pqtnoi",
         showAlertCommentsDialog: true,
       },
     });
