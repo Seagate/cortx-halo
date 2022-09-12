@@ -876,7 +876,7 @@
     "data": [
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",
@@ -888,7 +888,7 @@
       },
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",
@@ -900,7 +900,7 @@
       },
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",
@@ -912,7 +912,7 @@
       },
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",

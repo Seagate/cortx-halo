@@ -83,16 +83,10 @@ export const lrMaintenanceSupportBundleConst = {
         actionList: [],
         customActionList: [
           {
-            name: "sendToSeagate",
+            name: "sendTo",
             path: "send-bundle.svg",
             hoverPath: "send-bundle-hover.svg",
-            tooltip: "Send to Seagate",
-          },
-          {
-            name: "sendToServer",
-            path: "send-bundle.svg",
-            hoverPath: "send-bundle-hover.svg",
-            tooltip: "Send to Server",
+            tooltip: "Send",
           },
           {
             name: "download",
