@@ -363,8 +363,8 @@ export default class LrNodeConfiguration extends Vue {
   }
 }
 .intersect-test {
-  height: 1px;
-  width: 1px;
+  height: 0;
+  width: 0;
   top:auto;
   z-index: -1;
 }
