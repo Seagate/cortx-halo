@@ -17,21 +17,11 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from resource import Component
-from config import ResourcesConfig
-from const import FileType
-
-def main():
-    haloprovcfg = ResourcesConfig(FileType.YAML, './config/haloprov.yaml')
-    resources = haloprovcfg.get_resources()
-    for resource in resources:
-        comp = Component(resource, haloprovcfg, None)
-        if not comp.validate():
-            comp.setup()
-            comp.configure()
-            comp.validate()
+from provisioner.components.minio.setup import setup
+from provisioner.components.minio.validate import validate
 
 
-if __name__ == "__main__":
-    main()
-
+def test_setup():
+    setup()
+    x = validate()
+    assert x!=0, "Cluster setup failed"

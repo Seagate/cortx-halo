@@ -1,21 +1,29 @@
 - hosts: all
+  vars:
+    ansible_python_interpreter: /bin/python3
   become: true
   roles:
     - role: common_setup
 
 
 - hosts: master-node
+  vars:
+    ansible_python_interpreter: /bin/python3
   become: true
   roles:
     - role: master_setup
 
 
 - hosts: worker-node
+  vars:
+    ansible_python_interpreter: /bin/python3
   become: true
   roles:
     - role: worker_setup
 
 - hosts: master-node
+  vars:
+    ansible_python_interpreter: /bin/python3
   become: true
   roles:
     - role: final_setup
