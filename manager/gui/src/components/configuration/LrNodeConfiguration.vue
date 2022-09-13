@@ -23,7 +23,8 @@
       </SgtTooltipIcon>
     </div>
     <v-divider></v-divider>
-
+    
+    <div class="intersect-test"></div>
     <div class="node-selection-section">
       <v-row class="field-row">
         <v-col cols="3" class="field-label"> Node </v-col>
@@ -265,6 +266,24 @@ export default class LrNodeConfiguration extends Vue {
     }));
     this.selectedNode = this.nodeOptions[0].value;
     await this.setNetworkInfoAllNodes();
+    //
+    const stickyElm: HTMLElement | null = this.$el.querySelector('.node-selection-section')
+    const intele: HTMLElement | null = this.$el.querySelector('.intersect-test')
+
+    if (stickyElm != null && intele != null){
+      const observer = new IntersectionObserver(
+        function (entries) {
+          if (entries[0].intersectionRatio === 0) {
+            stickyElm.classList.add("sticky-node-name");
+          } else if (entries[0].intersectionRatio === 1) {
+            stickyElm.classList.remove("sticky-node-name");
+          }
+        },
+        { threshold: [0, 1] }
+        );
+        observer.observe(intele)
+    }
+    
   }
 
   async setNetworkInfoAllNodes(isReset = false) {
@@ -332,10 +351,25 @@ export default class LrNodeConfiguration extends Vue {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .node-configuration-container {
   .node-selection-section {
     padding: 3rem 3.5rem 1rem;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
   }
+}
+.intersect-test {
+  height: 0;
+  width: 0;
+  top:auto;
+  z-index: -1;
+}
+.sticky-node-name{
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  
 }
 </style>
