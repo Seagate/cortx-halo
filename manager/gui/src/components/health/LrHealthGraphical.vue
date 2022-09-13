@@ -16,21 +16,29 @@
 -->
 <template>
   <div class="graphical-view-container">
-    <div class="export-feature" v-if="showExport">
-      <SgtDropdown
-        placeholder="EXPORT AS"
-        :dropdownOptions="exportOptions"
-        v-model="selectedExport"
-      />
-      <v-btn
+    <div class="export-feature">
+      <template v-if="showAdvanceSearch">
+        <SgtAdvanceSearch
+        ref="advanceSearch"
+        :config="healthSearchConst"
+        />
+      </template>
+      <template v-if="showExport">
+        <SgtDropdown
+          placeholder="Export As"
+          :dropdownOptions="exportOptions"
+          v-model="selectedExport"
+        />
+        <v-btn
         color="csmprimary"
-        class="white--text export-btn"
-        @click="handleExport"
-        :disabled="!selectedExport"
-        >Export</v-btn
-      >
+          class="white--text export-btn"
+          @click="handleExport"
+          :disabled="!selectedExport"
+          >Export</v-btn
+          >
+      </template>
     </div>
-
+    
     <div id="health_tree_container" :style="healthTreeContainerDim"></div>
   </div>
 </template>
@@ -47,9 +55,12 @@ import {
 } from "../../utils/SVGExport";
 import { Dimensions } from "@/utils/LrUtilFunctions";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
+import SgtAdvanceSearch from "@/lib/components/SgtAdvanceSearch/SgtAdvanceSearch.vue"; 
+import { lrHealthConst } from "./LrHealthTabular.constant";
+
 @Component({
   name: "LrHealthGraphical",
-  components: { SgtDropdown },
+  components: { SgtDropdown, SgtAdvanceSearch },
 })
 export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   public healthTreeContainerDim: any = {
@@ -75,6 +86,7 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
 
   public exportOptions = ["PDF", "PNG", "JPEG", "SVG"];
   public selectedExport = "";
+  public healthSearchConst: any = lrHealthConst.searchConfig;
 
   public async mounted() {
     this.calculateDimensions();
@@ -87,6 +99,10 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   }
 
   get showExport() {
+    return this.$route.path === "/health";
+  }
+  
+  get showAdvanceSearch(){
     return this.$route.path === "/health";
   }
 
@@ -323,7 +339,7 @@ export default class LrHealthGraphical extends Mixins(ClusterManagementMixin) {
   .export-feature {
     display: flex;
     gap: 1em;
-    max-width: 400px;
+    max-width: 44em;
   }
 }
 .g_popup:focus {
