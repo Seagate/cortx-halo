@@ -41,7 +41,7 @@
                 tooltip="Send to Seagate"
                 class="pr-3"
             />
-            Send to Seagate
+            <span>Send to Seagate</span>
         </v-row>
         <v-row class="pa-6" @click="sendToServer()">
             <SgtSvgIcon
@@ -49,7 +49,7 @@
                 tooltip="Send to Server"
                 class="pr-3"
             />
-            Send to Server
+            <span>Send to Server</span>
         </v-row>
         
       </v-card-text>
@@ -173,6 +173,10 @@
   .text-section{
     font-size: 1rem;
     font-weight: bold;
+
+    span{
+      cursor: pointer;
+    }
   }
   .body-card{
     position: relative;
