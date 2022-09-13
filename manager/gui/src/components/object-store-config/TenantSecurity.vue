@@ -34,6 +34,7 @@
             :labelPre = "txtOff"
             :labelPost = "txtOn"
             :areToggleLabel="true"
+            data-test="enable-tls-toggle"
           ></SgtToggle>
         </v-col>
       </v-row>
@@ -57,6 +58,7 @@
             :labelPre = "txtOff"
             :labelPost = "txtOn"
             :areToggleLabel="true"
+            data-test="enable-auto-cert-toggle"
           ></SgtToggle>
         </v-col>
       </v-row>
@@ -71,6 +73,7 @@
             :labelPre = "txtOff"
             :labelPost = "txtOn"
             :areToggleLabel="true"
+            data-test="custom-certificates-toggle"
           ></SgtToggle>
         </v-col>
       </v-row>
@@ -92,6 +95,7 @@
             :labelPre = "txtOff"
             :labelPost = "txtOn"
             :areToggleLabel="true"
+            data-test="server-side-exception-toggle"
           ></SgtToggle>
         </v-col>
       </v-row>
@@ -103,12 +107,14 @@
           <v-btn
             class="mr-5"
             color="primary"
+            data-test="security-save-button"
             >Save
           </v-btn>
           <v-btn
             color="csmdisabled"
             depressed
             dark
+            data-test="security-save-button"
             >Reset</v-btn
           >
         </v-col>

@@ -20,26 +20,26 @@ describe("TenantSecurity", () => {
     expect(pageTitle.text()).toMatch("Security");
   });
 
-  test(`Presence of protocol dropdown field`, () => {
-    const protocolDropdown = wrapper.find(
-      `[data-test="protocol-dropdown-input"]`
+  test(`Presence of Enable TLS Toggle`, () => {
+    const enableTLSToggle = wrapper.find(
+      `[data-test="enable-tls-toggle"]`
     );
-    expect(protocolDropdown.exists()).toBe(true);
+    expect(enableTLSToggle.exists()).toBe(true);
   });
 
-  test(`Presence of server input field`, () => {
-    const serverInput = wrapper.find(`[data-test="server-input"]`);
-    expect(serverInput.exists()).toBe(true);
+  test(`Presence of Enable AutoCert Toggle`, () => {
+    const enableAutoCert = wrapper.find(`[data-test="enable-auto-cert-toggle"]`);
+    expect(enableAutoCert.exists()).toBe(true);
   });
 
-  test(`Presence of port input field`, () => {
-    const portInput = wrapper.find(`[data-test="port-input"]`);
-    expect(portInput.exists()).toBe(true);
+  test(`Presence of Custom Certificate Toggle`, () => {
+    const customCertToggle = wrapper.find(`[data-test="custom-certificates-toggle"]`);
+    expect(customCertToggle.exists()).toBe(true);
   });
 
-  test(`Presence of email input field`, () => {
-    const emailInput = wrapper.find(`[data-test="email-input"]`);
-    expect(emailInput.exists()).toBe(true);
+  test(`Presence of Enable Server Side Encryption Toggle`, () => {
+    const enableSSEncryToggle = wrapper.find(`[data-test="server-side-exception-toggle"]`);
+    expect(enableSSEncryToggle.exists()).toBe(true);
   });
 
   test(`Presence of password input field`, () => {
