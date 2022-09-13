@@ -17,7 +17,7 @@
 <template>
   <div>
     <div class="info-card-container" @click="$emit('click')">
-      <img :src="require(`@/assets/images/${imgUrl}`)" alt />
+      <img class="pl-3" :src="require(`@/assets/images/${imgUrl}`)" alt />
       <div class="card-info">
         <span class="title-text">{{ title }}</span>
         <span class="description">{{ description }}</span>

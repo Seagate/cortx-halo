@@ -12,9 +12,9 @@
     "buckets": 5,
     "objects": 22,
     "underReplicated": 12,
-    "S3Account": 22,
-    "IAMUser": 22,
-    "dummyText": 22
+    "S3 Account": 37,
+    "IAM User": 20,
+    "Tenants": 7
     }
   },
   "/dashboard/performance": {
@@ -876,7 +876,7 @@
     "data": [
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",
@@ -888,7 +888,7 @@
       },
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",
@@ -900,7 +900,7 @@
       },
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",
@@ -912,7 +912,7 @@
       },
       {
         "bundleId": "2fe291da-c999-44a6",
-        "timestamp": "1637652160",
+        "timestamp": 1637652160,
         "status": "In progress",
         "parameters": {
           "component": "CSM",
@@ -992,7 +992,7 @@
         "releaseName": "LR 2.1",
         "releaseDate": "24-01-2021",
         "status": "Failed",
-        "progress": "36"
+        "progress": "39"
       },
       {
         "id": "982n28knk20923",
@@ -1006,7 +1006,7 @@
         "releaseName": "LR 2.1",
         "releaseDate": "24-01-2021",
         "status": "Fetching",
-        "progress": "36"
+        "progress": "38"
       },
       {
         "id": "982n28knk20923",
@@ -1020,7 +1020,7 @@
         "releaseName": "LR 2.1",
         "releaseDate": "24-01-2021",
         "status": "Pausing",
-        "progress": "36"
+        "progress": "37"
       }
     ]
   },
@@ -1151,5 +1151,80 @@
       "senderEmail": "admin@seagate.com",
       "receiverEmails": "user1@seagate.com, user2@seagate.com"
     }
+  },
+  "object-store-config": {
+    "data": [
+      {
+        "tenantname": "Minio-1",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-2",
+        "state": "Initialized",
+        "rawcapacity": "8.0Gi",
+        "usage":"9.0Gi",
+        "pools":"3"
+      },
+      {
+        "tenantname": "Minio-3",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-4",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-5",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-6",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-7",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-8",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-9",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+
+      {
+        "tenantname": "Minio-10",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"1"
+      }
+    ]
   }
 }
