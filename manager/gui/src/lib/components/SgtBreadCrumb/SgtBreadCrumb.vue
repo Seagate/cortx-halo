@@ -56,7 +56,7 @@ export default class SgtBreadCrumb extends Vue {
     pathItems.forEach((item) => {
       pathValue += `/${item}`;
       this.pathList.push({
-        text: this.capitalizeFirstLetter(item),
+        text: this.capitalizeFirstLetters(item.replace("-", " ")),
         to: pathValue,
         disabled: false,
       });
@@ -76,8 +76,15 @@ export default class SgtBreadCrumb extends Vue {
     this.populatePathList();
   }
 
-  capitalizeFirstLetter = (value: string) => {
-    return value.charAt(0).toUpperCase() + value.substring(1);
+  capitalizeFirstLetters = (value: string) => {
+    const words = value.split(" ");
+
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+    }
+
+    return words.join(" ");
+
   };
 }
 </script>

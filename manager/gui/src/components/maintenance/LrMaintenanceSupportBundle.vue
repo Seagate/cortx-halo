@@ -84,8 +84,6 @@
             :dropdownOptions="['CSM', 'S3']"
             v-model="selectedComponent"
             @download="downloadBundle(data)"
-            @sendToServer="sendToServerBundle(data)"
-            @sendToSeagate="sendToSeagateBundle(data)"
           />
         </div>
         <div class="form-element">
@@ -114,7 +112,75 @@
       :records="supportBundleData"
       :searchConfig="supportBundleConfig.searchConfig"
       @zoom="moreInfoHandler"
+      @sendTo="sendToHandler"
     />
+    <SendTo 
+    v-if="sendToStatus"
+    @close-popup="sendToStatus = false" />
+
+    <v-dialog v-model="bundleDetailView" max-width="800px" persistent>
+      <v-card>
+        <v-card-title>
+          <div class="title-container">
+            <SgtSvgIcon
+              icon="green-tick.svg"
+              class="title-icon"
+              disableClick="true"
+            />
+            <div class="title-content">Bundle Deatil View</div>
+          </div>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <div class="content-container">
+            <v-container>
+              <v-row>
+                <v-col cols="3">
+                  <b>Bundle Id :</b>
+                </v-col>
+                <v-col>{{bundleViewDetails.bundleId}}</v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <b>Timestamp :</b>
+                </v-col>
+                <v-col>{{bundleViewDetails.timestamp}}</v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <b>Status :</b>
+                </v-col>
+                <v-col>{{bundleViewDetails.status}}</v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3" class="modal-sub-title">
+                  <b>Parameters</b>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <b>Component :</b>
+                </v-col>
+                <v-col>{{bundleViewDetails.parameters.component}}</v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <b>Node :</b>
+                </v-col>
+                <v-col>{{bundleViewDetails.parameters.node.name}}</v-col>
+              </v-row>
+            </v-container>
+          </div>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions class="action-button-container">
+          <v-btn color="csmborder" dark
+            @click="bundleDetailView=false">Close</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -122,16 +188,18 @@
 import { Component, Vue } from "vue-property-decorator";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
 import SgtDataTable from "@/lib/components/SgtDataTable/SgtDataTable.vue";
+import SgtSvgIcon from "@/lib/components/SgtSvgIcon/SgtSvgIcon.vue";
 import { Api } from "../../services/Api";
 import { lrMaintenanceSupportBundleConst } from "./LrMaintenance.constant";
 import SgtDialog from "@/lib/components/SgtDialog/SgtDialog.vue";
 import { SgtDialogModel } from "@/lib/components/SgtDialog/SgtDialog.model";
 import { create } from "vue-modal-dialogs";
 import { formatTime } from "@/utils/CommonUtilFunctions";
+import SendTo from "./SendTo.vue"
 import moment from "moment";
 @Component({
   name: "LrMaintenanceSupportBundle",
-  components: { SgtDropdown, SgtDataTable, SgtDialog },
+  components: { SgtDropdown, SgtDataTable, SgtDialog, SgtSvgIcon, SendTo},
 })
 export default class LrMaintenanceSupportBundle extends Vue {
   selectedNode: string = "";
@@ -144,7 +212,20 @@ export default class LrMaintenanceSupportBundle extends Vue {
   nodeOptions = [];
   supportBundleConfig = lrMaintenanceSupportBundleConst;
   moreInfoModel = create<SgtDialogModel>(SgtDialog);
-
+  sendToStatus: boolean = false
+  bundleDetailView: boolean = false
+  bundleViewDetails = {
+    "bundleId": "2fe291da-c999-44a6",
+    "timestamp": "1637652160",
+    "status": "In progress",
+    "parameters": {
+      "component": "CSM",
+      "node": {
+        "name": "Node1",
+        "id": "1"
+      }
+    }
+  }
   get isDisableCTA() {
     let isDisable = true;
     if (
@@ -195,20 +276,11 @@ export default class LrMaintenanceSupportBundle extends Vue {
   }
 
   async moreInfoHandler(data: any) {
-    const result = await this.moreInfoModel({
-      modalTitle: "Bundle detail view",
-      modalContent: `
-        <b>Bundle Id:</b> ${data.bundleId}<br>
-        <b>Timestamp:</b> ${formatTime(data.timestamp)}<br>
-        <b>Status: </b> ${data.status}<br>
-        <b>Parameters<br>
-        <b>Component: </b> ${data.parameters.component}<br>
-        <b>Node: </b> ${data.parameters.node.name}<br>
-      `,
-      modalType: "message",
-      modalContentType: "html",
-      okButtonLabel: "Close",
-    });
+    this.bundleViewDetails = data;
+    console.log(this.supportBundleData);
+    console.log(data);
+    this.bundleDetailView = true;
+    this.bundleViewDetails.timestamp = formatTime(this.bundleViewDetails.timestamp)
   }
 
   generateSupportBundle() {
@@ -231,11 +303,8 @@ export default class LrMaintenanceSupportBundle extends Vue {
   downloadBundle(data: any) {
     //API call to receive the support bundle
   }
-  sendToServerBundle(data: any) {
-    //API call to receive the support bundle
-  }
-  sendToSeagateBundle(data: any) {
-    //API call to receive the support bundle
+  sendToHandler(data: any){
+    this.sendToStatus = true;
   }
 }
 </script>
@@ -274,7 +343,26 @@ export default class LrMaintenanceSupportBundle extends Vue {
     }
   }
 }
+.title-container {
+  width: 100%;
+  .close-btn {
+    cursor: pointer;
+    float: right;
+  }
+  .title-content {
+    display: inline-block;
+    font-weight: bold;
+  }
+  .title-icon {
+    vertical-align: top;
+    padding-right: 0.5rem;
+  }
+}
 .v-picker {
   width: 100%;
+}
+.modal-sub-title{
+  color: #000;
+  font-size: 1rem;
 }
 </style>

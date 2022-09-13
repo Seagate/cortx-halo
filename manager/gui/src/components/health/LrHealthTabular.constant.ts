@@ -46,14 +46,12 @@ export const lrHealthConst = {
           label: "Cluster",
           value: "cluster"
         },
-        editable: true
       },
       {
         type: "textbox",
         name: "resource-id",
         label: "Resource ID",
         placeholder: "Enter Resource ID",
-        editable: true
       },
       {
         type: "dropdown",
@@ -74,7 +72,6 @@ export const lrHealthConst = {
           label: "Online",
           value: "online"
         },
-        editable: true
       }
     ]
   },

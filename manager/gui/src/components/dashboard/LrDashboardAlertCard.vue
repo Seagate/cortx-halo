@@ -118,7 +118,7 @@ export default class LrDashboardAlertCard extends Vue {
       .append("circle")
       .attr("r", 50)
       .attr("fill", "#FFFFFF")
-      .attr("stroke", "gray");
+      .attr("stroke", "#E5E5E5");
 
     d3.select("#alert-chart .inner-circle-div")
       .append("text")
