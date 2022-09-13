@@ -1151,5 +1151,80 @@
       "senderEmail": "admin@seagate.com",
       "receiverEmails": "user1@seagate.com, user2@seagate.com"
     }
+  },
+  "object-store-config": {
+    "data": [
+      {
+        "tenantname": "Minio-1",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-2",
+        "state": "Initialized",
+        "rawcapacity": "8.0Gi",
+        "usage":"9.0Gi",
+        "pools":"3"
+      },
+      {
+        "tenantname": "Minio-3",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-4",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-5",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-6",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-7",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-8",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+      {
+        "tenantname": "Minio-9",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"2"
+      },
+
+      {
+        "tenantname": "Minio-10",
+        "state": "Initialized",
+        "rawcapacity": "98.0Gi",
+        "usage":"8.0Gi",
+        "pools":"1"
+      }
+    ]
   }
 }
