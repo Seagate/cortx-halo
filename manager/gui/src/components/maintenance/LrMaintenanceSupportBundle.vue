@@ -153,7 +153,7 @@
                 <v-col>{{bundleViewDetails.status}}</v-col>
               </v-row>
               <v-row>
-                <v-col cols="3">
+                <v-col cols="3" class="modal-sub-title">
                   <b>Parameters</b>
                 </v-col>
               </v-row>
@@ -360,5 +360,9 @@ export default class LrMaintenanceSupportBundle extends Vue {
 }
 .v-picker {
   width: 100%;
+}
+.modal-sub-title{
+  color: #000;
+  font-size: 1rem;
 }
 </style>
