@@ -369,7 +369,6 @@ export default class LrNodeConfiguration extends Vue {
   z-index: -1;
 }
 .sticky-node-name{
-  border-bottom: #000 solid 1px;
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   
 }
