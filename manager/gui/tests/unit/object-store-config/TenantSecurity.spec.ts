@@ -46,17 +46,5 @@ describe("TenantSecurity", () => {
     const enableSSEncryToggle = wrapper.find(`[data-test="server-side-exception-toggle"]`);
     expect(enableSSEncryToggle.exists()).toBe(true);
   });
-
-  test(`Check Enable TLS Toggle is working`, async () => {
-    const enableTLSToggle = wrapper.find(
-      `[data-test="enable-tls-toggle"]`
-    );
-    console.log("before ", wrapper.vm.toggleStates.enableTls);
-    await enableTLSToggle.trigger("click");
-    await Vue.nextTick();
-    console.log("after ", wrapper.emitted());
-    
-    expect(wrapper.vm.toggleStates.enableTls).toBe(false);
-  });
   
 });
