@@ -2,7 +2,7 @@ import { createLocalVue, mount, Wrapper } from '@vue/test-utils';
 import LrDashboardNodesCard from "@/components/dashboard/LrDashboardNodesCard.vue";
 import Vuetify from 'vuetify';
 import Vue from 'vue'
-import { Api } from "@/services/api";
+import { Api } from "@/services/Api";
 import { hexToRGB } from "@/utils/CommonUtilFunctions"
 Vue.use(Vuetify)
 describe('Dashboard-LrDashboardNodesCard.vue', () => {
