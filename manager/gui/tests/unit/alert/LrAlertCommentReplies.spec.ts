@@ -15,6 +15,7 @@ describe("All alert - LrAlertCommentReplies.vue", () => {
       localVue,
       vuetify,
       propsData: {
+        comment_id: "naytvce2892pqtnoi",
         replies: [
           {
             comment_id: "naytvce2892ncpownw",
