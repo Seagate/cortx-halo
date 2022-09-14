@@ -17,21 +17,25 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from resource import Component
-from config import ResourcesConfig
-from const import FileType
+import ansible_runner
+from provisioner.const import PATH
 
-def main():
-    haloprovcfg = ResourcesConfig(FileType.YAML, './config/haloprov.yaml')
-    resources = haloprovcfg.get_resources()
-    for resource in resources:
-        comp = Component(resource, haloprovcfg, None)
-        if not comp.validate():
-            comp.setup()
-            comp.configure()
-            comp.validate()
+
+class Runner:
+
+    @staticmethod
+    def run (playbook, ini):
+        rc = ansible_runner.run(playbook = playbook, inventory = ini)
+        return rc
+
+
+def validate():
+    try:
+        return(Runner.run(PATH.MINIO_VALIDATE_PLAYBOOK_PATH, PATH.ANSIBLE_INVENTORY_PATH))
+    except Exception as e:
+        print(f'{e}') #TODO: Replace print with log
 
 
 if __name__ == "__main__":
-    main()
+    validate()
 

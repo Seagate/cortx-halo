@@ -39,3 +39,8 @@ Kubernetes:
     config_cmd: /opt/seagate/halo/install_depot/k8s/cluster_setup.py
     unconfig_cmd: /opt/seagate/halo/install_depot/k8s/cluster_destroy.py
     validate_cmd: /opt/seagate/halo/install_depot/k8s/cluster_validate.py
+MinIO:
+    resource_type: SOFTWARE
+    resource_id: minio
+    install_cmd: /opt/seagate/halo/install_depot/minio/setup.py
+    validate_cmd: /opt/seagate/halo/install_depot/minio/validate.py
