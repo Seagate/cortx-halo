@@ -29,3 +29,4 @@ yarn-error.log*
 .gitlab
 *.orig
 *.log
+.travis.yml

@@ -1,0 +1,30 @@
+---
+# tasks file for minio_setup
+- name: Extracting MinIO k8s plugin
+  unarchive:
+    src: /opt/seagate/halo/install_depot/kubectl-minio_linux_amd64.zip
+    dest: /usr/bin
+    remote_src: yes
+
+- name: Making kubectl-minio executable
+  file:
+    path: /usr/local/bin/kubectl-minio
+    mode: 777
+
+- name: Initialise MinIO operator
+  shell: kubectl minio init
+  args:
+    executable: /bin/bash
+
+- name: Get JWT Token for MinIO operator
+  shell: kubectl minio proxy -n minio-operator | grep JWT
+  register: jwt_token
+
+- name: Printing JWT Token for MinIO Operator
+  debug:
+    msg: "{{ jwt_token.stdout }}"
+
+- name: write to file
+  copy:
+    content: "{{ jwt_token.stdout }}"
+    dest: "/root/jwt_token.txt"

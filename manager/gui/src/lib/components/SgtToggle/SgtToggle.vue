@@ -16,7 +16,7 @@
 -->
 <template>
   <div class="toggle-wrapper" :class="{ disabled: disabled }">
-    <span class="mr-2" v-if="labelPre" :class="{'not-active': (value && areToggleLabel)}">{{ labelPre }}</span>
+    <span class="mr-2" v-if="labelPre" :class="{'not-active': (value && areToggleLabel)}" data-test="toggle-pre-label">{{ labelPre }}</span>
     <v-tooltip right :disabled="!tooltip">
       <template v-slot:activator="{ on, attrs }">
         <div
@@ -33,7 +33,7 @@
       </template>
       <span>{{ tooltip }}</span>
     </v-tooltip>
-    <span class="ml-2" v-if="labelPost" :class="{'not-active': (!value && areToggleLabel)}">{{ labelPost }}</span>
+    <span class="ml-2" v-if="labelPost" :class="{'not-active': (!value && areToggleLabel)}" data-test="toggle-post-label">{{ labelPost }}</span>
   </div>
 </template>
 

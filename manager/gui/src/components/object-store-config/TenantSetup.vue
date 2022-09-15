@@ -29,8 +29,10 @@
            <v-text-field
               v-model="userName"
               placeholder="Enter Username"
+              :rules="validationRules.username"
               outlined
               dense
+              data-test="username-input"
             ></v-text-field>
         </v-col>
       </v-row>
@@ -49,8 +51,11 @@
            <v-text-field
               v-model="noOfServers"
               placeholder="Enter Number of Servers"
+              type="number"
+              :rules="validationRules.noOfServers"
               outlined
               dense
+              data-test="no-of-server-input"
             ></v-text-field>
         </v-col>
       </v-row>
@@ -62,8 +67,11 @@
            <v-text-field
               v-model="drivesPerServer"
               placeholder="Enter Drives per Server"
+              type="number"
+              :rules="validationRules.drivesPerServer"
               outlined
               dense
+              data-test="drives-per-server-input"
             ></v-text-field>
         </v-col>
       </v-row>
@@ -77,8 +85,10 @@
               placeholder="Enter Total Size"
               outlined
               dense
-              disabled="true"
+              disabled
+              type="number"
               append-icon="mdi-post-size"
+              data-test="total-size-input"
             ></v-text-field>
         </v-col>
       </v-row>
@@ -91,6 +101,8 @@
               :dropdownOptions="ensureCodeParity.data"
               v-model="ensureCodeParity.current"
               height="10px"
+              data-test="ensure-code-parity-dropdown"
+              :rules="validationRules.ensureCodeParity"
             />
         </v-col>
       </v-row>
@@ -118,7 +130,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import SgtDropdown from "@/lib/components/SgtDropdown/SgtDropdown.vue";
- 
+import { requiredValidation } from "../../utils/validations";
 
 @Component({
   name: "TenantSetup",
@@ -150,6 +162,13 @@ export default class TenantSetup extends Vue {
         value:"EC:8",
       },
   };
+
+  validationRules = {
+    noOfServers: [requiredValidation],
+    drivesPerServer: [requiredValidation],
+    ensureCodeParity: [requiredValidation],
+    username: [requiredValidation]
+  }
 
   @Watch("noOfServers")
   onNoOfServersChanged(newValue: number, oldValue: number) {

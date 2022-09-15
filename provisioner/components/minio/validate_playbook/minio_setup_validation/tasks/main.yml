@@ -1,0 +1,13 @@
+---
+# tasks file for minio_setup_validation
+- name: Validate correct Minio Plugin Installation
+  shell: kubectl minio version | grep v4.4.28
+  register: minio_version
+
+- debug: var=minio_version.stdout
+
+- name: Validate Operator Installation
+  shell: curl http://localhost:9090
+  register: operator_status
+
+- debug: var=operator_status.stdout

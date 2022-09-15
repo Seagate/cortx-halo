@@ -122,7 +122,7 @@ class Component(Resource):
         return
 
     def unconfigure(self):
-        ''' configure component'''
+        ''' unconfigure component'''
         return
 
     def upgrade(self):
