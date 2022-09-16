@@ -18,19 +18,28 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 from abc import ABC, abstractmethod
-from const import ResourceType
+from const import ResourceType, PATH
 from config import SiteConfig
 from config import ResourcesConfig
 import os
+import yaml
 
 class Resource(ABC):
 
-    def __init__(self, resource_type: ResourceType, resource_id: str, provcfg: ResourcesConfig, sitecfg: SiteConfig):
+    def __init__(self, resource_type: ResourceType, resource_id: str, rescfg: ResourcesConfig, siteconfig: SiteConfig):
         self.type = resource_type
         self.id = resource_id
-        self.provcfg = provcfg
-        if sitecfg:
-            self.sitecfg = sitecfg.get_resource_config(resource_type, resource_id)
+        self.rescfg = rescfg
+        self.rsccfg = None
+        if siteconfig:
+            self.rsccfg = siteconfig.get_resource_config(resource_type, resource_id)
+            if self.rsccfg:
+                rscfile = PATH.RESOURCE_CFGFILE.format(resource_id)
+                if not os.path.isfile(rscfile):
+                    basepath = os.path.dirname(__file__)
+                    rscfile = basepath + '/' + rscfile
+                with open(rscfile, 'w') as rsc:
+                    outputs = yaml.dump(self.rsccfg, rsc)
 
     @abstractmethod
     def setup(self):
@@ -78,39 +87,40 @@ class Resource(ABC):
         return
 
 class Component(Resource):
-    def __init__(self, resource_id: str, provcfg: ResourcesConfig, sitecfg: SiteConfig):
-        if provcfg.get_resource_type(resource_id) == 'SERVER_NIC':
+    def __init__(self, resource: str, rescfg: ResourcesConfig, siteconfig: SiteConfig):
+        if rescfg.get_resource_type(resource) == 'SERVER_NIC':
             resource_type = ResourceType.SERVER_NIC
-        elif provcfg.get_resource_type(resource_id) == 'SERVER_HBA':
+        elif rescfg.get_resource_type(resource) == 'SERVER_HBA':
             resource_type = ResourceType.SERVER_HBA
-        elif provcfg.get_resource_type(resource_id) == 'CLUSTER':
+        elif rescfg.get_resource_type(resource) == 'CLUSTER':
             resource_type = ResourceType.CLUSTER
-        elif provcfg.get_resource_type(resource_id) == 'SOFTWARE':
+        elif rescfg.get_resource_type(resource) == 'SOFTWARE':
             resource_type = ResourceType.SOFTWARE
-        super().__init__(resource_type, resource_id, provcfg, sitecfg)
+        resource_id = rescfg.get_resource_id(resource) 
+        super().__init__(resource_type, resource_id, rescfg, siteconfig)
 
     def setup(self):
         ''' setup component using best practices '''
-        setupPath = self.provcfg.get_resource_cmd(self.id, 'install_cmd')
-        if setupPath:
+        setupPath = self.rescfg.get_resource_cmd(self.id, 'install_cmd')
+        if setupPath and os.path.isfile(setupPath):
             os.system("python3 %s" %setupPath)
 
     def configure(self):
         ''' configure component '''
-        configPath = self.provcfg.get_resource_cmd(self.id, 'config_cmd')
-        if configPath:
+        configPath = self.rescfg.get_resource_cmd(self.id, 'config_cmd')
+        if configPath and os.path.isfile(configPath):
             os.system("python3 %s" %configPath)
 
     def validate(self):
         ''' validate resource setup and config '''
-        validatePath = self.provcfg.get_resource_cmd(self.id, 'validate_cmd')
-        if validatePath:
+        validatePath = self.rescfg.get_resource_cmd(self.id, 'validate_cmd')
+        if validatePath and os.path.isfile(validatePath):
             os.system("python3 %s" %validatePath)
 
     def teardown(self):
         ''' teardown component'''
-        teardownPath = self.provcfg.get_resource_cmd(self.id, 'teardown_cmd')
-        if teardownPath:
+        teardownPath = self.rescfg.get_resource_cmd(self.id, 'teardown_cmd')
+        if teardownPath and os.path.isfile(teardownPath):
             os.system("python3 %s" %teardownPath)
 
     def enable(self):

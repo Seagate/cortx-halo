@@ -39,6 +39,10 @@ class SOFTWARE(Enum):
 
 class PATH(object):
     HALO_BASE_PATH = '/opt/seagate/halo/install_depot/'
+    HALOPROV_CFGFILE = './config/haloprov.yaml'
+    NODEPREP_CFGFILE = './config/nodeprep.yaml'
+    SITE_CFGFILE = './config/sitecfg.yaml'
+    RESOURCE_CFGFILE='./{}/config.yaml'
     IMAGE_TAR_FILE_PATH = HALO_BASE_PATH + 'images/'
     ANSIBLE_PATH = HALO_BASE_PATH + 'ansible/'
     K8S_PATH = HALO_BASE_PATH + 'k8s/'

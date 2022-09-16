@@ -17,7 +17,7 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.network.const import NWCONSTS
+from network.const import NWCONSTS
 import os
 import jinja2
 import yaml
@@ -27,7 +27,7 @@ def config(cfgfile = NWCONSTS.CONFIG_YAML):
     try:
         basepath = os.path.dirname(__file__)
         # Load ifcfg input
-        if not os. path.isfile(cfgfile):
+        if not os.path.isfile(cfgfile):
             cfgfile = basepath + '/' + cfgfile
         with open(cfgfile, "r") as f:
             ifcfg = yaml.load(f, Loader=yaml.SafeLoader)
