@@ -22,7 +22,7 @@ from resource import Component
 from config import ResourcesConfig, SiteConfig
 from const import FileType, PATH
 
-def main():
+def provision_components():
     basepath = path.dirname(__file__)
     node_cfgfile = PATH.NODEPREP_CFGFILE
     if not path.isfile(node_cfgfile):
@@ -39,6 +39,9 @@ def main():
             comp.setup()
             comp.configure()
             comp.validate()
+
+def main():
+    provision_components()
 
 
 if __name__ == "__main__":

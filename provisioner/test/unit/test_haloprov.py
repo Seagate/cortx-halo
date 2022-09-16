@@ -21,7 +21,6 @@ import pytest
 from shutil import move, copyfile
 from os import path
 from haloprov import provision_components
-import yaml
 
 
 pytestmark = pytest.mark.unit
@@ -62,8 +61,8 @@ def test_haloprov():
     provision_components()
 
     if restore_provcfg:
-        restore_config_file(dest, provcfg) 
+        restore_config_file(dest, provcfg)
 
     if restore_sitecfg:
-        restore_config_file(dest, sitecfg) 
+        restore_config_file(dest, sitecfg)
 

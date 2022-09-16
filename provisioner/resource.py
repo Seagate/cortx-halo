@@ -39,7 +39,7 @@ class Resource(ABC):
                     basepath = os.path.dirname(__file__)
                     rscfile = basepath + '/' + rscfile
                 with open(rscfile, 'w') as rsc:
-                    outputs = yaml.dump(self.rsccfg, rsc)
+                    yaml.dump(self.rsccfg, rsc)
 
     @abstractmethod
     def setup(self):
@@ -96,7 +96,7 @@ class Component(Resource):
             resource_type = ResourceType.CLUSTER
         elif rescfg.get_resource_type(resource) == 'SOFTWARE':
             resource_type = ResourceType.SOFTWARE
-        resource_id = rescfg.get_resource_id(resource) 
+        resource_id = rescfg.get_resource_id(resource)
         super().__init__(resource_type, resource_id, rescfg, siteconfig)
 
     def setup(self):

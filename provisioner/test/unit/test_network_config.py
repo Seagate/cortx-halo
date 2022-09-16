@@ -18,7 +18,7 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import pytest
-from provisioner.components.network.config import config
+from network.config import config
 import yaml
 import hashlib
 

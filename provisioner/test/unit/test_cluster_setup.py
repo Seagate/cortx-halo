@@ -17,8 +17,8 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.k8s.cluster_setup import setup
-from provisioner.components.k8s.cluster_validate import validate
+from k8s.cluster_setup import setup
+from k8s.cluster_validate import validate
 
 
 def test_setup():

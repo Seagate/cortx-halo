@@ -17,9 +17,9 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.nodecli.setup import setup
-from provisioner.components.nodecli.teardown import teardown
-from provisioner.components.nodecli.validate import validate
+from nodecli.setup import setup
+from nodecli.teardown import teardown
+from nodecli.validate import validate
 
 
 def test_setup():
