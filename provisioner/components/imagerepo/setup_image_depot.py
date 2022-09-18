@@ -18,7 +18,7 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import os
-from provisioner.const import PATH
+from const import PATH
 
 
 def createDir():

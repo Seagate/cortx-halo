@@ -52,6 +52,7 @@ class PATH(object):
     MINIO_FILE_PATH = MINIO_PATH + 'kubectl-minio'
     MINIO_SETUP_PLAYBOOK_PATH = MINIO_PATH + 'setup_playbook/minio_setup_playbook.yml'
     MINIO_VALIDATE_PLAYBOOK_PATH = MINIO_PATH + 'validate_playbook/minio_validate_playbook.yml'
+    MINIO_CONFIGURE_PLAYBOOK_PATH = MINIO_PATH + 'configure_playbook/minio_configure_playbook.yml'
 
 class VARIABLE(object):
     IMAGES = ['calico/kube-controllers', 'calico/cni', 'calico/node', 'k8s.gcr.io/kube-apiserver',

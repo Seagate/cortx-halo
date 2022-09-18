@@ -4,3 +4,10 @@
   become: true
   roles:
     - role: minio_setup_validation
+
+- hosts: master-node
+  vars:
+    ansible_python_interpreter: /bin/python3
+  become: true
+  roles:
+    - role: minio_config_validation

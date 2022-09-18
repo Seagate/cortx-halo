@@ -18,9 +18,9 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import pytest
-from provisioner.components.imagerepo.setup_image_depot import loadImages
-from provisioner.components.imagerepo.setup_image_depot import createDir
-from provisioner.const import PATH, VARIABLE
+from imagerepo.setup_image_depot import loadImages
+from imagerepo.setup_image_depot import createDir
+from const import PATH, VARIABLE
 import os
 
 

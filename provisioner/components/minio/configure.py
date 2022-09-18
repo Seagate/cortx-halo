@@ -17,12 +17,24 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from k8s.cluster_setup import setup
-from k8s.cluster_validate import validate
+import ansible_runner
+from const import PATH
 
 
-def test_setup():
-    setup()
-    x = validate()
-    assert x!=0, "Cluster setup failed"
+class Runner:
 
+    @staticmethod
+    def run (playbook, ini):
+        rc = ansible_runner.run(playbook = playbook, inventory = ini)
+        return rc
+
+
+def configure():
+    try:
+        return(Runner.run(PATH.MINIO_CONFIGURE_PLAYBOOK_PATH, PATH.ANSIBLE_INVENTORY_PATH))
+    except Exception as e:
+        print(f'{e}') #TODO: Replace print with log
+
+
+if __name__ == "__main__":
+    configure()

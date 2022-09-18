@@ -17,7 +17,7 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.network.const import NWCONSTS
+from network.const import NWCONSTS
 import os
 import jinja2
 import yaml

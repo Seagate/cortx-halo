@@ -22,7 +22,7 @@
 import yaml
 import collections
 from const import FileType, ResourceType
-from provisioner.error import CustomError
+from error import CustomError
 from collections import OrderedDict
 
 

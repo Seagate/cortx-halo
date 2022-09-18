@@ -17,12 +17,11 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from k8s.cluster_setup import setup
-from k8s.cluster_validate import validate
+from minio.configure import configure
+from minio.validate import validate
 
 
 def test_setup():
-    setup()
+    configure()
     x = validate()
-    assert x!=0, "Cluster setup failed"
-
+    assert x!=0, "Tenant creation failed"

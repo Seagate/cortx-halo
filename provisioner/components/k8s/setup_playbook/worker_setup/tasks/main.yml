@@ -3,7 +3,7 @@
 
   - name: copy the join command file
     copy:
-      src: "../files/join_command.sh/{{ groups['master-node'][0] }}/join_command.sh"
+      src: join_command.sh
       dest: /root/join_command1.sh
       mode: "u+rwx"
     register: join_command_copied
@@ -12,3 +12,16 @@
     shell: "/root/join_command1.sh"
     when: join_command_copied.changed 
 
+  - name: creating kube config file
+    block:   
+    - name: creating .kube folder
+      file:
+        path: /root/.kube
+        state: directory
+
+    - name: copy config file to .kube folder
+      copy:
+        src: /etc/kubernetes/kubelet.conf
+        dest: $HOME/.kube/config
+        mode: 777
+        remote_src: yes

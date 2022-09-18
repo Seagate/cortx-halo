@@ -1,0 +1,9 @@
+---
+# tasks file for minio_config_validation
+- name: Validate tenant creation
+  shell: kubectl minio tenant info {{item.value.tenant_name}} --namespace {{item.value.namespace}}
+  with_dict: "{{ tenant_details }}"
+  register: tenant_info
+
+- debug: 
+    var: tenant_info

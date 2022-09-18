@@ -1,0 +1,19 @@
+---
+# vars file for minio_config_validation
+tenant_details:
+  - tenant1: 
+      tenant_name: 'tenant101'
+      servers: 1
+      namespace: 'namespace1'
+      volume_per_server: 1
+      storage_capacity_per_volume: "1Gi"
+      access_key: 'YWRtaW4='
+      secret_key: 'UGFzc3dvcmQ='
+  - tenant2: 
+      tenant_name: 'tenant201'
+      servers: 1
+      namespace: 'namespace2'
+      volume_per_server: 1
+      storage_capacity_per_volume: "1Gi"
+      access_key: 'YWRtaW4='
+      secret_key: 'UGFzc3dvcmQ='

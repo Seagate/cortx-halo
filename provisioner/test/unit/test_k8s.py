@@ -17,9 +17,9 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.k8s.setup import setup
-from provisioner.components.k8s.teardown import teardown
-from provisioner.components.k8s.validate import validate
+from k8s.setup import setup
+from k8s.teardown import teardown
+from k8s.validate import validate
 
 
 def test_setup():

@@ -43,4 +43,5 @@ MinIO:
     resource_type: SOFTWARE
     resource_id: minio
     install_cmd: /opt/seagate/halo/install_depot/minio/setup.py
+    config_cmd: /opt/seagate/halo/install_depot/minio/configure.py
     validate_cmd: /opt/seagate/halo/install_depot/minio/validate.py
