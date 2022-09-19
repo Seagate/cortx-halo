@@ -1,11 +1,11 @@
 @font-face {
   font-family: "HelveticaNeue";
-  src: url("/fonts/HelveticaNeue.ttf") format("truetype");
+  src: url("~@/assets/fonts/HelveticaNeue.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "HelveticaNeue";
-  src: url("/fonts/HelveticaNeueBd.ttf") format("truetype");
+  src: url("~@/assets/fonts/HelveticaNeueBd.ttf") format("truetype");
   font-weight: bold;
 }
 

@@ -121,9 +121,9 @@ export default class LrAlertComments extends Vue {
 
   addComment() {
     if (!this.commentText) this.errorMsg = "Comment Required";
-    else if (this.commentText.length > 250)
+    else if (this.commentText.length > 250){
       this.errorMsg = "Comment Cannot Be More Than 250 Char";
-    else {
+    }else {
       this.errorMsg = "";
       // code to post the comment
     }

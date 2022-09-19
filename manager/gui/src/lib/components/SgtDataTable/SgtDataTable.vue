@@ -338,8 +338,9 @@ export default class SgtDataTable extends Vue {
     this.actionItems = allActions.filter((ele) =>
       actions.actionList.includes(ele.name)
     );
-    if (actions.customActionList)
+    if (actions.customActionList){
       this.actionItems.push(...actions.customActionList);
+    }
   }
 
   /**
@@ -354,9 +355,9 @@ export default class SgtDataTable extends Vue {
    * Toggle select all checkbox on table header.
    */
   toggleSelectAll() {
-    if (this.selected.length < this.records.length)
+    if (this.selected.length < this.records.length){
       this.selected = this.records;
-    else this.selected = [];
+    }else this.selected = [];
   }
 
   /**

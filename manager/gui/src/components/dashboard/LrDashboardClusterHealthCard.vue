@@ -60,17 +60,21 @@ export default class LrDashboardClusterHealthCard extends Vue {
   getClusterHealthImgUrl(
     healthType: "offline" | "degraded" | "failed" | "online"
   ) {
-    if (healthType && dashboardCardData.clusterHealth[healthType])
+    if (healthType && dashboardCardData.clusterHealth[healthType]){
       return dashboardCardData.clusterHealth[healthType].image;
-    else return dashboardCardData.clusterHealth["offline"].image;
+    }else {
+      return dashboardCardData.clusterHealth["offline"].image;
+    }
   }
 
   getClusterHealthBackground(
     healthType: "offline" | "degraded" | "failed" | "online"
   ) {
-    if (healthType && dashboardCardData.clusterHealth[healthType])
+    if (healthType && dashboardCardData.clusterHealth[healthType]){
       return dashboardCardData.clusterHealth[healthType].color;
-    else return "#FFFFFF";
+  }else {
+    return "#FFFFFF";
+  }
   }
 }
 </script>
