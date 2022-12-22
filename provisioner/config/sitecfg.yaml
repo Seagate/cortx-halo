@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates
 
 # This program is free software: you can redistribute it and/or modify it
@@ -17,12 +15,31 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from k8s.cluster_setup import setup
-from k8s.cluster_validate import validate
+# Network configuration inputs 
+network:
+    interfaces:
+        # Static network IP configutation
+        <INTERFACE_DEVICE_NAME1>:
+            interface_type: Ethernet
+            bootproto: none
+            interface: <INTERFACE_DEVICE_NAME1>
+            ip_addr: <IPV4_ADDRESS>
+            subnet: <NETMASK>
+            gateway: <GATEWAY_ADDRESS>
+        # Dynamic network IP configutation
+        <INTERFACE_DEVICE_NAME2>:
+            interface_type: Ethernet
+            bootproto: dhcp
+            interface: <INTERFACE_DEVICE_NAME2>
 
-
-def test_setup():
-    setup()
-    x = validate()
-    assert x!=0, "Cluster setup failed"
-
+# Cluster configuration inputs 
+k8s:
+    all:
+        hosts:
+        children:
+            master-node:
+                hosts:
+                    ssc-vm-g2-rhev4-3414.colo.seagate.com:
+            worker-node:
+                hosts:
+                    ssc-vm-g2-rhev4-3412.colo.seagate.com:

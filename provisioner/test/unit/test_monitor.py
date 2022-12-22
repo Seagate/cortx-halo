@@ -17,9 +17,9 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.monitor.setup import setup
-from provisioner.components.monitor.teardown import teardown
-from provisioner.components.monitor.validate import validate
+from monitor.setup import setup
+from monitor.teardown import teardown
+from monitor.validate import validate
 
 
 def test_setup():

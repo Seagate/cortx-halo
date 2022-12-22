@@ -17,8 +17,8 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.minio.setup import setup
-from provisioner.components.minio.validate import validate
+from minio.setup import setup
+from minio.validate import validate
 
 
 def test_setup():

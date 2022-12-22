@@ -18,32 +18,51 @@
 # opensource@seagate.com or cortx-questions@seagate.com.
 
 import pytest
-from network.config import config
-import yaml
-import hashlib
+from shutil import move, copyfile
+from os import path
+from haloprov import provision_components
 
 
 pytestmark = pytest.mark.unit
 
 
+def setup_config_file(srccfg, dest):
+    restore = False
+    origcfg = dest + srccfg
+    if path.isfile(origcfg):
+        origcfgbkup = origcfg + '.' + __name__
+        move(origcfg, origcfgbkup)
+        restore = True
+    copyfile(srccfg, origcfg)
+    return restore
+
+def restore_config_file(dest, cfgfile):
+    origcfg = dest + cfgfile
+    origcfgbkup = origcfg + '.' + __name__
+    if path.isfile(origcfgbkup):
+        move(origcfgbkup, origcfg)
+        return True
+    return False
+
 # Make sure that the test_network_config_output.yaml network specifications are applicable to test machine
 # If any changes are made to network device names in test_network_config_output.yaml create expected output files
 # Update the test_network_config_output.yaml for expected output files and actual output files paths
-def test_network_config():
-    config(cfgfile='test_network_config_input.yaml')
-    with open("test_network_config_output.yaml", "r") as f:
-        test_cfg = yaml.load(f, Loader=yaml.SafeLoader)
-    for output_fn in test_cfg['expected_output_files']:
-        data = ''
-        with open(output_fn) as file_to_check:
-            data = file_to_check.read()
-            expected_sha256 = hashlib.sha256(str(data).encode('utf-8')).hexdigest()
-        actual_output_fn = '/etc/sysconfig/network-scripts/' + output_fn
-        data = ''
-        with open(actual_output_fn) as file_to_check:
-            data = file_to_check.read()
-            actual_sha256 = hashlib.sha256(str(data).encode('utf-8')).hexdigest()
-        if (expected_sha256 != actual_sha256):
-            assert False, "Network configuration failed"
-            break
+def test_haloprov():
+    HALOPROV_PATH='/opt/seagate/halo/install_depot/config/'
+
+    provcfg = 'haloprov.yaml'
+    dest = HALOPROV_PATH
+    restore_provcfg = setup_config_file(provcfg, dest)
+
+    sitecfg = 'sitecfg.yaml'
+    dest = HALOPROV_PATH
+    restore_sitecfg = setup_config_file(sitecfg, dest)
+
+    provision_components()
+
+    if restore_provcfg:
+        restore_config_file(dest, provcfg)
+
+    if restore_sitecfg:
+        restore_config_file(dest, sitecfg)
 

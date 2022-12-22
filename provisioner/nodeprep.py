@@ -17,19 +17,31 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
+from os import path
 from resource import Component
-from config import ResourcesConfig
-from const import FileType
+from config import ResourcesConfig, SiteConfig
+from const import FileType, PATH
 
-def main():
-    haloprovcfg = ResourcesConfig(FileType.INI, './config/nodeprep.yaml')
-    resources = haloprovcfg.get_resources()
+def provision_components():
+    basepath = path.dirname(__file__)
+    node_cfgfile = PATH.NODEPREP_CFGFILE
+    if not path.isfile(node_cfgfile):
+        node_cfgfile = basepath + '/' + node_cfgfile
+    site_cfgfile = PATH.SITE_CFGFILE
+    if not path.isfile(site_cfgfile):
+        site_cfgfile = basepath + '/' + site_cfgfile
+    siteconfig = SiteConfig(FileType.YAML, site_cfgfile)
+    nodeprovcfg = ResourcesConfig(FileType.YAML, node_cfgfile)
+    resources = nodeprovcfg.get_resources()
     for resource in resources:
-        comp = Component(resource, haloprovcfg, None)
+        comp = Component(resource, nodeprovcfg, siteconfig)
         if not comp.validate():
             comp.setup()
             comp.configure()
             comp.validate()
+
+def main():
+    provision_components()
 
 
 if __name__ == "__main__":

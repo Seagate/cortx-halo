@@ -17,9 +17,9 @@
 # For any questions about this software or licensing, please email
 # opensource@seagate.com or cortx-questions@seagate.com.
 
-from provisioner.components.ansible.setup import setup
-from provisioner.components.ansible.teardown import teardown
-from provisioner.components.ansible.validate import validate
+from ansible.setup import setup
+from ansible.teardown import teardown
+from ansible.validate import validate
 
 
 def test_setup():
