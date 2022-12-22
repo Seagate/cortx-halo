@@ -1,0 +1,23 @@
+---
+# vars file for minio_configure
+config:
+  - { drivename: '/dev/sd{b...i}', hostname: 'ssc-vm-g2-rhev4-3412.colo.seagate.com' }
+
+
+tenant_details:
+  - tenant1: 
+      tenant_name: 'tenant109'
+      servers: 1
+      namespace: 'namespace12'
+      volume_per_server: 1
+      storage_capacity_per_volume: "1Gi"
+      access_key: 'YWRtaW4='
+      secret_key: 'UGFzc3dvcmQ='
+  - tenant2: 
+      tenant_name: 'tenant209'
+      servers: 1
+      namespace: 'namespace21'
+      volume_per_server: 1
+      storage_capacity_per_volume: "1Gi"
+      access_key: 'YWRtaW4='
+      secret_key: 'UGFzc3dvcmQ='

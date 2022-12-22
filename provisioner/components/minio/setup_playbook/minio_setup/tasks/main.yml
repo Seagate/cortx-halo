@@ -8,7 +8,7 @@
 
 - name: Making kubectl-minio executable
   file:
-    path: /usr/local/bin/kubectl-minio
+    path: /usr/bin/kubectl-minio
     mode: 777
 
 - name: Initialise MinIO operator

@@ -18,24 +18,23 @@
     register: kube_dir_created
   
   - name: creating kube config file
-    block:   
+    block:
     - name: copy config file to .kube folder
-      shell: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
-
-
-    - name: changing permission of file
-      shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
+      copy:
+        src: /etc/kubernetes/kubelet.conf
+        dest: $HOME/.kube/config
+        mode: 777
+        remote_src: yes
 
     - name: saving the token 
       shell: "kubeadm token create --print-join-command > /join_command.sh"
 
     - name: fetch the token command
       fetch:
-       src: /join_command.sh 
-       dest: ../files/join_command.sh
+       src: /join_command.sh
+       dest: /opt/seagate/halo/install_depot/k8s/setup_playbook/worker_setup/files/
+       flat: yes
 
     - name: installing calico
-      shell: kubectl apply -f /opt/seagate/halo/install_depot/cortx-halo/provisioner/components/k8s/calico-etcd.yaml
+      shell: kubectl apply -f /opt/seagate/halo/install_depot/k8s/calico-etcd.yaml
     when: kube_dir_created.changed
-
-

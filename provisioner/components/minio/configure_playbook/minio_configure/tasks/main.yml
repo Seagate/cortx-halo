@@ -1,0 +1,33 @@
+---
+# tasks file for minio_configure
+- name: Install kubectl directpv plugin
+  copy:
+    src: /opt/seagate/halo/install_depot/kubectl-directpv
+    dest: /usr/bin
+    mode: 777
+    remote_src: yes
+
+- name: Use the directpv plugin to install directpv in your kubernetes cluster
+  shell: kubectl directpv install
+  args:
+    executable: /bin/bash
+
+- name: Manage and format drives using directpv
+  shell: kubectl directpv drives format --drives {{ item.drivename }}  --nodes {{ item.hostname}}
+  loop: "{{ config }}"
+
+- name: Create Namespace for tenants
+  shell: kubectl create namespace {{item.value.namespace}}
+  with_dict: "{{ tenant_details }}"
+  ignore_errors: true
+
+- name: Configure tenant yaml file
+  template:
+    src: tenant.j2
+    dest: "/root/{{ item.key }}.yml"
+  with_dict: "{{ tenant_details }}"
+
+- name: Deploy MionIO tenant
+  shell: kubectl apply -f /root/{{ item.key }}.yml
+  with_dict: "{{ tenant_details }}"
+
