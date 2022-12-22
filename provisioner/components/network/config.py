@@ -27,7 +27,7 @@ def config(cfgfile = NWCONSTS.CONFIG_YAML):
     try:
         basepath = os.path.dirname(__file__)
         # Load ifcfg input
-        if not os. path.isfile(cfgfile):
+        if not os.path.isfile(cfgfile):
             cfgfile = basepath + '/' + cfgfile
         with open(cfgfile, "r") as f:
             ifcfg = yaml.load(f, Loader=yaml.SafeLoader)
